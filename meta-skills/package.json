@@ -1,0 +1,17 @@
+{
+  "name": "meta-skills",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "init-skill": "bun meta-skill-creator/scripts/init-skill.ts",
+    "validate-skill": "bun meta-skill-creator/scripts/validate-skill.ts",
+    "package-skill": "bun meta-skill-creator/scripts/package-skill.ts",
+    "init-agent": "bun meta-agent-creator/scripts/init-agent.ts",
+    "validate-agent": "bun meta-agent-creator/scripts/validate-agent.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
+  }
+}
