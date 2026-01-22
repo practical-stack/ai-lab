@@ -1,0 +1,22 @@
+{
+  "name": "ai-ref",
+  "version": "0.1.0",
+  "description": "Meta-skill and meta-agent development workspace for building AI tooling that creates AI tooling",
+  "author": {
+    "name": "AI-REF Contributors",
+    "url": "https://github.com/ai-ref"
+  },
+  "repository": "https://github.com/ai-ref/ai-ref",
+  "license": "MIT",
+  "keywords": [
+    "meta-skill",
+    "meta-agent",
+    "skill-creator",
+    "agent-creator",
+    "ai-tooling",
+    "claude-code",
+    "opencode"
+  ],
+  "skills": "./skills/",
+  "agents": "./agents/"
+}

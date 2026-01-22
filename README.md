@@ -2,6 +2,8 @@
 
 > Reference workspace for studying AI agent and skill patterns to build meta-level tooling.
 
+**Dual Plugin**: Works with both Claude Code and OpenCode.
+
 ## What is this?
 
 A collection of AI agent/skill repositories aggregated for pattern analysis. The goal is to create:
@@ -9,15 +11,73 @@ A collection of AI agent/skill repositories aggregated for pattern analysis. The
 - **Meta-Skills**: Skills that help create better skills
 - **Meta-Agents**: Agents that help create better agents
 
+## Installation
+
+### Claude Code
+
+```bash
+# Add this repository as a plugin marketplace
+/plugin marketplace add https://github.com/ai-ref/ai-ref
+
+# Install the plugin
+/plugin install ai-ref
+```
+
+Or test locally:
+```bash
+claude --plugin-dir /path/to/ai-ref
+```
+
+### OpenCode
+
+**Option A: From npm** (when published)
+```json
+// opencode.json
+{
+  "plugin": ["ai-ref"]
+}
+```
+
+**Option B: Local plugins**
+```bash
+# Copy plugin to your project
+cp -r /path/to/ai-ref/.opencode/plugins/ .opencode/plugins/
+```
+
+## Available Skills
+
+| Skill | Description |
+|-------|-------------|
+| `/ai-ref:meta-skill-creator` | Create new skills following best practices |
+| `/ai-ref:meta-agent-creator` | Create new agent definitions |
+
+## Available Agents
+
+| Agent | Description |
+|-------|-------------|
+| `pattern-analyzer` | Analyze patterns across reference repositories |
+
 ## Directory Structure
 
 ```
 ai-ref/
-├── meta-skill-en/        ← Your work (English version)
-├── meta-skill-ko/        ← Your work (Korean version)
+├── .claude-plugin/           ← Claude Code plugin manifest
+│   └── plugin.json
+├── .opencode/                ← OpenCode plugin
+│   ├── plugins/
+│   │   └── ai-ref.ts
+│   └── package.json
+├── skills/                   ← Shared skills (both platforms)
+│   ├── meta-skill-creator/
+│   │   └── SKILL.md
+│   └── meta-agent-creator/
+│       └── SKILL.md
+├── agents/                   ← Shared agent definitions
+│   └── pattern-analyzer.md
 ├── AGENTS.md
 ├── README.md
-└── refs/                 ← Reference repositories (gitignored)
+├── package.json
+└── refs/                     ← Reference repositories (gitignored)
     ├── oh-my-opencode/
     ├── oh-my-claudecode/
     ├── skills/

@@ -1,0 +1,37 @@
+{
+  "name": "ai-ref",
+  "version": "0.1.0",
+  "description": "Meta-skill and meta-agent development workspace - Dual plugin for Claude Code and OpenCode",
+  "type": "module",
+  "main": ".opencode/plugins/ai-ref.ts",
+  "files": [
+    ".claude-plugin",
+    ".opencode",
+    "skills",
+    "agents"
+  ],
+  "keywords": [
+    "claude-code",
+    "opencode",
+    "plugin",
+    "meta-skill",
+    "meta-agent",
+    "ai-tooling"
+  ],
+  "author": "AI-REF Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ai-ref/ai-ref.git"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.0.220",
+    "typescript": "^5.7.0"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
