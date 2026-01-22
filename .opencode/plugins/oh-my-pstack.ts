@@ -1,21 +1,21 @@
 import type { Plugin } from "@opencode-ai/plugin";
 
-export const AiRefPlugin: Plugin = async ({
+export const OhMyPStackPlugin: Plugin = async ({
   client,
   directory,
   worktree,
 }) => {
   await client.app.log({
-    service: "ai-ref",
+    service: "oh-my-pstack",
     level: "info",
-    message: "AI-REF plugin initialized",
+    message: "Oh My PStack plugin initialized",
     extra: { directory, worktree },
   });
 
   return {
     "session.created": async () => {
       await client.app.log({
-        service: "ai-ref",
+        service: "oh-my-pstack",
         level: "debug",
         message: "New session created",
       });
@@ -26,7 +26,7 @@ export const AiRefPlugin: Plugin = async ({
 
       if (filePath.endsWith("SKILL.md")) {
         await client.app.log({
-          service: "ai-ref",
+          service: "oh-my-pstack",
           level: "info",
           message: `Skill file edited: ${filePath}`,
         });
@@ -34,7 +34,7 @@ export const AiRefPlugin: Plugin = async ({
 
       if (filePath.includes("/agents/") && filePath.endsWith(".md")) {
         await client.app.log({
-          service: "ai-ref",
+          service: "oh-my-pstack",
           level: "info",
           message: `Agent definition edited: ${filePath}`,
         });
@@ -46,7 +46,7 @@ export const AiRefPlugin: Plugin = async ({
         const filePath = output.args?.filePath as string | undefined;
         if (filePath?.includes("/skills/") || filePath?.includes("/agents/")) {
           await client.app.log({
-            service: "ai-ref",
+            service: "oh-my-pstack",
             level: "debug",
             message: `Modifying skill/agent: ${filePath}`,
           });
@@ -56,7 +56,7 @@ export const AiRefPlugin: Plugin = async ({
 
     "session.idle": async () => {
       await client.app.log({
-        service: "ai-ref",
+        service: "oh-my-pstack",
         level: "debug",
         message: "Session idle",
       });
@@ -64,4 +64,4 @@ export const AiRefPlugin: Plugin = async ({
   };
 };
 
-export default AiRefPlugin;
+export default OhMyPStackPlugin;

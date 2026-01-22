@@ -1,4 +1,4 @@
-# AI-REF
+# Oh My PStack
 
 > Reference workspace for studying AI agent and skill patterns to build meta-level tooling.
 
@@ -17,15 +17,15 @@ A collection of AI agent/skill repositories aggregated for pattern analysis. The
 
 ```bash
 # Add this repository as a plugin marketplace
-/plugin marketplace add https://github.com/ai-ref/ai-ref
+/plugin marketplace add https://github.com/pstack/oh-my-pstack
 
 # Install the plugin
-/plugin install ai-ref
+/plugin install oh-my-pstack
 ```
 
 Or test locally:
 ```bash
-claude --plugin-dir /path/to/ai-ref
+claude --plugin-dir /path/to/oh-my-pstack
 ```
 
 ### OpenCode
@@ -34,22 +34,22 @@ claude --plugin-dir /path/to/ai-ref
 ```json
 // opencode.json
 {
-  "plugin": ["ai-ref"]
+  "plugin": ["oh-my-pstack"]
 }
 ```
 
 **Option B: Local plugins**
 ```bash
 # Copy plugin to your project
-cp -r /path/to/ai-ref/.opencode/plugins/ .opencode/plugins/
+cp -r /path/to/oh-my-pstack/.opencode/plugins/ .opencode/plugins/
 ```
 
 ## Available Skills
 
 | Skill | Description |
 |-------|-------------|
-| `/ai-ref:meta-skill-creator` | Create new skills following best practices |
-| `/ai-ref:meta-agent-creator` | Create new agent definitions |
+| `/oh-my-pstack:meta-skill-creator` | Create new skills following best practices |
+| `/oh-my-pstack:meta-agent-creator` | Create new agent definitions |
 
 ## Available Agents
 
@@ -60,12 +60,12 @@ cp -r /path/to/ai-ref/.opencode/plugins/ .opencode/plugins/
 ## Directory Structure
 
 ```
-ai-ref/
+oh-my-pstack/
 ├── .claude-plugin/           ← Claude Code plugin manifest
 │   └── plugin.json
 ├── .opencode/                ← OpenCode plugin
 │   ├── plugins/
-│   │   └── ai-ref.ts
+│   │   └── oh-my-pstack.ts
 │   └── package.json
 ├── skills/                   ← Shared skills (both platforms)
 │   ├── meta-skill-creator/

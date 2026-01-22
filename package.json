@@ -1,9 +1,9 @@
 {
-  "name": "ai-ref",
+  "name": "oh-my-pstack",
   "version": "0.1.0",
   "description": "Meta-skill and meta-agent development workspace - Dual plugin for Claude Code and OpenCode",
   "type": "module",
-  "main": ".opencode/plugins/ai-ref.ts",
+  "main": ".opencode/plugins/oh-my-pstack.ts",
   "files": [
     ".claude-plugin",
     ".opencode",
@@ -18,11 +18,11 @@
     "meta-agent",
     "ai-tooling"
   ],
-  "author": "AI-REF Contributors",
+  "author": "Oh My PStack Contributors",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ai-ref/ai-ref.git"
+    "url": "https://github.com/pstack/oh-my-pstack.git"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^1.0.220",

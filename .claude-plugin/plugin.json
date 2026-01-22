@@ -1,12 +1,12 @@
 {
-  "name": "ai-ref",
+  "name": "oh-my-pstack",
   "version": "0.1.0",
   "description": "Meta-skill and meta-agent development workspace for building AI tooling that creates AI tooling",
   "author": {
-    "name": "AI-REF Contributors",
-    "url": "https://github.com/ai-ref"
+    "name": "Oh My PStack Contributors",
+    "url": "https://github.com/pstack"
   },
-  "repository": "https://github.com/ai-ref/ai-ref",
+  "repository": "https://github.com/pstack/oh-my-pstack",
   "license": "MIT",
   "keywords": [
     "meta-skill",

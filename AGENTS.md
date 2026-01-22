@@ -1,4 +1,4 @@
-# AI-REF: Meta Skill & Agent Development Workspace
+# Oh My PStack: Meta Skill & Agent Development Workspace
 
 This workspace aggregates AI agent/skill repositories to study patterns and create **meta-skills** (skills that create skills) and **meta-agents** (agents that create agents).
 
@@ -11,7 +11,11 @@ Study existing implementations → Extract patterns → Build meta-level tooling
 ## DIRECTORY STRUCTURE
 
 ```
-ai-ref/
+oh-my-pstack/
+├── .claude-plugin/       ← Claude Code plugin manifest
+├── .opencode/            ← OpenCode plugin
+├── skills/               ← Shared skills (both platforms)
+├── agents/               ← Shared agent definitions
 ├── meta-skill-en/        ← Your work (meta-skill development)
 ├── meta-skill-ko/        ← Your work (meta-skill development)
 ├── AGENTS.md             ← This file
