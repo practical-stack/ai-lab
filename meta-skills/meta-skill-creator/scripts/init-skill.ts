@@ -210,8 +210,8 @@ function printUsage(): void {
   --path        스킬이 생성될 경로
 
 예시:
-  bun scripts/init-skill.ts my-new-skill --path .cursor/skills
-  bun scripts/init-skill.ts api-helper --path .claude/skills
+  bun scripts/init-skill.ts my-new-skill --path .claude/skills
+  bun scripts/init-skill.ts api-helper --path .opencode/skills
 `);
 }
 

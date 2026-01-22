@@ -9,7 +9,7 @@ description: |
 # Meta-Agent Creator
 
 A meta-skill that helps create new specialized agents for multi-agent orchestration systems.
-Supports Claude Code, OpenCode, and Cursor platforms.
+Supports Claude Code and OpenCode platforms.
 
 > **Output Language**: All generated agent content (prompts, descriptions) will be in **Korean**.
 
@@ -22,8 +22,8 @@ Supports Claude Code, OpenCode, and Cursor platforms.
 bun scripts/init-agent.ts <agent-name> --path <output-directory> --platform <platform>
 
 # Examples
-bun scripts/init-agent.ts security-auditor --path .cursor/agents --platform cursor
-bun scripts/init-agent.ts data-analyst --path src/agents --platform opencode
+bun scripts/init-agent.ts security-auditor --path src/agents --platform opencode
+bun scripts/init-agent.ts data-analyst --path .claude/agents --platform claude-code
 ```
 
 ### Validate Agent
@@ -32,8 +32,8 @@ bun scripts/init-agent.ts data-analyst --path src/agents --platform opencode
 bun scripts/validate-agent.ts <agent-file>
 
 # Examples
-bun scripts/validate-agent.ts .cursor/agents/my-agent.md
 bun scripts/validate-agent.ts src/agents/my-agent.ts
+bun scripts/validate-agent.ts .claude/agents/my-agent.ts
 ```
 
 ## Agent Categories
@@ -121,23 +121,7 @@ Choose the appropriate category based on agent purpose:
 
 **Goal**: Create platform-specific configuration.
 
-#### Cursor (Markdown)
-
-Location: `.cursor/agents/<agent-name>.md`
-
-```markdown
----
-name: my-agent
-description: Agent description with trigger conditions
-model: inherit
-readonly: false
-is_background: false
----
-
-[System prompt here]
-```
-
-#### OpenCode (TypeScript)
+#### OpenCode / Claude Code (TypeScript)
 
 Location: `src/agents/<agent-name>.ts`
 
@@ -173,17 +157,7 @@ export function createMyAgent(model: string): AgentConfig {
 
 ## Platform Configurations
 
-### Cursor Agent Fields
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | No | Unique identifier (defaults to filename) |
-| `description` | No | When to use this agent |
-| `model` | No | `fast`, `inherit`, or specific model ID |
-| `readonly` | No | Restrict write permissions |
-| `is_background` | No | Run in background mode |
-
-### OpenCode Agent Fields
+### OpenCode / Claude Code Agent Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|

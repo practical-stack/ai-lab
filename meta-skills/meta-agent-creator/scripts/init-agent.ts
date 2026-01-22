@@ -4,48 +4,7 @@
 import { mkdirSync, writeFileSync, existsSync } from "fs";
 import { join, resolve } from "path";
 
-type Platform = "cursor" | "opencode" | "claude-code";
-
-const CURSOR_TEMPLATE = `---
-name: {{AGENT_NAME}}
-description: |
-  [TODO: 에이전트 설명과 위임 트리거 조건]
-  [TODO: "Use proactively" 또는 "Use when..." 포함]
-model: inherit
-readonly: false
-is_background: false
----
-
-## 역할
-
-[TODO: 에이전트의 정체성과 전문 분야 1-2문장]
-
-## 핵심 역량
-
-- [TODO: 역량 1]
-- [TODO: 역량 2]
-- [TODO: 역량 3]
-
-## 워크플로우
-
-호출 시:
-1. [TODO: 단계 1]
-2. [TODO: 단계 2]
-3. [TODO: 단계 3]
-
-## 출력 형식
-
-[TODO: 구조화된 출력 형식 정의]
-
-보고 내용:
-- [TODO: 보고 항목 1]
-- [TODO: 보고 항목 2]
-
-## 제약 조건
-
-- [TODO: 제약 1]
-- [TODO: 제약 2]
-`;
+type Platform = "opencode" | "claude-code";
 
 const OPENCODE_TEMPLATE = `import type { AgentConfig } from "@opencode-ai/sdk";
 import type { AgentPromptMetadata } from "./types";
@@ -140,13 +99,8 @@ function initAgent(name: string, basePath: string, platform: Platform): { succes
     let filePath: string;
     let content: string;
 
-    if (platform === "cursor") {
-      filePath = join(outputDir, `${name}.md`);
-      content = applyTemplate(CURSOR_TEMPLATE, name);
-    } else {
-      filePath = join(outputDir, `${name}.ts`);
-      content = applyTemplate(OPENCODE_TEMPLATE, name);
-    }
+    filePath = join(outputDir, `${name}.ts`);
+    content = applyTemplate(OPENCODE_TEMPLATE, name);
 
     writeFileSync(filePath, content, "utf-8");
     console.log(`Created agent file: ${filePath}`);
@@ -172,11 +126,11 @@ Usage:
 Arguments:
   agent-name    Agent name (kebab-case)
   --path        Output directory
-  --platform    Platform (cursor, opencode, claude-code)
+  --platform    Platform (opencode, claude-code)
 
 Examples:
-  bun scripts/init-agent.ts security-auditor --path .cursor/agents --platform cursor
-  bun scripts/init-agent.ts data-analyst --path src/agents --platform opencode
+  bun scripts/init-agent.ts security-auditor --path src/agents --platform opencode
+  bun scripts/init-agent.ts data-analyst --path .claude/agents --platform claude-code
 `);
 }
 
@@ -194,8 +148,8 @@ function main(): void {
   const basePath = args[pathIndex + 1];
   const platform = args[platformIndex + 1] as Platform;
 
-  if (!["cursor", "opencode", "claude-code"].includes(platform)) {
-    console.error("Error: Invalid platform. Choose from: cursor, opencode, claude-code");
+  if (!["opencode", "claude-code"].includes(platform)) {
+    console.error("Error: Invalid platform. Choose from: opencode, claude-code");
     process.exit(1);
   }
 

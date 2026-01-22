@@ -159,9 +159,7 @@ model: inherit
 - 완료 전 반드시 검증
 ```
 
-## Platform Adapters
-
-### Claude Code / OpenCode
+## Platform Format (Claude Code / OpenCode)
 
 ```typescript
 export function createExploreAgent(model: string): AgentConfig {
@@ -175,21 +173,6 @@ export function createExploreAgent(model: string): AgentConfig {
     prompt: `...`
   };
 }
-```
-
-### Cursor
-
-```markdown
-# .cursor/agents/explore.md
-
----
-name: explore
-description: 코드베이스 탐색 전문가. "X는 어디에?" 질문에 사용
-model: fast
-readonly: true
----
-
-[Agent prompt here]
 ```
 
 ## Best Practices

@@ -26,7 +26,7 @@ npx ts-node scripts/init-skill.ts <skill-name> --path <output-directory>
 bun scripts/init-skill.ts <skill-name> --path <output-directory>
 
 # Example
-bun scripts/init-skill.ts my-awesome-skill --path .cursor/skills
+bun scripts/init-skill.ts my-awesome-skill --path .claude/skills
 ```
 
 ### Validate and Package
@@ -271,10 +271,6 @@ This skill generates output compatible with:
 |----------|----------------|--------|
 | Claude Code | `.claude/skills/` | ✅ Full Support |
 | OpenCode | `.opencode/skills/` | ✅ Full Support |
-| Cursor (Nightly) | `.cursor/skills/` | ✅ Full Support |
-| Cursor (Stable) | `.cursorrules` | ⚠️ Use adapter |
-
-For Cursor Stable, see `.cursorrules` for role-switching workflow.
 
 ## References
 

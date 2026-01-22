@@ -111,8 +111,8 @@ function main(): void {
   if (args.length < 1) {
     console.log("사용법: bun scripts/package-skill.ts <skill-folder> [output-dir]");
     console.log("\n예시:");
-    console.log("  bun scripts/package-skill.ts .cursor/skills/my-skill");
-    console.log("  bun scripts/package-skill.ts .cursor/skills/my-skill ./dist");
+    console.log("  bun scripts/package-skill.ts .claude/skills/my-skill");
+    console.log("  bun scripts/package-skill.ts .claude/skills/my-skill ./dist");
     process.exit(1);
   }
 
