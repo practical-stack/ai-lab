@@ -9,25 +9,42 @@ A collection of AI agent/skill repositories aggregated for pattern analysis. The
 - **Meta-Skills**: Skills that help create better skills
 - **Meta-Agents**: Agents that help create better agents
 
+## Directory Structure
+
+```
+ai-ref/
+├── meta-skill-en/        ← Your work (English version)
+├── meta-skill-ko/        ← Your work (Korean version)
+├── AGENTS.md
+├── README.md
+└── refs/                 ← Reference repositories (gitignored)
+    ├── oh-my-opencode/
+    ├── oh-my-claudecode/
+    ├── skills/
+    ├── agent-skills/
+    ├── plugins-for-claude-natives/
+    └── claude-cookbooks/
+```
+
 ## Quick Start
 
 ```bash
-# Each folder is an independent git repo
-cd oh-my-opencode && bun install && bun test
-cd oh-my-claudecode && npm install && npm test
-cd claude-cookbooks && make install && make test
+# Reference repos are in refs/ folder
+cd refs/oh-my-opencode && bun install && bun test
+cd refs/oh-my-claudecode && npm install && npm test
+cd refs/claude-cookbooks && make install && make test
 ```
 
-## Repository Overview
+## Reference Repositories (in refs/)
 
 | Project | Description | Tech Stack |
 |---------|-------------|------------|
-| [oh-my-opencode](./oh-my-opencode/) | Multi-agent orchestration for OpenCode | Bun, TypeScript |
-| [oh-my-claudecode](./oh-my-claudecode/) | Multi-agent orchestration for Claude Code | Node.js, TypeScript |
-| [skills](./skills/) | Official Claude skill collection | Markdown, Python |
-| [agent-skills](./agent-skills/) | Vercel-focused Claude skills | Markdown, Bash |
-| [plugins-for-claude-natives](./plugins-for-claude-natives/) | Claude Code plugins | Mixed |
-| [claude-cookbooks](./claude-cookbooks/) | Claude examples and patterns | Python, Jupyter |
+| [oh-my-opencode](./refs/oh-my-opencode/) | Multi-agent orchestration for OpenCode | Bun, TypeScript |
+| [oh-my-claudecode](./refs/oh-my-claudecode/) | Multi-agent orchestration for Claude Code | Node.js, TypeScript |
+| [skills](./refs/skills/) | Official Claude skill collection | Markdown, Python |
+| [agent-skills](./refs/agent-skills/) | Vercel-focused Claude skills | Markdown, Bash |
+| [plugins-for-claude-natives](./refs/plugins-for-claude-natives/) | Claude Code plugins | Mixed |
+| [claude-cookbooks](./refs/claude-cookbooks/) | Claude examples and patterns | Python, Jupyter |
 
 ## Key Patterns Discovered
 
@@ -61,7 +78,7 @@ skill-name/
 
 ### skill-creator
 
-Located at `skills/skills/skill-creator/`, this is already a meta-skill that:
+Located at `refs/skills/skills/skill-creator/`, this is already a meta-skill that:
 - Guides skill creation process
 - Provides `init_skill.py` for scaffolding
 - Provides `package_skill.py` for distribution

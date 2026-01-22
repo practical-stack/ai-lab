@@ -8,18 +8,35 @@ Study existing implementations → Extract patterns → Build meta-level tooling
 
 **Goal**: Create skills and agents that help build better skills and agents.
 
+## DIRECTORY STRUCTURE
+
+```
+ai-ref/
+├── meta-skill-en/        ← Your work (meta-skill development)
+├── meta-skill-ko/        ← Your work (meta-skill development)
+├── AGENTS.md             ← This file
+├── README.md
+└── refs/                 ← Reference repositories (gitignored)
+    ├── oh-my-opencode/
+    ├── oh-my-claudecode/
+    ├── skills/
+    ├── agent-skills/
+    ├── plugins-for-claude-natives/
+    └── claude-cookbooks/
+```
+
 ## REFERENCE REPOSITORIES
 
-Each folder is an independent git repo with its own history:
+Each folder in `refs/` is an independent git repo with its own history:
 
 | Repo | Runtime | Focus | Key Patterns |
 |------|---------|-------|--------------|
-| `oh-my-opencode/` | Bun | OpenCode orchestration | Agent definitions, multi-model routing, hooks |
-| `oh-my-claudecode/` | Node.js | Claude Code orchestration | Tiered agents, model routing, state management |
-| `skills/` | - | Official skill collection | **Has `skill-creator`** - existing meta-skill |
-| `agent-skills/` | - | Vercel-focused skills | Skill packaging patterns |
-| `plugins-for-claude-natives/` | - | Claude Code plugins | Plugin architecture |
-| `claude-cookbooks/` | Python/uv | Jupyter notebooks | Examples, patterns |
+| `refs/oh-my-opencode/` | Bun | OpenCode orchestration | Agent definitions, multi-model routing, hooks |
+| `refs/oh-my-claudecode/` | Node.js | Claude Code orchestration | Tiered agents, model routing, state management |
+| `refs/skills/` | - | Official skill collection | **Has `skill-creator`** - existing meta-skill |
+| `refs/agent-skills/` | - | Vercel-focused skills | Skill packaging patterns |
+| `refs/plugins-for-claude-natives/` | - | Claude Code plugins | Plugin architecture |
+| `refs/claude-cookbooks/` | Python/uv | Jupyter notebooks | Examples, patterns |
 
 ## SKILL PATTERNS (from analysis)
 
@@ -77,31 +94,34 @@ interface AgentConfig {
 
 ## EXISTING META-TOOLS
 
-### `skill-creator` (skills/skills/skill-creator/)
+### `skill-creator` (refs/skills/skills/skill-creator/)
 Already implements meta-skill pattern:
 - Guides skill creation process
 - Includes `init_skill.py` and `package_skill.py` scripts
 - Progressive disclosure documentation
 
-### Orchestrator Patterns (oh-my-*/src/agents/)
+### Orchestrator Patterns (refs/oh-my-*/src/agents/)
 Study how orchestrators delegate to specialists - same pattern applies to meta-agents.
 
 ## BUILD / TEST COMMANDS
 
 ### oh-my-opencode (Bun)
 ```bash
+cd refs/oh-my-opencode
 bun run build && bun test
 bun test src/file.test.ts  # Single test
 ```
 
 ### oh-my-claudecode (Node.js)
 ```bash
+cd refs/oh-my-claudecode
 npm run build && npm run test:run
 npx vitest run src/path/to/file.test.ts
 ```
 
 ### claude-cookbooks (Python)
 ```bash
+cd refs/claude-cookbooks
 make install && make check && make test
 ```
 
@@ -121,13 +141,13 @@ make install && make check && make test
 ## META-DEVELOPMENT WORKFLOW
 
 ### Creating a Meta-Skill
-1. Study existing skills in `skills/`, `agent-skills/`, `oh-my-*/skills/`
+1. Study existing skills in `refs/skills/`, `refs/agent-skills/`, `refs/oh-my-*/skills/`
 2. Identify patterns that can be generalized
 3. Use `skill-creator` as template
 4. Include scripts that automate repetitive creation tasks
 
 ### Creating a Meta-Agent
-1. Study agent definitions in `oh-my-*/src/agents/`
+1. Study agent definitions in `refs/oh-my-*/src/agents/`
 2. Analyze orchestrator patterns (delegation, verification)
 3. Define agent config with appropriate model tier
 4. Create prompt that guides agent creation
@@ -145,16 +165,16 @@ When studying a repo:
 
 | Purpose | Location |
 |---------|----------|
-| Skill creation guide | `skills/skills/skill-creator/SKILL.md` |
-| Skill template | `skills/template/SKILL.md` |
-| Agent definitions | `oh-my-claudecode/src/agents/definitions.ts` |
-| Orchestrator prompts | `oh-my-claudecode/skills/orchestrate/SKILL.md` |
-| Agent council (multi-AI) | `plugins-for-claude-natives/plugins/agent-council/` |
-| Background agents | `oh-my-opencode/src/features/background-agent/` |
+| Skill creation guide | `refs/skills/skills/skill-creator/SKILL.md` |
+| Skill template | `refs/skills/template/SKILL.md` |
+| Agent definitions | `refs/oh-my-claudecode/src/agents/definitions.ts` |
+| Orchestrator prompts | `refs/oh-my-claudecode/skills/orchestrate/SKILL.md` |
+| Agent council (multi-AI) | `refs/plugins-for-claude-natives/plugins/agent-council/` |
+| Background agents | `refs/oh-my-opencode/src/features/background-agent/` |
 
 ## SEE ALSO
 
-- `oh-my-opencode/AGENTS.md` - Full OpenCode implementation details
-- `oh-my-claudecode/AGENTS.md` - Full ClaudeCode implementation details
-- `agent-skills/AGENTS.md` - Skill packaging guide
-- `skills/skills/skill-creator/SKILL.md` - Meta-skill reference implementation
+- `refs/oh-my-opencode/AGENTS.md` - Full OpenCode implementation details
+- `refs/oh-my-claudecode/AGENTS.md` - Full ClaudeCode implementation details
+- `refs/agent-skills/AGENTS.md` - Skill packaging guide
+- `refs/skills/skills/skill-creator/SKILL.md` - Meta-skill reference implementation
