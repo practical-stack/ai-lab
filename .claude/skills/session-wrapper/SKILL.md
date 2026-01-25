@@ -1,0 +1,288 @@
+---
+name: session-wrapper
+description: |
+  Extract reusable patterns from completed session work and prepare for LLM structure creation.
+  Triggers: "wrap this session", "extract workflow", "make this reusable",
+  "abstract this work", "create skill from session", "session to skill"
+---
+
+# Session Wrapper
+
+Extract and abstract completed work from a session into a reusable pattern that can be converted to a Skill, Agent, or Command.
+
+## Quick Reference
+
+| Phase | Input | Output |
+|-------|-------|--------|
+| 1. IDENTIFY | Session history / completed work | Work summary |
+| 2. ABSTRACT | Concrete actions | Generic pattern |
+| 3. FORMALIZE | Pattern description | Feature Request (for `/make-llm-structure`) |
+
+## When to Use
+
+✅ **USE WHEN**:
+- You completed a multi-step workflow that might be repeated
+- You want to turn ad-hoc work into a reusable component
+- You see patterns emerging across sessions
+
+❌ **DON'T USE WHEN**:
+- Work was one-time only, won't be repeated
+- Already have a clear feature request (use `/make-llm-structure` directly)
+
+## Workflow
+
+### Phase 1: IDENTIFY Work Done
+
+**Goal**: Catalog what was accomplished in the session.
+
+#### 1.1 Review Session Actions
+
+List all significant actions:
+
+```markdown
+## Session Work Summary
+
+### Actions Performed
+1. [Action 1]: [What was done]
+2. [Action 2]: [What was done]
+3. [Action 3]: [What was done]
+...
+
+### Artifacts Created
+- [File/artifact 1]: [Purpose]
+- [File/artifact 2]: [Purpose]
+...
+
+### Decisions Made
+- [Decision 1]: [Reasoning]
+- [Decision 2]: [Reasoning]
+...
+```
+
+#### 1.2 Identify Patterns
+
+Ask these questions:
+
+| Question | Answer |
+|----------|--------|
+| What triggered this work? | [User request / problem identified] |
+| What was the end goal? | [Desired outcome] |
+| Were there repeatable steps? | [Yes/No - list if yes] |
+| Could this be automated? | [Fully / Partially / Manual only] |
+| What domain knowledge was used? | [Expertise applied] |
+
+### Phase 2: ABSTRACT to Generic Pattern
+
+**Goal**: Convert concrete work into a reusable pattern.
+
+#### 2.1 Generalize Steps
+
+| Concrete (This Session) | Abstract (Any Session) |
+|-------------------------|------------------------|
+| "Created learning-content-creator skill" | "Create domain skill from pattern" |
+| "Added frontmatter to 14 files" | "Apply metadata standard to documents" |
+| "Translated EN to KO" | "Create language variants" |
+
+#### 2.2 Identify Variables
+
+What parts change between uses?
+
+```markdown
+## Pattern Variables
+
+| Variable | This Session | Generic |
+|----------|--------------|---------|
+| Source | `research/*.md` | `{source_directory}` |
+| Output | `learning/*.md` | `{output_directory}` |
+| Languages | EN, KO | `{language_list}` |
+```
+
+#### 2.3 Define Trigger Conditions
+
+When should this pattern be invoked?
+
+```markdown
+## Trigger Conditions
+
+### Keywords
+- "create learning content"
+- "research to learning"
+
+### Context
+- Research files exist in source directory
+- Multi-model analysis completed
+
+### User Intent
+- Transform research into structured educational content
+```
+
+### Phase 3: FORMALIZE as Feature Request
+
+**Goal**: Output a structured description for `/make-llm-structure`.
+
+#### 3.1 Write Feature Request
+
+Use this template:
+
+```markdown
+## Feature Request
+
+### Name
+[pattern-name] (kebab-case)
+
+### Description
+[1-2 sentence description of what this does]
+
+### Trigger
+[How is it activated - user command, auto-detect, goal assignment]
+
+### Inputs
+- [Input 1]: [Description]
+- [Input 2]: [Description]
+
+### Outputs
+- [Output 1]: [Description]
+- [Output 2]: [Description]
+
+### Steps (High-Level)
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+### Domain Knowledge Required
+[What expertise is needed - coding patterns, frameworks, etc.]
+
+### Side Effects
+[File creation, external API calls, deployments, etc.]
+
+### Reusability
+[How often might this be used - once, occasionally, frequently]
+```
+
+#### 3.2 Validate Feature Request
+
+Before proceeding, verify:
+
+- [ ] Description is clear and complete
+- [ ] Trigger is well-defined
+- [ ] Steps are at the right abstraction level (not too detailed, not too vague)
+- [ ] Domain knowledge is identified
+- [ ] Side effects are documented
+
+## Output
+
+After completing this workflow, you have a **Feature Request** ready for:
+
+```
+/make-llm-structure <feature-request>
+```
+
+This will diagnose whether it should be a Command, Skill, or Agent, and generate the appropriate spec template.
+
+## Example: Learning Content Creator
+
+### Phase 1: Identify
+
+```markdown
+## Session Work Summary
+
+### Actions Performed
+1. Read research documents (Claude, GPT, Gemini responses)
+2. Created content outline synthesizing insights
+3. Wrote 7 English learning modules
+4. Translated to 7 Korean modules
+5. Added YAML frontmatter to all 14 files
+
+### Artifacts Created
+- learning/README.en.md - Course index
+- learning/01-06-*.en.md - 6 learning modules
+- learning/*.ko.md - Korean translations
+
+### Decisions Made
+- 6 modules (fundamentals → anti-patterns progression)
+- Keep technical terms in English for KO version
+- Use tutorial type for frontmatter
+```
+
+### Phase 2: Abstract
+
+```markdown
+## Generic Pattern
+
+| Concrete | Abstract |
+|----------|----------|
+| research/01-claude.en.md | {research_sources} |
+| learning/*.en.md | {output_dir}/*.{primary_lang}.md |
+| EN → KO translation | Primary → Secondary language |
+
+## Variables
+- source_directory
+- output_directory
+- primary_language (default: en)
+- secondary_languages (optional)
+- frontmatter_skill (optional)
+```
+
+### Phase 3: Formalize
+
+```markdown
+## Feature Request
+
+### Name
+learning-content-creator
+
+### Description
+Transform multi-model research materials into structured learning content with bilingual support and proper metadata.
+
+### Trigger
+User says "create learning content" or "research to learning" when research files exist.
+
+### Inputs
+- Research directory with model responses
+- Target output directory
+- Language configuration
+
+### Outputs
+- Structured learning modules (EN)
+- Translations (KO)
+- Frontmatter metadata on all files
+
+### Steps
+1. Analyze research sources
+2. Create content outline
+3. Write English modules
+4. Translate to Korean
+5. Add frontmatter
+
+### Domain Knowledge
+- Multi-model research synthesis
+- Learning content structure
+- Translation guidelines
+- Frontmatter schema
+
+### Side Effects
+- Creates multiple files
+- No external APIs
+- No deployments
+
+### Reusability
+Moderate - whenever new research topic completed
+```
+
+## Next Steps
+
+After formalizing the feature request:
+
+1. Run: `/make-llm-structure <paste feature request>`
+2. Review diagnosis (Command / Skill / Agent)
+3. Follow the appropriate creation workflow:
+   - **Command**: Implement from spec
+   - **Skill**: Use `meta-skill-creator`
+   - **Agent**: Use `meta-agent-creator`
+
+## References
+
+| Resource | Purpose |
+|----------|---------|
+| [Pattern Templates](references/pattern-templates.md) | Common reusable pattern types |
+| [Abstraction Guide](references/abstraction-guide.md) | Tips for effective abstraction |
