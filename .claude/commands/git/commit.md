@@ -94,5 +94,5 @@ COMMIT 2: fix: correct button alignment
 
 | Command | Purpose | Status |
 |---------|---------|--------|
-| `/pr` | Create pull request | Planned |
-| `/branch` | Branch management | Planned |
+| `/git:pr` | Create pull request | Available |
+| `/git:branch` | Generate branch name | Available |
