@@ -4,7 +4,7 @@ description: "AI 코딩 어시스턴트의 세 가지 핵심 요소인 Command, 
 type: tutorial
 tags: [AI, Architecture]
 order: 1
-related: [./01-fundamentals.en.md]
+related: [./01-fundamentals.md]
 ---
 
 # 모듈 1: AI 에이전트 아키텍처 기초

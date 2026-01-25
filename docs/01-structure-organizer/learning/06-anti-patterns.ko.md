@@ -5,7 +5,7 @@ type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 6
 depends_on: [./05-examples.ko.md]
-related: [./06-anti-patterns.en.md]
+related: [./06-anti-patterns.md]
 ---
 
 # 모듈 6: 안티패턴 및 베스트 프랙티스

@@ -5,7 +5,7 @@ type: tutorial
 tags: [AI, Architecture]
 order: 5
 depends_on: [./04-templates.ko.md]
-related: [./05-examples.en.md]
+related: [./05-examples.md]
 ---
 
 # 모듈 5: 실전 예제 및 연습

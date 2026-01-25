@@ -5,7 +5,7 @@ type: tutorial
 tags: [AI, Architecture]
 order: 2
 depends_on: [./01-fundamentals.ko.md]
-related: [./02-relationships.en.md]
+related: [./02-relationships.md]
 ---
 
 # 모듈 2: 컴포넌트 관계 및 계약

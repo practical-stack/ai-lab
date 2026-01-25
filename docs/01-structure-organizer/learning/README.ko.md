@@ -3,7 +3,7 @@ title: "AI 에이전트 아키텍처 코스"
 description: "Claude Code, Cursor, OpenCode 같은 AI 코딩 어시스턴트에서 Command, Skill, Agent 설계를 마스터하기 위한 종합 학습 과정"
 type: index
 tags: [AI, Architecture, BestPractice]
-related: [./README.en.md]
+related: [./README.md]
 ---
 
 # AI 에이전트 아키텍처 코스

@@ -5,7 +5,7 @@ type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 3
 depends_on: [./02-relationships.ko.md]
-related: [./03-decision-framework.en.md]
+related: [./03-decision-framework.md]
 ---
 
 # 모듈 3: 결정 프레임워크

@@ -5,7 +5,7 @@ type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 4
 depends_on: [./03-decision-framework.ko.md]
-related: [./04-templates.en.md]
+related: [./04-templates.md]
 ---
 
 # 모듈 4: 실용적 설계 템플릿
