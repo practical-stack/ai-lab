@@ -10,6 +10,7 @@ Extracted skills from ai-lab research. Each skill follows the standard structure
 |-------|----------|---------|
 | [doc-frontmatter](doc-frontmatter/) | "frontmatter", "add frontmatter" | Generate/validate YAML frontmatter for docs |
 | [learning-content-creator](learning-content-creator/) | "create learning content", "research to learning" | Transform research into structured learning content |
+| [llm-repo-analysis](llm-repo-analysis/) | "analyze this LLM repo", "extract patterns from" | Deep analysis of LLM repos → structured documentation |
 | [meta-agent](meta-agent/) | "create an agent", "new agent" | Guide for creating specialized AI agents |
 | [meta-command](meta-command/) | "create a command", "command spec", "frontmatter" | Guide for creating and validating commands |
 | [meta-prompt-engineer](meta-prompt-engineer/) | "write a prompt", "create prompt", "meta-prompt" | Generate high-quality prompts using proven techniques |
