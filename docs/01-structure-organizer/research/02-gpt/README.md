@@ -4,7 +4,7 @@ description: "Comprehensive design guide for Command, Skill, and Agent architect
 type: index
 tags: [Architecture, AI]
 order: 2
-depends_on: [../00-research-prompt.en.md]
+depends_on: [../00-research-prompt.md]
 ---
 
 # GPT-4 Research: AI Agent Architecture Guide
@@ -15,12 +15,12 @@ depends_on: [../00-research-prompt.en.md]
 
 | # | Section | EN | KO |
 |---|---------|----|----|
-| 01 | Concept Definitions & Boundaries | [01-concepts.en.md](./01-concepts.en.md) | [01-concepts.ko.md](./01-concepts.ko.md) |
-| 02 | Relationship Model | [02-relationships.en.md](./02-relationships.en.md) | [02-relationships.ko.md](./02-relationships.ko.md) |
-| 03 | Decision Rules | [03-decision-rules.en.md](./03-decision-rules.en.md) | [03-decision-rules.ko.md](./03-decision-rules.ko.md) |
-| 04 | Design Templates | [04-templates.en.md](./04-templates.en.md) | [04-templates.ko.md](./04-templates.ko.md) |
-| 05 | Example Designs | [05-examples.en.md](./05-examples.en.md) | [05-examples.ko.md](./05-examples.ko.md) |
-| 06 | Anti-patterns & Guardrails | [06-anti-patterns.en.md](./06-anti-patterns.en.md) | [06-anti-patterns.ko.md](./06-anti-patterns.ko.md) |
+| 01 | Concept Definitions & Boundaries | [01-concepts.md](./01-concepts.md) | [01-concepts.ko.md](./01-concepts.ko.md) |
+| 02 | Relationship Model | [02-relationships.md](./02-relationships.md) | [02-relationships.ko.md](./02-relationships.ko.md) |
+| 03 | Decision Rules | [03-decision-rules.md](./03-decision-rules.md) | [03-decision-rules.ko.md](./03-decision-rules.ko.md) |
+| 04 | Design Templates | [04-templates.md](./04-templates.md) | [04-templates.ko.md](./04-templates.ko.md) |
+| 05 | Example Designs | [05-examples.md](./05-examples.md) | [05-examples.ko.md](./05-examples.ko.md) |
+| 06 | Anti-patterns & Guardrails | [06-anti-patterns.md](./06-anti-patterns.md) | [06-anti-patterns.ko.md](./06-anti-patterns.ko.md) |
 
 ## Section Overview
 
