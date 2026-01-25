@@ -4,7 +4,7 @@ description: "작업 복잡성과 재사용성 기반 Command, Skill, Agent 결�
 type: explanation
 tags: [Architecture, AI]
 order: 3
-related: "./03-decision-rules.en.md"
+related: ["./03-decision-rules.en.md"]
 ---
 
 # C. "언제 무엇을 만들지" 결정 규칙 (결정 트리 + 체크리스트)

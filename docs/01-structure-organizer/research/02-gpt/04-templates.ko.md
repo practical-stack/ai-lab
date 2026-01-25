@@ -4,7 +4,7 @@ description: "Command, Skill, Agent의 표준 스펙 템플릿으로 입력 스�
 type: explanation
 tags: [Architecture, AI]
 order: 4
-related: "./04-templates.en.md"
+related: ["./04-templates.en.md"]
 ---
 
 # D. 설계 템플릿 (스펙 폼)

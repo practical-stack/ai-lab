@@ -4,7 +4,7 @@ description: "Hierarchical composition model, contract definitions for I/O and e
 type: explanation
 tags: [Architecture, AI]
 order: 2
-related: "./02-relationships.ko.md"
+related: ["./02-relationships.ko.md"]
 ---
 
 # B. Relationship Model (Association Structure)

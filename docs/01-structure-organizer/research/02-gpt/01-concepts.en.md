@@ -4,7 +4,7 @@ description: "Precise definitions and separation of Command, Skill, Agent concep
 type: explanation
 tags: [Architecture, AI]
 order: 1
-related: "./01-concepts.ko.md"
+related: ["./01-concepts.ko.md"]
 ---
 
 # AI Agent Architecture: Command, Skill, Agent Design Guide

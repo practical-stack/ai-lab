@@ -1,10 +1,10 @@
 ---
 title: "예시 설계"
-description: "프로젝트 스캐폴딩 CI 설정, 버그 리포트에서 PR 생성까지의 실무 워크플로우 예시."
+description: "프로젝트 스캐폴딩 CI 설정, 버그 리포트에서 PR 생성까지의 실무 워크플로우 예시를 통한 설계 가이드."
 type: explanation
 tags: [Architecture, AI]
 order: 5
-related: "./05-examples.en.md"
+related: ["./05-examples.en.md"]
 ---
 
 # E. 예시 설계 (내 워크플로우 적용)

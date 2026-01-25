@@ -4,7 +4,7 @@ description: "Standard specification templates for Command, Skill, and Agent wit
 type: explanation
 tags: [Architecture, AI]
 order: 4
-related: "./04-templates.ko.md"
+related: ["./04-templates.ko.md"]
 ---
 
 # D. Design Templates (Spec Forms)

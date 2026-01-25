@@ -4,7 +4,7 @@ description: "12 common failure patterns in Command/Skill/Agent design with symp
 type: explanation
 tags: [Architecture, AI]
 order: 6
-related: "./06-anti-patterns.ko.md"
+related: ["./06-anti-patterns.ko.md"]
 ---
 
 # F. Anti-patterns & Guardrails

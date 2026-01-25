@@ -4,7 +4,7 @@ description: "계층적 구성 모델, I/O 및 예외 처리의 계약 정의, �
 type: explanation
 tags: [Architecture, AI]
 order: 2
-related: "./02-relationships.en.md"
+related: ["./02-relationships.en.md"]
 ---
 
 # B. 관계 모델 (연관 구조)
