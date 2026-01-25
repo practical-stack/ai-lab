@@ -116,7 +116,7 @@ skill-name/
 
 ```yaml
 ---
-name: skill-name           # Required: kebab-case, max 40 chars
+name: skill-name           # Required: kebab-case, max 64 chars
 description: |             # Required: triggers + purpose
   Describe the skill and when to use it.
   Triggers: "keyword1", "keyword2", "keyword3"
@@ -178,12 +178,11 @@ bun scripts/validate-skill.ts <skill-folder>
 
 | Category | Check | Requirement |
 |----------|-------|-------------|
-| Frontmatter | `name` field | kebab-case, matches directory name |
+| Frontmatter | `name` field | kebab-case, max 64 chars, matches directory name |
 | Frontmatter | `description` field | Includes triggers, purpose, when to use |
 | Structure | SKILL.md exists | Required |
 | Structure | Line count | < 500 lines (split to references if exceeded) |
-| Content | No TODO placeholders | All [TODO] items resolved |
-| Content | No unnecessary files | No README.md, CHANGELOG.md, etc. |
+| Content | No unresolved placeholders | All TODO markers resolved |
 | Scripts | Execution test | All scripts run without errors |
 | References | Explicit links | All references linked from SKILL.md |
 
@@ -274,5 +273,4 @@ This skill generates output compatible with:
 ## References
 
 - **Workflow Patterns**: See [references/workflows.md](references/workflows.md) for detailed workflow guidance
-- **Agent Patterns**: See [references/agent-patterns.md](references/agent-patterns.md) for meta-agent creation
-- **Output Templates**: See [assets/templates/](assets/templates/) for templates
+- **Output Templates**: See [assets/templates/skill-template.md](assets/templates/skill-template.md) for skill template

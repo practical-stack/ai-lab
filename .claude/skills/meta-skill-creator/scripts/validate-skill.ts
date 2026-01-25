@@ -73,8 +73,8 @@ function validateSkill(skillPath: string): ValidationResult {
     if (!/^[a-z0-9-]+$/.test(name)) {
       errors.push(`'name' is not kebab-case: ${name}`);
     }
-    if (name.length > 40) {
-      errors.push(`'name' exceeds 40 characters: ${name.length} chars`);
+    if (name.length > 64) {
+      errors.push(`'name' exceeds 64 characters: ${name.length} chars`);
     }
     if (name !== skillName) {
       errors.push(`'name' does not match directory name: ${name} vs ${skillName}`);
@@ -100,14 +100,8 @@ function validateSkill(skillPath: string): ValidationResult {
     errors.push(`${todoMatches.length} unresolved TODO item(s) found`);
   }
 
-  const unnecessaryFiles = ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE.md"];
-  for (const file of unnecessaryFiles) {
-    if (existsSync(join(skillPath, file))) {
-      warnings.push(`Unnecessary file found: ${file}`);
-    }
-  }
-
-  // Anti-Pattern 4: Skill Orchestrates Other Skills
+  // Project-specific: Skill should not orchestrate other Skills/Commands
+  // See: meta-structure-organizer/references/combination-patterns.md#anti-pattern-4
   const orchestrationPatterns = [
     { pattern: /Load skill[:\s]/gi, desc: "Load skill" },
     { pattern: /Use skill[:\s]/gi, desc: "Use skill" },
@@ -117,7 +111,7 @@ function validateSkill(skillPath: string): ValidationResult {
   for (const { pattern, desc } of orchestrationPatterns) {
     const matches = content.match(pattern);
     if (matches && matches.length > 0) {
-      errors.push(`Orchestration leakage: "${desc}" (${matches.length}x) - Skills must not invoke other Skills/Commands`);
+      warnings.push(`Orchestration leakage: "${desc}" (${matches.length}x) - Skills should provide knowledge, not orchestration`);
     }
   }
 
