@@ -88,5 +88,5 @@ This tool provides a systematic approach to component type selection for AI codi
 
 - [Research Prompt](./research/00-research-prompt.en.md) - Original research prompt
 - [Claude Research](./research/01-claude.en.md) - Claude's analysis
-- [GPT-4 Research](./research/02-gpt.en.md) - GPT-4's comprehensive taxonomy
+- [GPT-4 Research](./research/02-gpt/) - GPT-4's comprehensive taxonomy (multi-file)
 - [Gemini Research](./research/03-gemini.en.md) - Gemini's enterprise architecture view
