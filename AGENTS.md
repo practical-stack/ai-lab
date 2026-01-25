@@ -1,5 +1,7 @@
 # AI Lab: LLM Research Workspace
 
+**Generated:** 2026-01-25 | **Commit:** c740883 | **Branch:** main
+
 Research workspace for analyzing hyped LLM tools and extracting actionable insights.
 
 ## PURPOSE
@@ -71,6 +73,7 @@ Create reusable artifacts from research:
 
 | # | Topic | Status | Artifacts |
 |---|-------|--------|-----------|
+| 00 | Meta (Frontmatter) | Done | Skill: `.claude/skills/doc-frontmatter/` |
 | 01 | Structure Organizer | Done | Skill: `.claude/skills/meta-structure-organizer/` |
 | 02 | Naming Convention | Done | Reference: `docs/02-naming-convention/` |
 
