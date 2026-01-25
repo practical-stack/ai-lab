@@ -8,7 +8,7 @@ Don't be vague with guesswork. Assuming that terminology may differ across envir
 
 ## 0) My Environment/Prerequisites (Fill in)
 
-- Platform/Environment: [e.g., Cursor / Claude Code / OpenAI Assistants / LangChain / Internal Framework / Other]
+- Platform/Environment: [e.g., Opencode/ Cursor / Claude Code / OpenAI Assistants / LangChain / Internal Framework / Other]
 - Execution Entity:
   - Human (Developer) → [Yes/No]
   - LLM Agent (Automatic Execution) → [Yes/No]
