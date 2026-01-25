@@ -5,7 +5,7 @@ type: explanation
 tags: [AI, Architecture, BestPractice]
 order: 3
 depends_on: [./00-research-prompt.ko.md]
-related: [./03-gemini.en.md]
+related: [./03-gemini.md]
 ---
 
 # 엔터프라이즈 생성형 AI 시스템 아키텍처: Command, Skills, Agents의 통합적 설계와 구현 전략

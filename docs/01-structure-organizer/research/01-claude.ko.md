@@ -5,7 +5,7 @@ type: explanation
 tags: [AI, Architecture, BestPractice]
 order: 1
 depends_on: [./00-research-prompt.ko.md]
-related: [./01-claude.en.md]
+related: [./01-claude.md]
 ---
 
 # AI 코딩 어시스턴트를 위한 Command, Skill, Agent 설계 가이드

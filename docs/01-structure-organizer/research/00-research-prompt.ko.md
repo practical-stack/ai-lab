@@ -4,7 +4,7 @@ description: "Command, Skill, Agent 컴포넌트를 정확히 구분하고 설�
 type: reference
 tags: [AI, Architecture]
 order: 0
-related: [./00-research-prompt.en.md]
+related: [./00-research-prompt.md]
 ---
 
 # Meta Prompt: Command · Skills · Agents 설계/운영을 위한 정확한 이해 & 설계 가이드 요청
