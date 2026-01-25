@@ -1,3 +1,12 @@
+---
+title: "Example Designs"
+description: "Real-world workflow examples including project scaffolding with CI setup and bug-to-PR workflows with component architecture."
+type: explanation
+tags: [Architecture, AI]
+order: 5
+related: "./05-examples.ko.md"
+---
+
 # E. Example Designs (Applying to My Workflows)
 
 This section covers two workflow examples:

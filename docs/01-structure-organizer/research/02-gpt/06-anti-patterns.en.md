@@ -1,3 +1,12 @@
+---
+title: "Anti-patterns & Guardrails"
+description: "12 common failure patterns in Command/Skill/Agent design with symptoms, guardrails, and prevention measures for robust architecture."
+type: explanation
+tags: [Architecture, AI]
+order: 6
+related: "./06-anti-patterns.ko.md"
+---
+
 # F. Anti-patterns & Guardrails
 
 We organize 12 failure/misuse patterns that frequently appear in Command/Skill/Agent design/operations and their prevention measures. Each item provides symptoms of the anti-pattern and **organizational rule responses (guardrails)**.

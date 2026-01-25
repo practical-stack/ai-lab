@@ -1,3 +1,12 @@
+---
+title: "Relationship Model"
+description: "Hierarchical composition model, contract definitions for I/O and exceptions, and operational patterns for versioning, testing, and rollback."
+type: explanation
+tags: [Architecture, AI]
+order: 2
+related: "./02-relationships.ko.md"
+---
+
 # B. Relationship Model (Association Structure)
 
 ## 1. Hierarchy

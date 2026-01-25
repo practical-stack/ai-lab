@@ -1,3 +1,12 @@
+---
+title: "Design Templates"
+description: "Standard specification templates for Command, Skill, and Agent with input schema, process flows, and output definitions."
+type: explanation
+tags: [Architecture, AI]
+order: 4
+related: "./04-templates.ko.md"
+---
+
 # D. Design Templates (Spec Forms)
 
 Below are standard spec writing templates for Command, Skill, and Agent respectively. In practice, copy this form to write specifications for each component.

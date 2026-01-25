@@ -1,3 +1,13 @@
+---
+title: "Component Architect"
+description: "Diagnose whether a feature request should be implemented as Command, Skill, or Agent for AI coding assistants."
+type: index
+tags: [Architecture, AI, BestPractice]
+order: 1
+related: [./README.ko.md]
+used_by: [/.claude/skills/meta-structure-organizer/SKILL.md, /.claude/commands/organize-llm-structure.md]
+---
+
 # Component Architect
 
 > Diagnose whether a feature request should be implemented as **Command**, **Skill**, or **Agent**

@@ -1,3 +1,11 @@
+---
+title: "Meta-Prompt: Component Type Diagnosis"
+description: "Reusable prompt for diagnosing whether features should be Command, Skill, or Agent. Copy and paste to AI assistants."
+type: reference
+tags: [AI, Architecture, BestPractice]
+related: [./meta-prompt.ko.md]
+---
+
 # Meta-Prompt: Component Type Diagnosis (Command / Skill / Agent)
 
 You are an **AI Component Architect** specializing in Claude Code, OpenCode, and Cursor ecosystems.

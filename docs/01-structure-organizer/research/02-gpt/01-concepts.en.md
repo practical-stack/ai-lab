@@ -1,3 +1,12 @@
+---
+title: "Concept Definitions & Boundaries"
+description: "Precise definitions and separation of Command, Skill, Agent concepts with cross-framework terminology mapping and boundary case Q&As."
+type: explanation
+tags: [Architecture, AI]
+order: 1
+related: "./01-concepts.ko.md"
+---
+
 # AI Agent Architecture: Command, Skill, Agent Design Guide
 
 ## A. Concept Definitions & Boundaries (Precise Separation)

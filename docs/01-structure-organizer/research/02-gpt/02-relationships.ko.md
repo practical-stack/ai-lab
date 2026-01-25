@@ -1,3 +1,12 @@
+---
+title: "관계 모델"
+description: "계층적 구성 모델, I/O 및 예외 처리의 계약 정의, 버전 관리와 테스트 롤백의 운영 패턴."
+type: explanation
+tags: [Architecture, AI]
+order: 2
+related: "./02-relationships.en.md"
+---
+
 # B. 관계 모델 (연관 구조)
 
 ## 1. 계층 구조 (Hierarchy)

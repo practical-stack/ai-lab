@@ -1,3 +1,12 @@
+---
+title: "Decision Rules for Component Selection"
+description: "Decision tree flowchart and checklist for determining when to create Command, Skill, or Agent based on task complexity and reusability."
+type: explanation
+tags: [Architecture, AI]
+order: 3
+related: "./03-decision-rules.ko.md"
+---
+
 # C. Decision Rules for "When to Create What" (Decision Tree + Checklist)
 
 ## Decision Tree (Designation Flowchart)

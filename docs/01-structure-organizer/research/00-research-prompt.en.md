@@ -1,3 +1,12 @@
+---
+title: "Research Prompt: Command/Skill/Agent Design"
+description: "Meta prompt for AI agent architects to precisely distinguish and design Command, Skill, and Agent components."
+type: reference
+tags: [AI, Architecture]
+order: 0
+related: [./00-research-prompt.ko.md]
+---
+
 # Meta Prompt: Precise Understanding & Design Guide for Command · Skills · Agents Design/Operations
 
 You are an "AI Agent System Designer (Agent Architect)".

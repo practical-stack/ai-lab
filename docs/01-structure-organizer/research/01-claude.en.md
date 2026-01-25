@@ -1,3 +1,13 @@
+---
+title: "Claude Research: Command/Skill/Agent Design"
+description: "Claude's analysis of designing commands, skills, and agents for AI coding assistants with GitHub CLI integration focus."
+type: explanation
+tags: [AI, Architecture, BestPractice]
+order: 1
+depends_on: [./00-research-prompt.en.md]
+related: [./01-claude.ko.md]
+---
+
 # Designing commands, skills, and agents for AI coding assistants
 
 AI coding assistants like Claude Code and OpenCode organize capabilities into distinct abstraction layers—commands, skills, and agents—each serving different purposes. **Commands** are human-triggered entry points, **skills** encode domain expertise without execution, and **agents** provide autonomous reasoning. This guide establishes precise definitions, architectural patterns, and practical specifications for building maintainable AI coding workflows, with particular focus on GitHub CLI integration.

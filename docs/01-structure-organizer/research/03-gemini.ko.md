@@ -1,3 +1,13 @@
+---
+title: "Gemini 연구: 엔터프라이즈 AI 아키텍처"
+description: "Command, Skills, Agents 설계 전략을 포함한 엔터프라이즈급 AI 시스템 아키텍처에 대한 Gemini의 분석."
+type: explanation
+tags: [AI, Architecture, BestPractice]
+order: 3
+depends_on: [./00-research-prompt.ko.md]
+related: [./03-gemini.en.md]
+---
+
 # 엔터프라이즈 생성형 AI 시스템 아키텍처: Command, Skills, Agents의 통합적 설계와 구현 전략
 
 ## 1. 서론: 결정론적 소프트웨어에서 확률론적 인지 컴퓨팅으로의 대전환

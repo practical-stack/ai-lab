@@ -1,3 +1,12 @@
+---
+title: "안티패턴 & 가드레일"
+description: "Command/Skill/Agent 설계의 12가지 실패 패턴과 증상, 가드레일 및 방지책."
+type: explanation
+tags: [Architecture, AI]
+order: 6
+related: "./06-anti-patterns.en.md"
+---
+
 # F. 안티패턴 & 가드레일
 
 Command/Skill/Agent 설계/운영 시 자주 나타나는 실패/혼용 패턴 12가지와 그 방지책을 정리합니다.

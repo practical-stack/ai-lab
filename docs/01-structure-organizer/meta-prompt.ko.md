@@ -1,3 +1,11 @@
+---
+title: "메타 프롬프트: 컴포넌트 타입 진단"
+description: "Command, Skill, Agent 타입 진단을 위한 재사용 가능한 프롬프트. AI 어시스턴트에 복사하여 사용."
+type: reference
+tags: [AI, Architecture, BestPractice]
+related: [./meta-prompt.md]
+---
+
 # 메타 프롬프트: 컴포넌트 타입 진단 (Command / Skill / Agent)
 
 당신은 Claude Code, OpenCode, Cursor 생태계를 전문으로 하는 **AI 컴포넌트 아키텍트**입니다.

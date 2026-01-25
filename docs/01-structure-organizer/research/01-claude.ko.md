@@ -1,3 +1,13 @@
+---
+title: "Claude 연구: Command/Skill/Agent 설계"
+description: "AI 코딩 어시스턴트를 위한 Command, Skill, Agent 설계에 대한 Claude의 분석. GitHub CLI 통합 중심."
+type: explanation
+tags: [AI, Architecture, BestPractice]
+order: 1
+depends_on: [./00-research-prompt.ko.md]
+related: [./01-claude.en.md]
+---
+
 # AI 코딩 어시스턴트를 위한 Command, Skill, Agent 설계 가이드
 
 Claude Code와 OpenCode 같은 AI 코딩 어시스턴트는 기능을 Command, Skill, Agent라는 추상화 계층으로 구분한다. **Command**는 사람이 트리거하는 진입점이고, **Skill**은 실행 없이 도메인 전문성을 인코딩하며, **Agent**는 자율적 추론을 제공한다. 이 가이드는 GitHub CLI 통합에 초점을 맞춰 정확한 정의, 아키텍처 패턴, 실용적인 명세를 정립한다.

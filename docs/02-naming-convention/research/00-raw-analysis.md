@@ -1,3 +1,12 @@
+---
+title: "Raw Analysis: Naming Convention Research"
+description: "Analysis of naming patterns across 6 repositories including Anthropic skills, Vercel agent-skills, and community plugins."
+type: reference
+tags: [Documentation]
+order: 0
+related: [../README.md]
+---
+
 # Raw Analysis: Naming Convention Research
 
 > Analysis date: 2026-01-25

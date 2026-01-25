@@ -1,3 +1,12 @@
+---
+title: "설계 템플릿"
+description: "Command, Skill, Agent의 표준 스펙 템플릿으로 입력 스키마, 프로세스 흐름, 출력 정의를 포함."
+type: explanation
+tags: [Architecture, AI]
+order: 4
+related: "./04-templates.en.md"
+---
+
 # D. 설계 템플릿 (스펙 폼)
 
 아래에 Command, Skill, Agent 각각에 대한 표준 스펙 작성 템플릿을 제공합니다. 실무에서 이 폼을 복사하여 각 구성요소의 명세서를 작성하면 됩니다.

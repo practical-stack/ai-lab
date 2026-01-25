@@ -1,6 +1,15 @@
+---
+title: "연구 프롬프트: Command/Skill/Agent 설계"
+description: "Command, Skill, Agent 컴포넌트를 정확히 구분하고 설계하기 위한 AI 아키텍트용 메타 프롬프트."
+type: reference
+tags: [AI, Architecture]
+order: 0
+related: [./00-research-prompt.en.md]
+---
+
 # Meta Prompt: Command · Skills · Agents 설계/운영을 위한 정확한 이해 & 설계 가이드 요청
 
-너는 “AI 에이전트 시스템 설계자(Agent Architect)”다.
+너는 "AI 에이전트 시스템 설계자(Agent Architect)"다.
 내 목표는 command, skills, agents를 **정확히 구분**하고, **서로 연관지어** 제품/팀 워크플로우에서 의도에 맞게 만들고 운영하는 것이다.
 추측으로 얼버무리지 말고, 용어가 환경마다 다를 수 있음을 전제한 뒤 **내 환경에 맞춘 정의/경계/설계 원칙/운영 방식**을 도출해줘.
 

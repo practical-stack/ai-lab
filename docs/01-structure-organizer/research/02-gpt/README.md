@@ -1,3 +1,11 @@
+---
+title: "GPT-4 Research: AI Agent Architecture Guide"
+description: "Comprehensive design guide for Command, Skill, and Agent architecture with decision trees, templates, and anti-patterns."
+type: index
+tags: [Architecture, AI]
+order: 2
+---
+
 # GPT-4 Research: AI Agent Architecture Guide
 
 > Comprehensive design guide for Command, Skill, and Agent architecture

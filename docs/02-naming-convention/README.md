@@ -1,3 +1,11 @@
+---
+title: "Naming Convention"
+description: "Naming conventions for Skill, Agent, and Command in Claude Code / OpenCode ecosystems. Summarizes patterns from 6 reference repositories."
+type: reference
+tags: [Architecture, Documentation, BestPractice]
+related: [./research/00-raw-analysis.md]
+---
+
 # Naming Convention
 
 > Naming conventions for **Skill**, **Agent**, and **Command** in Claude Code / OpenCode ecosystems

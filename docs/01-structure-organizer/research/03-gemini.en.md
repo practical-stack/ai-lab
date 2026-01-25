@@ -1,3 +1,13 @@
+---
+title: "Gemini Research: Enterprise AI Architecture"
+description: "Gemini's analysis of enterprise-grade AI system architecture with Command, Skills, and Agents design strategies."
+type: explanation
+tags: [AI, Architecture, BestPractice]
+order: 3
+depends_on: [./00-research-prompt.en.md]
+related: [./03-gemini.ko.md]
+---
+
 # Enterprise Generative AI System Architecture: Integrated Design and Implementation Strategy for Command, Skills, and Agents
 
 ## 1. Introduction: The Great Transition from Deterministic Software to Probabilistic Cognitive Computing

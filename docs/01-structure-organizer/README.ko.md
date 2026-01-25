@@ -1,3 +1,13 @@
+---
+title: "Component Architect"
+description: "AI 코딩 어시스턴트를 위한 기능 요청의 Command, Skill, Agent 타입 진단 도구."
+type: index
+tags: [Architecture, AI, BestPractice]
+order: 1
+related: [./README.md]
+used_by: [/.claude/skills/meta-structure-organizer/SKILL.md, /.claude/commands/organize-llm-structure.md]
+---
+
 # Component Architect
 
 > 기능 요청을 **Command**, **Skill**, **Agent** 중 어느 것으로 구현해야 하는지 진단

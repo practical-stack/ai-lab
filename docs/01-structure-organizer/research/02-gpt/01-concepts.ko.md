@@ -1,3 +1,12 @@
+---
+title: "개념 정의 및 경계"
+description: "Command, Skill, Agent의 정확한 정의와 분리 방법, 프레임워크별 용어 매핑 및 경계 케이스 Q&A."
+type: explanation
+tags: [Architecture, AI]
+order: 1
+related: "./01-concepts.en.md"
+---
+
 # AI Agent 아키텍처: Command, Skill, Agent 설계 가이드
 
 ## A. 개념 정의 & 경계 (정확한 분리)
