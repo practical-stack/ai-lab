@@ -237,6 +237,45 @@ bug-fix-agent loads:
 📚 SKILL: code-review-rules (extracted knowledge)
 ```
 
+### Anti-Pattern 4: Skill Orchestrates Other Skills
+
+Skills should provide **knowledge**, not **orchestration instructions**.
+
+❌ **Wrong (Imperative - tells what to do):**
+```markdown
+## Next Steps
+Load skill: meta-skill-creator
+Use skill: doc-frontmatter
+Run /create-llm-structure
+```
+
+✅ **Correct (Declarative - describes what exists):**
+```markdown
+## Related Resources
+- Skill creation patterns: see `meta-skill-creator/references/`
+- Frontmatter schema: see `doc-frontmatter/references/schema.md`
+```
+
+**Key Distinction:**
+
+| Type | Example | Allowed in Skill? |
+|------|---------|-------------------|
+| Imperative | "Load skill X", "Use X", "Run /command" | ❌ No |
+| Declarative | "See X for reference", "Schema defined in X" | ✅ Yes |
+
+**Detection Patterns (grep):**
+```
+/Load skill/i
+/Use skill/i
+/다음.*스킬.*사용/
+/Run \/\w+/
+```
+
+**Why This Matters:**
+- Skills are **knowledge modules**, not orchestrators
+- Commands own the pipeline and decide which skills to use
+- Hidden orchestration in skills creates unclear dependencies
+
 ---
 
 ## Combination Output Template

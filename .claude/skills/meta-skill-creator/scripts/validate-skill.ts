@@ -44,66 +44,80 @@ function validateSkill(skillPath: string): ValidationResult {
   const skillName = basename(skillPath);
 
   if (!existsSync(skillPath)) {
-    return { valid: false, errors: [`스킬 폴더를 찾을 수 없습니다: ${skillPath}`], warnings };
+    return { valid: false, errors: [`Skill folder not found: ${skillPath}`], warnings };
   }
 
   if (!statSync(skillPath).isDirectory()) {
-    return { valid: false, errors: [`경로가 디렉토리가 아닙니다: ${skillPath}`], warnings };
+    return { valid: false, errors: [`Path is not a directory: ${skillPath}`], warnings };
   }
 
   const skillMdPath = join(skillPath, "SKILL.md");
   if (!existsSync(skillMdPath)) {
-    return { valid: false, errors: ["SKILL.md 파일이 없습니다"], warnings };
+    return { valid: false, errors: ["SKILL.md file not found"], warnings };
   }
 
   const content = readFileSync(skillMdPath, "utf-8");
   const parsed = parseFrontmatter(content);
 
   if (!parsed) {
-    errors.push("SKILL.md에 유효한 YAML frontmatter가 없습니다 (--- ... --- 형식 필요)");
+    errors.push("SKILL.md has no valid YAML frontmatter (--- ... --- format required)");
     return { valid: false, errors, warnings };
   }
 
   const { frontmatter, body } = parsed;
 
   if (!frontmatter.name) {
-    errors.push("frontmatter에 'name' 필드가 없습니다");
+    errors.push("Missing 'name' field in frontmatter");
   } else {
     const name = String(frontmatter.name);
     if (!/^[a-z0-9-]+$/.test(name)) {
-      errors.push(`'name'이 kebab-case가 아닙니다: ${name}`);
+      errors.push(`'name' is not kebab-case: ${name}`);
     }
     if (name.length > 40) {
-      errors.push(`'name'이 40자를 초과합니다: ${name.length}자`);
+      errors.push(`'name' exceeds 40 characters: ${name.length} chars`);
     }
     if (name !== skillName) {
-      errors.push(`'name'이 디렉토리명과 일치하지 않습니다: ${name} vs ${skillName}`);
+      errors.push(`'name' does not match directory name: ${name} vs ${skillName}`);
     }
   }
 
   if (!frontmatter.description) {
-    errors.push("frontmatter에 'description' 필드가 없습니다");
+    errors.push("Missing 'description' field in frontmatter");
   } else {
     const desc = String(frontmatter.description);
     if (desc.length < 20) {
-      warnings.push("description이 너무 짧습니다 (트리거 조건과 목적을 포함하세요)");
+      warnings.push("Description is too short (include trigger conditions and purpose)");
     }
   }
 
   const lines = body.split("\n");
   if (lines.length > 500) {
-    warnings.push(`SKILL.md가 500줄을 초과합니다 (${lines.length}줄) - references/로 분할을 권장합니다`);
+    warnings.push(`SKILL.md exceeds 500 lines (${lines.length} lines) - consider splitting to references/`);
   }
 
   const todoMatches = content.match(/\[TODO[^\]]*\]/gi);
   if (todoMatches && todoMatches.length > 0) {
-    errors.push(`완료되지 않은 TODO 항목이 ${todoMatches.length}개 있습니다`);
+    errors.push(`${todoMatches.length} unresolved TODO item(s) found`);
   }
 
   const unnecessaryFiles = ["README.md", "CHANGELOG.md", "CONTRIBUTING.md", "LICENSE.md"];
   for (const file of unnecessaryFiles) {
     if (existsSync(join(skillPath, file))) {
-      warnings.push(`불필요한 파일이 있습니다: ${file}`);
+      warnings.push(`Unnecessary file found: ${file}`);
+    }
+  }
+
+  // Anti-Pattern 4: Skill Orchestrates Other Skills
+  const orchestrationPatterns = [
+    { pattern: /Load skill[:\s]/gi, desc: "Load skill" },
+    { pattern: /Use skill[:\s]/gi, desc: "Use skill" },
+    { pattern: /Run \/[a-z-]+/gi, desc: "Run /command" },
+  ];
+  
+  for (const { pattern, desc } of orchestrationPatterns) {
+    const matches = content.match(pattern);
+    if (matches && matches.length > 0) {
+      errors.push(`Orchestration leakage: "${desc}" (${matches.length}x) - Skills must not invoke other Skills/Commands`);
     }
   }
 
@@ -113,7 +127,7 @@ function validateSkill(skillPath: string): ValidationResult {
     for (const refFile of refFiles) {
       const refPath = `references/${refFile}`;
       if (!content.includes(refPath) && !content.includes(refFile)) {
-        warnings.push(`references/${refFile}이 SKILL.md에서 링크되지 않았습니다`);
+        warnings.push(`references/${refFile} is not linked from SKILL.md`);
       }
     }
   }
@@ -125,36 +139,36 @@ function main(): void {
   const args = process.argv.slice(2);
 
   if (args.length < 1) {
-    console.log("사용법: bun scripts/validate-skill.ts <skill-folder>");
+    console.log("Usage: bun scripts/validate-skill.ts <skill-folder>");
     process.exit(1);
   }
 
   const skillPath = args[0];
-  console.log(`🔍 스킬 검증 중: ${skillPath}\n`);
+  console.log(`Validating skill: ${skillPath}\n`);
 
   const result = validateSkill(skillPath);
 
   if (result.errors.length > 0) {
-    console.log("❌ 오류:");
+    console.log("Errors:");
     for (const error of result.errors) {
-      console.log(`   - ${error}`);
+      console.log(`  - ${error}`);
     }
     console.log();
   }
 
   if (result.warnings.length > 0) {
-    console.log("⚠️  경고:");
+    console.log("Warnings:");
     for (const warning of result.warnings) {
-      console.log(`   - ${warning}`);
+      console.log(`  - ${warning}`);
     }
     console.log();
   }
 
   if (result.valid) {
-    console.log("✅ 스킬 검증 통과");
+    console.log("Skill validation passed");
     process.exit(0);
   } else {
-    console.log("❌ 스킬 검증 실패");
+    console.log("Skill validation failed");
     process.exit(1);
   }
 }
