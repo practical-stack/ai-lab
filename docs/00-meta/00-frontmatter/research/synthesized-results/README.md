@@ -1,23 +1,25 @@
 ---
-title: "2차 종합 분석 결과"
-description: "GPT, Gemini, Claude 세 AI 모델의 1차 DeepSearch 결과를 바탕으로 추가 질문과 함께 진행한 심층 종합 분석입니다."
+title: "2nd Synthesized Analysis Results"
+description: "In-depth synthesized analysis based on 1st DeepSearch results from GPT, Gemini, and Claude with additional follow-up questions."
 type: index
 tags: [AI, Documentation, Frontmatter]
 depends_on: [../raw-results/README.md]
 ---
 
-# 2차 종합 분석 결과
+# 2nd Synthesized Analysis Results
 
-[1차 DeepSearch 결과](../raw-results/)를 바탕으로 추가 질문과 함께 심층 분석을 진행한 결과입니다.
+[한국어](./README.ko.md)
 
-## 문서 목록
+Results from in-depth analysis conducted with additional questions based on [1st DeepSearch results](../raw-results/).
 
-| 문서 | AI 모델 | 주요 내용 |
-|------|--------|----------|
-| [01-gpt.md](./01-gpt.md) | GPT | GraphRAG 아키텍처 심층 분석 |
-| [02-gemini.md](./02-gemini.md) | Gemini | 엔터프라이즈급 스키마 설계 |
-| [03-claude.md](./03-claude.md) | Claude | 실용적 스키마 + 구현 예시 |
+## Document List
 
-## 최종 결과
+| Document | AI Model | Main Content |
+|----------|----------|--------------|
+| [01-gpt.md](./01-gpt.md) | GPT | In-depth GraphRAG architecture analysis |
+| [02-gemini.md](./02-gemini.md) | Gemini | Enterprise-grade schema design |
+| [03-claude.md](./03-claude.md) | Claude | Practical schema + implementation examples |
 
-이 분석들을 종합하여 도출된 방법론: [../../00-guide.md](../../00-guide.md)
+## Final Result
+
+Methodology derived from synthesizing these analyses: [../../00-guide.md](../../00-guide.md)
