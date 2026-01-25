@@ -12,6 +12,7 @@ Extracted skills from ai-lab research. Each skill follows the standard structure
 | [learning-content-creator](learning-content-creator/) | "create learning content", "research to learning" | Transform research into structured learning content |
 | [meta-agent](meta-agent/) | "create an agent", "new agent" | Guide for creating specialized AI agents |
 | [meta-command](meta-command/) | "create a command", "command spec", "frontmatter" | Guide for creating and validating commands |
+| [meta-prompt-engineer](meta-prompt-engineer/) | "write a prompt", "create prompt", "meta-prompt" | Generate high-quality prompts using proven techniques |
 | [meta-session-wrapper](meta-session-wrapper/) | "wrap this session", "extract workflow" | Extract reusable patterns from completed sessions |
 | [meta-skill](meta-skill/) | "create a skill", "new skill" | Guide for creating effective AI skills |
 | [meta-structure-organizer](meta-structure-organizer/) | "should this be a skill?", "command or agent?" | Organize features into Command/Skill/Agent |
