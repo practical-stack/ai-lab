@@ -4,7 +4,7 @@ description: "Claude's analysis of designing commands, skills, and agents for AI
 type: explanation
 tags: [AI, Architecture, BestPractice]
 order: 1
-depends_on: [./00-research-prompt.en.md]
+depends_on: [./00-research-prompt.md]
 related: [./01-claude.ko.md]
 ---
 

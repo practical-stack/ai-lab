@@ -4,7 +4,7 @@ description: "Gemini's analysis of enterprise-grade AI system architecture with 
 type: explanation
 tags: [AI, Architecture, BestPractice]
 order: 3
-depends_on: [./00-research-prompt.en.md]
+depends_on: [./00-research-prompt.md]
 related: [./03-gemini.ko.md]
 ---
 
