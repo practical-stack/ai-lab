@@ -1,34 +1,34 @@
 ---
 name: {{SKILL_NAME}}
 description: |
-  스킬 설명과 사용 시점을 명시합니다.
-  트리거: "키워드1", "키워드2", "keyword3"
+  Describe the skill and when to use it.
+  Triggers: "keyword1", "keyword2", "keyword3"
 ---
 
 # {{SKILL_TITLE}}
 
-## 개요
+## Overview
 
-이 스킬은 [목적]을 위해 사용됩니다.
+This skill is used for [purpose].
 
-## 빠른 시작
+## Quick Start
 
 ```bash
 bun scripts/example.ts
 ```
 
-## 사용 가이드
+## Usage Guide
 
-### 기본 사용법
+### Basic Usage
 
-[기본 사용 방법 설명]
+[Basic usage instructions]
 
-### 고급 기능
+### Advanced Features
 
-[고급 기능 설명]
+[Advanced feature descriptions]
 
-## 리소스
+## Resources
 
-- `scripts/` - 실행 가능한 스크립트
-- `references/` - 상세 문서
-- `assets/` - 템플릿 및 에셋
+- `scripts/` - Executable scripts
+- `references/` - Detailed documentation
+- `assets/` - Templates and assets
