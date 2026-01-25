@@ -6,12 +6,28 @@ Step-by-step workflow for analyzing an LLM agent/plugin repository.
 
 ### 0.1 Access Repository
 
-```bash
-# If remote URL
-git clone <repo-url> refs/<repo-name>
+Repositories are typically pre-cloned in `refs/` directory:
 
-# If local path
-cd <path>
+```bash
+# Check available repos
+ls refs/
+
+# Common repos:
+# - refs/oh-my-opencode/
+# - refs/oh-my-claudecode/
+# - refs/agent-skills/
+# - refs/skills/
+# - refs/claude-cookbooks/
+```
+
+**If repo not yet cloned:**
+```bash
+git clone <repo-url> refs/<repo-name>
+```
+
+**Set working path for analysis:**
+```bash
+REPO_PATH="refs/<repo-name>"
 ```
 
 ### 0.2 Initial Exploration

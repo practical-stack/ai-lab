@@ -17,10 +17,17 @@ Deep analysis of an LLM agent/plugin repository to produce structured documentat
 
 ## Example
 
-```
-/analyze-llm-repo https://github.com/user/llm-project --depth deep
-/analyze-llm-repo refs/existing-clone
-/analyze-llm-repo . (current directory)
+```bash
+# Most common: analyze pre-cloned repo in refs/
+/analyze-llm-repo refs/oh-my-opencode --depth deep
+
+# Available repos in refs/:
+ls refs/
+# oh-my-opencode/  oh-my-claudecode/  agent-skills/  skills/  claude-cookbooks/
+
+# Clone new repo first, then analyze
+git clone https://github.com/user/llm-project refs/llm-project
+/analyze-llm-repo refs/llm-project --depth standard
 ```
 
 ## Instructions
@@ -33,8 +40,8 @@ Deep analysis of an LLM agent/plugin repository to produce structured documentat
    ls docs/ | grep -E "^[0-9]+-" | tail -1
    ```
 3. Access repository:
-   - If GitHub URL: `git clone <url> refs/<repo-name>`
-   - If local path: use directly
+   - **Typical**: Use pre-cloned repo in `refs/<repo-name>`
+   - If not cloned: `git clone <url> refs/<repo-name>` first
 
 ### Phase 1: Initial Exploration
 
