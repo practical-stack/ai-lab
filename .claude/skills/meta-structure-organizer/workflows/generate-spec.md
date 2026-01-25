@@ -1,16 +1,31 @@
 # Workflow: Generate Spec Template
 
-Based on the diagnosis, generate the appropriate spec template.
+Based on the diagnosis, generate the appropriate spec template(s).
 
-## Step 1: Select Template
+## Step 1: Determine Output Type
 
-| Diagnosis | Template |
+| Diagnosis Type | Action |
+|----------------|--------|
+| Single component | Generate one template |
+| Combination pattern | Generate templates for all components |
+
+### For Combinations
+
+Refer to [combination-patterns.md](../references/combination-patterns.md) and generate templates in order:
+
+1. **Command** (if user trigger needed)
+2. **Agent** (if multi-step planning needed)
+3. **Skills** (for each domain expertise needed)
+
+## Step 2: Select Template(s)
+
+| Component | Template |
 |-----------|----------|
 | ⚡ COMMAND | [templates/command.yaml](../references/templates/command.yaml) |
 | 📚 SKILL | [templates/skill.yaml](../references/templates/skill.yaml) |
 | 🤖 AGENT | [templates/agent.yaml](../references/templates/agent.yaml) |
 
-## Step 2: Fill Template
+## Step 3: Fill Template(s)
 
 Using the analysis from [analyze.md](./analyze.md), fill in:
 
@@ -37,7 +52,9 @@ Using the analysis from [analyze.md](./analyze.md), fill in:
 - `autonomy`: level (L1-L5)
 - `guardrails`: safety constraints
 
-## Step 3: Output Format
+## Step 4: Output Format
+
+### Single Component Output
 
 ```yaml
 # ============================================
@@ -50,7 +67,44 @@ Using the analysis from [analyze.md](./analyze.md), fill in:
 [Filled template content]
 ```
 
-## Step 4: Provide Implementation Hints
+### Combination Output
+
+For combinations, output an architecture overview followed by individual specs:
+
+```markdown
+# Feature: [Feature Name]
+
+## Architecture Overview
+
+```
+⚡ COMMAND: /command-name (Entry Point)
+    ↓
+🤖 AGENT: agent-name (Orchestration)
+    ↓
+📚 SKILL: skill-1 (Domain 1)
+📚 SKILL: skill-2 (Domain 2)
+```
+
+## Component Specifications
+
+### 1. Command: /command-name
+
+[Command spec template]
+
+### 2. Agent: agent-name
+
+[Agent spec template]
+
+### 3. Skill: skill-1
+
+[Skill spec template]
+
+### 4. Skill: skill-2
+
+[Skill spec template]
+```
+
+## Step 5: Provide Implementation Hints
 
 After the spec, add:
 
@@ -70,7 +124,7 @@ After the spec, add:
 - [Important consideration 2]
 ```
 
-## Step 5: Link to Creation Skill
+## Step 6: Link to Creation Skill
 
 Based on diagnosis, guide to the appropriate creation skill for detailed implementation:
 
@@ -90,4 +144,14 @@ Add to output:
 - **SKILL 생성**: `.claude/skills/meta-skill-creator/SKILL.md` (6단계 워크플로우)
 - **AGENT 생성**: `.claude/skills/meta-agent-creator/SKILL.md` (5단계 워크플로우)
 - **COMMAND 생성**: 위 스펙 템플릿을 기반으로 직접 구현
+
+### 조합 패턴의 경우
+
+조합이 필요한 경우, 다음 순서로 구현:
+
+1. **Command 먼저** (진입점)
+2. **Agent 다음** (오케스트레이션 로직)
+3. **Skills 마지막** (도메인 지식)
+
+각 컴포넌트가 서로를 참조할 수 있도록 이름과 구조를 미리 정의하세요.
 ```

@@ -41,8 +41,22 @@ Organize features into the right structure: **Command**, **Skill**, or **Agent**
 |----------|---------|
 | [Decision Tree](references/decision-tree.md) | Primary decision logic |
 | [Criteria Matrix](references/criteria.md) | Detailed comparison criteria |
-| [Boundary Cases](references/boundary-cases.md) | 10 common confusions |
+| [Boundary Cases](references/boundary-cases.md) | 12 common confusions |
+| [Combination Patterns](references/combination-patterns.md) | Multi-component architectures |
 | [Templates](references/templates/) | Spec templates for each type |
+
+## Combination Patterns
+
+Most real features need **multiple component types**. Common patterns:
+
+| Pattern | Structure | Use When |
+|---------|-----------|----------|
+| **Command + Agent** | Entry → Executor | User triggers complex work |
+| **Agent + Skills** | Executor + Knowledge | Agent needs domain expertise |
+| **Command + Skills** | Entry + Knowledge | Procedure needs domain knowledge |
+| **Full Stack** | Command → Agent → Skills → Tools | Complete feature |
+
+See [combination-patterns.md](references/combination-patterns.md) for details.
 
 ## Next Steps (After Diagnosis)
 
@@ -53,6 +67,7 @@ After diagnosing the component type, use the appropriate creation skill:
 | ⚡ **COMMAND** | Use spec template directly | [templates/command.yaml](references/templates/command.yaml) |
 | 📚 **SKILL** | Load meta-skill-creator | [meta-skill-creator](../meta-skill-creator/SKILL.md) |
 | 🤖 **AGENT** | Load meta-agent-creator | [meta-agent-creator](../meta-agent-creator/SKILL.md) |
+| **Combination** | Generate specs for all components | Follow order in combination-patterns.md |
 
 > **Note**: This skill diagnoses *what* type to use. The creation skills guide *how* to build it.
 
