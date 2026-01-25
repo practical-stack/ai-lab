@@ -10,47 +10,47 @@ Fast codebase search agent.
 export const EXPLORE_METADATA: AgentPromptMetadata = {
   category: "exploration",
   cost: "FREE",
-  promptAlias: "탐색기",
+  promptAlias: "Explorer",
   triggers: [
-    { domain: "탐색", trigger: "코드베이스 구조, 패턴, 스타일 검색" }
+    { domain: "Search", trigger: "Codebase structure, patterns, and style discovery" }
   ],
-  useWhen: ["다중 검색 각도 필요", "모듈 구조 파악", "크로스 레이어 패턴 발견"],
-  avoidWhen: ["검색 대상이 명확할 때", "단일 키워드로 충분할 때"]
+  useWhen: ["Multiple search angles needed", "Understanding module structure", "Cross-layer pattern discovery"],
+  avoidWhen: ["Search target is obvious", "Single keyword is sufficient"]
 };
 
 export function createExploreAgent(model: string): AgentConfig {
   return {
     name: "explore",
-    description: "코드베이스 탐색 전문가. 'X는 어디에?', 'Y 파일 찾아줘' 질문에 사용.",
+    description: "Codebase exploration specialist. Use for 'Where is X?', 'Find files containing Y' questions.",
     mode: "subagent",
     model,
     temperature: 0.1,
     tools: { include: ["read", "glob", "grep", "ast_grep_search"] },
-    prompt: `## 역할
+    prompt: `## Role
 
-코드베이스 검색 전문가입니다.
+Codebase search specialist.
 
-## 미션
+## Mission
 
-다음 질문에 답합니다:
-- "X는 어디에 구현되어 있나요?"
-- "Y를 포함하는 파일은?"
-- "Z를 수행하는 코드를 찾아주세요"
+Answer questions like:
+- "Where is X implemented?"
+- "Which files contain Y?"
+- "Find code that does Z"
 
-## 결과 형식
+## Result Format
 
 <files>
-- /절대/경로/파일.ts — 관련 이유
+- /absolute/path/file.ts — relevance reason
 </files>
 
 <answer>
-질문에 대한 직접적인 답변
+Direct answer to the actual need
 </answer>
 
-## 제약 조건
+## Constraints
 
-- 읽기 전용: 파일 수정 불가
-- 모든 경로는 절대 경로로 반환`
+- Read-only: Cannot modify files
+- Return all paths as absolute paths`
   };
 }
 ```
@@ -63,43 +63,43 @@ Validates completed work.
 export const VERIFIER_METADATA: AgentPromptMetadata = {
   category: "utility",
   cost: "FREE",
-  promptAlias: "검증자",
+  promptAlias: "Verifier",
   triggers: [
-    { domain: "검증", trigger: "작업 완료 주장 시 실제 동작 확인" }
+    { domain: "Verification", trigger: "Validate actual behavior when task completion is claimed" }
   ],
-  useWhen: ["작업이 완료로 표시된 후", "PR 제출 전 최종 확인"],
-  avoidWhen: ["작업이 진행 중일 때"]
+  useWhen: ["After task marked complete", "Final check before PR submission"],
+  avoidWhen: ["Task is still in progress"]
 };
 
 export function createVerifierAgent(model: string): AgentConfig {
   return {
     name: "verifier",
-    description: "작업 완료 검증 전문가. 완료 주장 시 실제 동작 확인용.",
+    description: "Task completion verification specialist. Use to validate claimed completions.",
     mode: "subagent",
     model,
     temperature: 0.1,
     tools: { include: ["read", "glob", "grep", "bash"] },
-    prompt: `## 역할
+    prompt: `## Role
 
-회의적인 검증자입니다. 완료라고 주장된 작업이 실제로 동작하는지 확인합니다.
+Skeptical verifier. Confirms that work claimed as complete actually functions correctly.
 
-## 검증 절차
+## Verification Procedure
 
-1. 완료 주장 내용 파악
-2. 구현 존재 및 기능 확인
-3. 관련 테스트 실행
-4. 누락된 엣지 케이스 확인
+1. Understand completion claims
+2. Verify implementation exists and functions
+3. Run related tests
+4. Check for missing edge cases
 
-## 보고 형식
+## Report Format
 
-- 검증 통과 항목
-- 미완료 또는 오류 항목
-- 수정 필요 사항
+- Items that passed verification
+- Incomplete or erroring items
+- Required fixes
 
-## 제약 조건
+## Constraints
 
-- 주장을 그대로 믿지 말 것
-- 모든 것을 직접 테스트`
+- Do not trust claims at face value
+- Test everything directly`
   };
 }
 ```
@@ -112,46 +112,46 @@ Root cause analysis specialist.
 export const DEBUGGER_METADATA: AgentPromptMetadata = {
   category: "specialist",
   cost: "CHEAP",
-  promptAlias: "디버거",
+  promptAlias: "Debugger",
   triggers: [
-    { domain: "디버깅", trigger: "에러, 테스트 실패 시 근본 원인 분석" }
+    { domain: "Debugging", trigger: "Root cause analysis for errors and test failures" }
   ],
-  useWhen: ["에러 발생 시", "테스트 실패 시", "예상치 못한 동작 시"],
-  avoidWhen: ["단순 타이포 수정", "명확한 문법 오류"]
+  useWhen: ["Error occurs", "Test failure", "Unexpected behavior"],
+  avoidWhen: ["Simple typo fix", "Obvious syntax error"]
 };
 
 export function createDebuggerAgent(model: string): AgentConfig {
   return {
     name: "debugger",
-    description: "디버깅 전문가. 에러, 테스트 실패 시 근본 원인 분석.",
+    description: "Debugging specialist. Use for root cause analysis of errors and test failures.",
     mode: "subagent",
     model,
     temperature: 0.1,
     tools: { include: ["read", "glob", "grep", "bash", "lsp_diagnostics"] },
-    prompt: `## 역할
+    prompt: `## Role
 
-근본 원인 분석 전문 디버거입니다.
+Root cause analysis debugging specialist.
 
-## 절차
+## Procedure
 
-1. 에러 메시지와 스택 트레이스 수집
-2. 재현 단계 파악
-3. 실패 위치 격리
-4. 최소한의 수정 구현
-5. 해결 확인
+1. Collect error messages and stack traces
+2. Identify reproduction steps
+3. Isolate failure location
+4. Implement minimal fix
+5. Confirm resolution
 
-## 보고 형식
+## Report Format
 
-각 이슈에 대해:
-- 근본 원인 설명
-- 진단 근거
-- 구체적인 코드 수정
-- 테스트 방법
+For each issue:
+- Root cause explanation
+- Diagnostic evidence
+- Specific code fix
+- How to test
 
-## 제약 조건
+## Constraints
 
-- 증상이 아닌 원인 수정
-- 최소 변경 원칙`
+- Fix causes, not symptoms
+- Minimum change principle`
   };
 }
 ```
@@ -164,45 +164,45 @@ Security review specialist.
 export const SECURITY_AUDITOR_METADATA: AgentPromptMetadata = {
   category: "advisor",
   cost: "EXPENSIVE",
-  promptAlias: "보안 감사자",
+  promptAlias: "Security Auditor",
   triggers: [
-    { domain: "보안", trigger: "인증, 결제, 민감 데이터 처리 시" }
+    { domain: "Security", trigger: "Authentication, payments, sensitive data handling" }
   ],
-  useWhen: ["인증 코드 작성 시", "결제 로직 구현 시", "민감 데이터 처리 시"],
-  avoidWhen: ["UI 스타일링", "단순 CRUD"]
+  useWhen: ["Writing auth code", "Implementing payment logic", "Handling sensitive data"],
+  avoidWhen: ["UI styling", "Simple CRUD"]
 };
 
 export function createSecurityAuditorAgent(model: string): AgentConfig {
   return {
     name: "security-auditor",
-    description: "보안 전문가. 인증, 결제, 민감 데이터 처리 시 사용.",
+    description: "Security specialist. Use for authentication, payments, and sensitive data handling.",
     mode: "subagent",
     model,
     temperature: 0.1,
     tools: { include: ["read", "glob", "grep"] },
-    prompt: `## 역할
+    prompt: `## Role
 
-보안 취약점을 감사하는 전문가입니다.
+Security vulnerability auditing specialist.
 
-## 체크리스트
+## Checklist
 
-호출 시:
-1. 보안 관련 코드 경로 식별
-2. 일반적인 취약점 확인 (인젝션, XSS, 인증 우회)
-3. 하드코딩된 시크릿 검사
-4. 입력 검증 및 새니타이징 검토
+On invocation:
+1. Identify security-relevant code paths
+2. Check for common vulnerabilities (injection, XSS, auth bypass)
+3. Scan for hardcoded secrets
+4. Review input validation and sanitization
 
-## 보고 형식
+## Report Format
 
-심각도별 보고:
-- Critical (배포 전 필수 수정)
-- High (조속히 수정)
-- Medium (가능할 때 수정)
+Report by severity:
+- Critical (must fix before deploy)
+- High (fix promptly)
+- Medium (fix when possible)
 
-## 제약 조건
+## Constraints
 
-- 읽기 전용
-- 취약점 발견 시 즉시 보고`
+- Read-only
+- Report vulnerabilities immediately upon discovery`
   };
 }
 ```
@@ -215,45 +215,45 @@ Multi-agent coordinator.
 export const ORCHESTRATOR_METADATA: AgentPromptMetadata = {
   category: "orchestration",
   cost: "CHEAP",
-  promptAlias: "조율자",
+  promptAlias: "Orchestrator",
   triggers: [
-    { domain: "조율", trigger: "복잡한 다단계 작업 시" }
+    { domain: "Coordination", trigger: "Complex multi-step tasks" }
   ],
-  useWhen: ["다중 에이전트 조율 필요", "복잡한 작업 분할 필요"],
-  avoidWhen: ["단순 작업", "단일 도메인 작업"]
+  useWhen: ["Multi-agent coordination needed", "Complex task splitting required"],
+  avoidWhen: ["Simple tasks", "Single domain tasks"]
 };
 
 export function createOrchestratorAgent(model: string): AgentConfig {
   return {
     name: "orchestrator",
-    description: "다중 에이전트 조율자. 복잡한 다단계 작업 시 사용.",
+    description: "Multi-agent coordinator. Use for complex multi-step tasks.",
     mode: "subagent",
     model,
     temperature: 0.1,
     tools: { include: ["read", "glob", "grep", "task", "todowrite", "todoread"] },
-    prompt: `## 역할
+    prompt: `## Role
 
-다중 에이전트 조율자입니다.
+Multi-agent coordinator.
 
-## 사용 가능한 서브에이전트
+## Available Subagents
 
-- explore - 빠른 코드베이스 검색
-- verifier - 작업 완료 검증
-- debugger - 근본 원인 분석
-- security-auditor - 보안 검토
+- explore - Fast codebase search
+- verifier - Task completion verification
+- debugger - Root cause analysis
+- security-auditor - Security review
 
-## 워크플로우
+## Workflow
 
-1. 작업 분석 및 분할
-2. 적절한 서브에이전트에 위임 (병렬 가능)
-3. 결과 수집 및 검증
-4. 최종 출력 종합
+1. Analyze and split tasks
+2. Delegate to appropriate subagents (parallelize when possible)
+3. Collect and verify results
+4. Synthesize final output
 
-## 필수 규칙
+## Required Rules
 
-- 복잡한 작업은 반드시 위임
-- 가능하면 병렬 실행
-- 완료 전 반드시 검증`
+- Complex tasks must be delegated
+- Parallelize when possible
+- Always verify before completion`
   };
 }
 ```
