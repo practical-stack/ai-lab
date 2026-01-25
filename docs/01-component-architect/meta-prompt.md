@@ -293,7 +293,7 @@ owner:
 # ============================================
 
 skill:
-  name: "{Domain}.{SkillName}"     # e.g., "Logging.DebugSkill"
+  name: "{skill-name}"            # kebab-case, e.g., "logging-debug"
   version: "1.0.0"
   
   description: |
@@ -327,7 +327,7 @@ triggers:
 # ============================================
 
 structure:
-  root: "skills/{Domain}/{SkillName}/"
+  root: "skills/{skill-name}/"
   files:
     - path: "SKILL.md"
       purpose: "Main skill definition with workflow routing"
@@ -350,7 +350,7 @@ structure:
 
 content:
   frontmatter:
-    name: "{SkillName}"
+    name: "{skill-name}"
     description: "{trigger description with USE WHEN / DO NOT USE WHEN}"
   
   body_sections:
@@ -480,11 +480,11 @@ owner:
 # AGENT SPECIFICATION
 # ============================================
 # Platform: Claude Code / OpenCode / Cursor
-# File Location: agents/{AgentName}.md
+# File Location: agents/{agent-name}.md
 # ============================================
 
 agent:
-  name: "{AgentName}"              # e.g., "BugFixerAgent"
+  name: "{agent-name}"            # kebab-case, e.g., "bug-fixer"
   version: "1.0.0"
   
   goal: |
@@ -530,7 +530,7 @@ output:
 # ============================================
 
 system_prompt: |
-  You are {AgentName}, specialized in {domain}.
+  You are {agent-name}, specialized in {domain}.
   
   ## Your Role
   {Role description}
@@ -865,4 +865,4 @@ dependencies:
 | **Side effects** | Yes (with confirm) | None | Yes |
 | **State** | Stateless | Stateless | Has memory |
 | **Reuse** | Medium | High | Low |
-| **Examples** | `/deploy`, `/create-pr` | `CodingStyle.Skill` | `BugFixerAgent` |
+| **Examples** | `/deploy`, `/create-pr` | `coding-style` | `bug-fixer` |

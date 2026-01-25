@@ -293,7 +293,7 @@ owner:
 # ============================================
 
 skill:
-  name: "{Domain}.{SkillName}"     # 예: "Logging.DebugSkill"
+  name: "{skill-name}"            # kebab-case, 예: "logging-debug"
   version: "1.0.0"
   
   description: |
@@ -327,7 +327,7 @@ triggers:
 # ============================================
 
 structure:
-  root: "skills/{Domain}/{SkillName}/"
+  root: "skills/{skill-name}/"
   files:
     - path: "SKILL.md"
       purpose: "워크플로우 라우팅이 포함된 메인 스킬 정의"
@@ -350,7 +350,7 @@ structure:
 
 content:
   frontmatter:
-    name: "{SkillName}"
+    name: "{skill-name}"
     description: "{USE WHEN / DO NOT USE WHEN이 포함된 트리거 설명}"
   
   body_sections:
@@ -480,11 +480,11 @@ owner:
 # AGENT 사양서
 # ============================================
 # 플랫폼: Claude Code / OpenCode / Cursor
-# 파일 위치: agents/{AgentName}.md
+# 파일 위치: agents/{agent-name}.md
 # ============================================
 
 agent:
-  name: "{AgentName}"              # 예: "BugFixerAgent"
+  name: "{agent-name}"            # kebab-case, 예: "bug-fixer"
   version: "1.0.0"
   
   goal: |
@@ -530,7 +530,7 @@ output:
 # ============================================
 
 system_prompt: |
-  당신은 {domain}을 전문으로 하는 {AgentName}입니다.
+  당신은 {domain}을 전문으로 하는 {agent-name}입니다.
   
   ## 역할
   {역할 설명}
@@ -865,4 +865,4 @@ dependencies:
 | **부작용** | 있음 (확인 후) | 없음 | 있음 |
 | **상태** | 무상태 | 무상태 | 메모리 있음 |
 | **재사용** | 중간 | 높음 | 낮음 |
-| **예시** | `/deploy`, `/create-pr` | `CodingStyle.Skill` | `BugFixerAgent` |
+| **예시** | `/deploy`, `/create-pr` | `coding-style` | `bug-fixer` |

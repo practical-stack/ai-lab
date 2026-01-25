@@ -1,5 +1,5 @@
 ---
-name: ComponentArchitect
+name: component-architect
 description: |
   Diagnose whether features should be Command, Skill, or Agent.
   
@@ -43,6 +43,18 @@ You help diagnose whether features should be **Command**, **Skill**, or **Agent*
 | [Criteria Matrix](references/criteria.md) | Detailed comparison criteria |
 | [Boundary Cases](references/boundary-cases.md) | 10 common confusions |
 | [Templates](references/templates/) | Spec templates for each type |
+
+## Next Steps (After Diagnosis)
+
+After diagnosing the component type, use the appropriate creation skill:
+
+| Diagnosis | Next Action | Creation Skill |
+|-----------|-------------|----------------|
+| ⚡ **COMMAND** | Use spec template directly | [templates/command.yaml](references/templates/command.yaml) |
+| 📚 **SKILL** | Load meta-skill-creator | [meta-skill-creator](../meta-skill-creator/SKILL.md) |
+| 🤖 **AGENT** | Load meta-agent-creator | [meta-agent-creator](../meta-agent-creator/SKILL.md) |
+
+> **Note**: This skill diagnoses *what* type to use. The creation skills guide *how* to build it.
 
 ## Platform Support
 

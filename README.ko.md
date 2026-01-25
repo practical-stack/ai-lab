@@ -45,7 +45,7 @@ flowchart LR
 |------|--------|
 | 리서치 | [`docs/01-component-architect/`](./docs/01-component-architect/) |
 | 멀티모델 분석 | Claude, GPT-4, Gemini 관점 비교 |
-| 추출 아티팩트 | [`.claude/skills/ComponentArchitect/`](./.claude/skills/ComponentArchitect/) |
+| 추출 아티팩트 | [`.claude/skills/component-architect/`](./.claude/skills/component-architect/) |
 
 ## 디렉토리 구조
 
@@ -68,7 +68,8 @@ ai-lab/
 
 | # | 주제 | 상태 | 아티팩트 |
 |---|------|------|----------|
-| 01 | [Component Architect](./docs/01-component-architect/) | 완료 | [Skill](./.claude/skills/ComponentArchitect/) |
+| 01 | [Component Architect](./docs/01-component-architect/) | 완료 | [Skill](./.claude/skills/component-architect/) |
+| 02 | [Naming Convention](./docs/02-naming-convention/) | 완료 | 참조 문서 |
 
 ## 새 리서치 추가
 

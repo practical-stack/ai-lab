@@ -23,7 +23,7 @@ ai-lab/
 │           └── 03-gemini.md
 ├── .claude/                      # Claude Code artifacts
 │   ├── skills/                   # Extracted skills
-│   │   └── SkillName/SKILL.md
+│   │   └── skill-name/SKILL.md
 │   └── commands/                 # Custom commands
 ├── meta-skill/                   # Meta-level tooling
 ├── refs/                         # Reference repositories (gitignored)
@@ -62,7 +62,7 @@ Create reusable artifacts from research:
 
 | Artifact Type | Location | When to Use |
 |---------------|----------|-------------|
-| **Skill** | `.claude/skills/SkillName/` | Domain knowledge for AI assistants |
+| **Skill** | `.claude/skills/skill-name/` | Domain knowledge for AI assistants |
 | **Command** | `.claude/commands/` | User-triggered procedures |
 | **Prompt** | `docs/NN-topic/meta-prompt.md` | Reusable prompt templates |
 | **Pattern** | Document in README | General best practices |
@@ -71,15 +71,28 @@ Create reusable artifacts from research:
 
 | # | Topic | Status | Artifacts |
 |---|-------|--------|-----------|
-| 01 | Component Architect | Done | Skill: `.claude/skills/ComponentArchitect/` |
+| 01 | Component Architect | Done | Skill: `.claude/skills/component-architect/` |
+| 02 | Naming Convention | Done | Reference: `docs/02-naming-convention/` |
 
 ## SKILL PATTERNS
+
+### Naming Convention (kebab-case)
+
+All components use **kebab-case**:
+
+| Component | Directory/File | `name` field |
+|-----------|----------------|--------------|
+| Skill | `skill-name/SKILL.md` | `skill-name` |
+| Agent | `agent-name.md` | `agent-name` |
+| Command | `command-name.md` | _(none)_ |
+
+See [`docs/02-naming-convention/`](./docs/02-naming-convention/) for details.
 
 ### SKILL.md Structure
 
 ```yaml
 ---
-name: SkillName
+name: skill-name
 description: |
   When to use this skill.
   USE WHEN: keyword triggers
@@ -103,7 +116,7 @@ description: |
 ### Skill Directory Layout
 
 ```
-SkillName/
+skill-name/
 ├── SKILL.md              # Required: frontmatter + instructions
 ├── workflows/            # Optional: step-by-step procedures
 ├── references/           # Optional: on-demand documentation
@@ -156,4 +169,4 @@ When researching a new topic:
 ## SEE ALSO
 
 - Example research: `docs/01-component-architect/`
-- Example skill: `.claude/skills/ComponentArchitect/`
+- Example skill: `.claude/skills/component-architect/`

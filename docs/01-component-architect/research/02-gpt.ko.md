@@ -796,30 +796,30 @@ flowchart TD
 **Skill Name:** `<Domain>.<Skill>` (도메인과 스킬 식별자)  
 **Description (목적/사용처):** 해당 Skill이 다루는 문제 영역과 사용 트리거를 상세히 기술.
 
-- _예:_ **Logging.Skill** – _“코드에 로깅 추가/수정 작업 시 사용. 다른 맥락에서는 사용하지 말 것. (Use when: adding log statements or adjusting log levels. Do NOT use when: database transactions or UI text.)”_ [oai_citation:74‡youngleaders.tech](https://www.youngleaders.tech/p/claude-skills-commands-subagents-plugins#:~:text=1,for%20skills)
+- _예:_ **logging skill** – _“코드에 로깅 추가/수정 작업 시 사용. 다른 맥락에서는 사용하지 말 것. (Use when: adding log statements or adjusting log levels. Do NOT use when: database transactions or UI text.)”_ [oai_citation:74‡youngleaders.tech](https://www.youngleaders.tech/p/claude-skills-commands-subagents-plugins#:~:text=1,for%20skills)
 
 **Not for Use (비목적/한계):** 에이전트가 이 Skill을 잘못 사용하면 안 되는 경우나 한계.
 
-- _예:_ “Debugging 상황에는 이 스킬이 도움 안 됨 – 대신 Debug.Skill 사용”
+- _예:_ “Debugging 상황에는 이 스킬이 도움 안 됨 – 대신 debug skill 사용”
 - _예:_ “거대한 로그 데이터 분석에는 본 스킬 비적합 (context 한계)”
 
 **Skill Files Structure:** (SKILL.md 및 부속 파일 구성)
 
 ```
 skills/
-└── Logging/                    # Domain folder
+└── logging/                    # Domain folder (kebab-case)
     ├── SKILL.md                # 메인 스킬 정의
-    ├── Workflows/
-    │   ├── AddLog.md           # 새 로그 추가 절차
-    │   └── AdjustLevel.md      # 로그 레벨 조정 절차
-    └── Tools/
+    ├── workflows/
+    │   ├── add-log.md          # 새 로그 추가 절차
+    │   └── adjust-level.md     # 로그 레벨 조정 절차
+    └── tools/
         └── format_log.py       # (예시) 로그 포맷 검증 스크립트
 ```
 
 - **Context Files:** SKILL.md 외 참고로 불러올 추가 문서가 있으면 명시.
   - _예:_ `Conventions.md` – 프로젝트 공통 로깅 컨벤션 설명 (SKILL.md 본문에서 참조함).
 - **Tools:** 동반하는 툴/스크립트 설명 및 경로.
-  - _예:_ `Tools/format_log.py` – Python script, 인자로 로그 메시지 주면 포맷 규칙 검사, 결과 JSON 리턴.
+  - _예:_ `tools/format_log.py` – Python script, 인자로 로그 메시지 주면 포맷 규칙 검사, 결과 JSON 리턴.
 
 **Skill Triggers (트리거 조건):** 에이전트가 이 Skill을 언제 로드해야 하는지 구체적 패턴.
 
@@ -838,11 +838,11 @@ skills/
 
 - **Overall Structure:**
   - SKILL.md: YAML frontmatter + 본문에 **Workflow Routing 표** 및 **스킬 설명**.
-  - Workflows: 각각 세부 작업 절차 (예: AddLog.md는 1)로그 위치 결정 2)코드 삽입 3)포맷 검증 4)테스트 등).
+  - Workflows: 각각 세부 작업 절차 (예: add-log.md는 1)로그 위치 결정 2)코드 삽입 3)포맷 검증 4)테스트 등).
 - **Example Workflow:** (한 워크플로우의 요약)
-  - _예:_ **AddLog.md** – “Agent가 이 워크플로우를 실행하면, 함수 시작 부분에 진입 로그를 추가하도록 안내. 1) 함수 이름과 입력값 식별, 2) 해당 위치에 `logger.info()` 코드 삽입, 3) `format_log.py` 툴로 메시지 포맷 검사, 4) 결과 요약.”
+  - _예:_ **add-log.md** – “Agent가 이 워크플로우를 실행하면, 함수 시작 부분에 진입 로그를 추가하도록 안내. 1) 함수 이름과 입력값 식별, 2) 해당 위치에 `logger.info()` 코드 삽입, 3) `format_log.py` 툴로 메시지 포맷 검사, 4) 결과 요약.”
 - **Skill Usage in Agent:**
-  - _예:_ “Agent는 SKILL.md 로드 후, `## Workflow Routing` 테이블을 읽어 **사용자 의도에 맞는 워크플로우 파일**을 선택 실행함. ‘로그 레벨 변경’ 키워드 감지 시 AdjustLevel.md 로 진행.”
+  - _예:_ “Agent는 SKILL.md 로드 후, `## Workflow Routing` 테이블을 읽어 **사용자 의도에 맞는 워크플로우 파일**을 선택 실행함. ‘로그 레벨 변경’ 키워드 감지 시 adjust-level.md 로 진행.”
 
 **Output/Effect:** Skill 적용으로 기대되는 Agent의 행동이나 외부 효과.
 
@@ -866,9 +866,9 @@ skills/
 - **Unit (Prompt) Test:** Skill의 Workflow가 제대로 작동하는지, 작은 예제로 Agent에 주입하여 시뮬레이션.
   - _예:_ 간단한 함수 코드에 “로그 추가” 요청 + 이 Skill만 로드 → Agent가 로그 한 줄 추가한 diff 생성 확인.
 - **Integration Test:** 실제 Agent 전체에 Skill 포함해 사용자 시나리오 테스트.
-  - _예:_ 사용자가 “이 함수에 디버그 로그 넣어줘” 요청 → Agent가 Logging.Skill 로드하고 결과 주는지 확인.
+  - _예:_ 사용자가 “이 함수에 디버그 로그 넣어줘” 요청 → Agent가 logging skill 로드하고 결과 주는지 확인.
 - **Negative Test:** Skill 트리거가 오작동하지 않는지 테스트.
-  - _예:_ “배송(logistics) 모듈 수정” 요청했을 때 Logging.Skill이 로드되지 않는지 검증.
+  - _예:_ “배송(logistics) 모듈 수정” 요청했을 때 logging skill이 로드되지 않는지 검증.
 - **Automated Validation:** Skill 내 포함된 툴(`format_log.py`)을 단위 테스트 (올바른 포맷/잘못된 포맷 입력 케이스).
 
 **Observability (관측):**
@@ -890,11 +890,11 @@ skills/
 **Notes:**
 
 - 회사 코딩 규칙문서 (링크) 에 따라 작성됨.
-- 관련 Skill: Debug.Skill (함께 로드될 수 있으므로 트리거 충돌 주의 – Debug.Skill description과 키워드 조정함).
+- 관련 Skill: debug skill (함께 로드될 수 있으므로 트리거 충돌 주의 – debug skill description과 키워드 조정함).
 
 ### 3. Agent Spec Template
 
-**Agent Name:** `<에이전트 이름>` – (가능한 역할을 나타내는 명칭, 예: _“QA-BugHunter-Agent”_)  
+**Agent Name:** `<에이전트 이름>` – (가능한 역할을 나타내는 명칭, 예: _“qa-bug-hunter”_)  
 **Goal (목표):** 이 Agent가 해결하거나 수행해야 하는 최상위 목적 기술.
 
 - _예:_ “버그 리포트로부터 원인을 찾아 코드 수정 및 PR까지 완결하는 것.”
@@ -932,9 +932,9 @@ You are a code assistant specialized in bug fixing…
   - TestRunner Tool – _“테스트 실행”_ (네트워크 없이 로컬 테스트만).
   - WebSearch Tool – _“오픈 웹 검색”_ (**비활성화** in this agent for security).
 - **Skills:**
-  - Logging.Skill, Debug.Skill – (필요시 자동 로드)
-  - CodingGuidelines.Skill – (프로젝트 코딩 스타일 & 네이밍 규칙 제공)
-  - _Note:_ 이 Agent는 위 이외 Skill은 로드하지 않음 (예: UI.Skill 등 비관련 도메인 제외).
+  - logging skill, debug skill – (필요시 자동 로드)
+  - coding-guidelines skill – (프로젝트 코딩 스타일 & 네이밍 규칙 제공)
+  - _Note:_ 이 Agent는 위 이외 Skill은 로드하지 않음 (예: ui skill 등 비관련 도메인 제외).
 - **Permissions:**
   - GitHub API 토큰 (레포지토리 접근 권한 O, 조직 관리 권한 X)
   - Prod DB 접근 없음 (데이터 변동 방지)
@@ -944,11 +944,11 @@ You are a code assistant specialized in bug fixing…
 
 1. **Problem Understanding:** 버그 설명을 분석해 재현 단서를 추출. 필요한 경우 사용자에게 추가 질문 (1회 이상).
 2. **Locate Issue:** FileSearch 툴로 관련 코드 탐색. 관련 코드 조각을 읽어 원인 진단.
-3. **Devise Fix:** 문제 원인에 맞는 수정 방안을 플랜. (필요시 CodingGuidelines.Skill 자동 로드하여 스타일 참고)
+3. **Devise Fix:** 문제 원인에 맞는 수정 방안을 플랜. (필요시 coding-guidelines skill 자동 로드하여 스타일 참고)
 4. **Apply Fix:** CodeEditor 툴로 해당 부분 수정.
 5. **Test Fix:** TestRunner 툴 실행. 결과에 따라 성공/실패 분기.
    - 만약 테스트 실패 → 오류 로그 분석하여 **2단계**로 돌아가 추가 수정 시도 (최대 2회 루프).
-6. **Prepare PR:** 테스트 통과하면 Logging.Skill 등 참고하여 로그/주석 추가 개선. GitHub API 툴로 새 브랜치 push 및 PR 생성.
+6. **Prepare PR:** 테스트 통과하면 logging skill 등 참고하여 로그/주석 추가 개선. GitHub API 툴로 새 브랜치 push 및 PR 생성.
 7. **Output Result:** 사용자에게 “버그 원인과 수정 사항” 요약 답변 출력, PR 링크 첨부. 필요시 리뷰어에게 다음 단계 안내.
 
 **Success Criteria (완료 기준):** Agent가 언제 작업을 “완료”로 간주하는지.
@@ -982,7 +982,7 @@ You are a code assistant specialized in bug fixing…
 
 **Logging & Monitoring:**
 
-- 이 Agent는 모든 주요 이벤트를 로깅 (`AGENT=BugHunter step=LocateIssue time=...`).
+- 이 Agent는 모든 주요 이벤트를 로깅 (`AGENT=bug-hunter step=locate-issue time=...`).
 - 사용된 스킬/툴 요약을 결과와 함께 로그에 첨부 (재현성 위해).
 - Metric: bug_fix_success_rate, avg_fix_iterations, avg_time_to_fix 추적.
 
@@ -1005,7 +1005,7 @@ You are a code assistant specialized in bug fixing…
 
 **Notes:**
 
-- 이 Agent는 사내 `CodingGuidelines.Skill`에 강하게 의존 – 해당 Skill 업데이트시 이 Agent 테스트 필요.
+- 이 Agent는 사내 `coding-guidelines skill`에 강하게 의존 – 해당 Skill 업데이트시 이 Agent 테스트 필요.
 - 향후 개선: 복잡한 이슈는 LLM만으로 어려우므로, 유사 이력 검색(과거 버그 해결 내역) 통합 검토중.
 
 ## E. 예시 설계 (내 워크플로우 적용)
@@ -1028,8 +1028,8 @@ You are a code assistant specialized in bug fixing…
 | 구성요소 | 이름 | 역할 |
 |----------|------|------|
 | **Command** | `/init-project` | 사람이 실행하는 명령, 프로젝트 이름 등 파라미터 입력 받아 에이전트 트리거 |
-| **Agent** | `ProjectInitAgent` | 프로젝트 초기화 전문 에이전트, 스캐폴드 생성부터 CI 설정까지 멀티스텝 수행 |
-| **Skills** | `Scaffold.Skill`, `CI.Skill` | 도메인별 지식 (언어별 템플릿/디렉토리 구조, CI 도구 작성 지침) |
+| **Agent** | `project-init-agent` | 프로젝트 초기화 전문 에이전트, 스캐폴드 생성부터 CI 설정까지 멀티스텝 수행 |
+| **Skills** | `scaffold`, `ci` | 도메인별 지식 (언어별 템플릿/디렉토리 구조, CI 도구 작성 지침) |
 | **Tools** | Git CLI, FileWrite 등 | 실제 작업 수행 (create-react-app CLI 등) |
 
 > **구조:** Command → Agent → (Skills) → Tools
@@ -1041,29 +1041,29 @@ You are a code assistant specialized in bug fixing…
 ├── commands/
 │   └── init-project.md           # /init-project Command 스크립트
 ├── agents/
-│   └── ProjectInitAgent.md       # 프로젝트 초기화 에이전트 정의
+│   └── project-init-agent.md     # 프로젝트 초기화 에이전트 정의
 └── skills/
-    ├── Scaffold/                 # Scaffold.Skill 도메인
+    ├── scaffold/                 # scaffold 스킬 도메인
     │   ├── SKILL.md              # 스캐폴딩 스킬 개요 (트리거: "새 프로젝트", 언어 키워드 등)
-    │   └── Workflows/
-    │       ├── CreateStructure.md  # 디렉토리/파일 생성 절차
-    │       └── InitRepo.md         # Git init & 첫 커밋 절차
-    └── CI/                       # CI.Skill 도메인
+    │   └── workflows/
+    │       ├── create-structure.md  # 디렉토리/파일 생성 절차
+    │       └── init-repo.md         # Git init & 첫 커밋 절차
+    └── ci/                       # ci 스킬 도메인
         ├── SKILL.md              # CI 스킬 개요 (트리거: "CI", "pipeline" 등)
-        └── Workflows/
-            └── SetupPipeline.md  # CI YAML 작성 및 CI 설정 절차
+        └── workflows/
+            └── setup-pipeline.md  # CI YAML 작성 및 CI 설정 절차
 ```
 
 **Naming Convention:**
 
 | 항목 | 규칙 | 예시 |
 |------|------|------|
-| Command 파일 | 소문자/kebab-case, 직관적 | `init-project.md` |
-| Agent 파일 | UpperCamelCase + "Agent" Suffix | `ProjectInitAgent.md` |
-| Skill 디렉토리 | TitleCase 도메인명 | `Scaffold`, `CI` |
-| Workflow 파일 | PascalCase 작업명 | `CreateStructure.md`, `SetupPipeline.md` |
+| Command 파일 | kebab-case | `init-project.md` |
+| Agent 파일 | kebab-case | `project-init-agent.md` |
+| Skill 디렉토리 | kebab-case | `scaffold`, `ci` |
+| Workflow 파일 | kebab-case | `create-structure.md`, `setup-pipeline.md` |
 
-> **핵심:** 명칭에서 역할이 분명히 드러나야 함
+> **핵심:** 모든 구성요소는 일관성을 위해 kebab-case 사용
 
 **최소 구현 (의사코드 수준):**
 
@@ -1072,16 +1072,16 @@ You are a code assistant specialized in bug fixing…
 ```markdown
 /init-project <project_name> [--language <lang>]
 
-- Load the `Scaffold` skill and `CI` skill.
-- Ask the ProjectInitAgent to create a new project named "$1" (language: $2).
+- Load the `scaffold` skill and `ci` skill.
+- Ask the project-init-agent to create a new project named "$1" (language: $2).
 ```
 
 설명: 이 Command는 단순히 프로젝트명과 언어를 받아, 관련 Skill을 미리 로드하고 Agent에게 작업 시작하도록 요청하는 역할. (Agent를 직접 @멘션해 호출하거나, 내부 프롬프트로 agent 행동 유도)
 
-**agents/ProjectInitAgent.md:** (내부에 시스템 역할과 지시)
+**agents/project-init-agent.md:** (내부에 시스템 역할과 지시)
 
 ```yaml
-name: ProjectInitAgent
+name: project-init-agent
 description: "An agent that scaffolds a new project and sets up CI."
 tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 ```
@@ -1091,8 +1091,8 @@ tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 
 ## Instructions:
 
-1. Ensure the "Scaffold" skill is loaded for project structure templates.
-2. Ensure the "CI" skill is loaded for CI configuration templates.
+1. Ensure the "scaffold" skill is loaded for project structure templates.
+2. Ensure the "ci" skill is loaded for CI configuration templates.
 3. Plan: Determine appropriate project structure based on language.
 4. Step 1: Create base project files and folders (use FileWrite tool).
 5. Step 2: Initialize git repository (use GitInit tool), commit scaffold.
@@ -1103,10 +1103,10 @@ tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 
 (시스템 프롬프트에는 위 절차+안전장치: "if prod deployment, skip" 등도 넣음.)
 
-**skills/Scaffold/SKILL.md:**
+**skills/scaffold/SKILL.md:**
 
 ```yaml
-name: Scaffold
+name: scaffold
 description: |
   Project scaffolding instructions.
   USE WHEN: "new project", "initialize repository", "project structure", etc.
@@ -1120,15 +1120,15 @@ description: |
 
 | Workflow            | Trigger keywords                      | File                         |
 | ------------------- | ------------------------------------- | ---------------------------- |
-| **CreateStructure** | "new project", "scaffold", "template" | Workflows/CreateStructure.md |
-| **InitRepo**        | "git init", "initialize repository"   | Workflows/InitRepo.md        |
+| **create-structure** | "new project", "scaffold", "template" | workflows/create-structure.md |
+| **init-repo**        | "git init", "initialize repository"   | workflows/init-repo.md        |
 
 ## About
 
 This skill provides templates and steps to scaffold a new software project. It covers directory structure, sample files, and repository initialization.
 ```
 
-**skills/Scaffold/Workflows/CreateStructure.md:**
+**skills/scaffold/workflows/create-structure.md:**
 
 ```markdown
 **Goal:** Create base structure for a new $LANG project named $PROJECT_NAME.
@@ -1141,7 +1141,7 @@ This skill provides templates and steps to scaffold a new software project. It c
 6. Ensure no file collisions; if directory already exists, warn and stop.
 ```
 
-**skills/CI/Workflows/SetupPipeline.md:**
+**skills/ci/workflows/setup-pipeline.md:**
 
 ```markdown
 **Goal:** Set up CI pipeline (GitHub Actions) for the new project.
@@ -1160,11 +1160,11 @@ This skill provides templates and steps to scaffold a new software project. It c
 | 단계 | 동작 |
 |------|------|
 | 1. 명령 입력 | 개발자가 VSCode Chat에 `/init-project MyApp --language python` 입력 |
-| 2. Agent 기동 | Scaffold와 CI 스킬 로드 (스킬 내용이 Agent 컨텍스트에 포함) |
+| 2. Agent 기동 | scaffold와 ci 스킬 로드 (스킬 내용이 Agent 컨텍스트에 포함) |
 | 3. 계획 수립 | "Step1: 구조 생성 → Step2: Git init → Step3: CI 설정" |
-| 4. Step1 | Scaffold.Skill의 CreateStructure 워크플로우로 폴더/파일 생성 (FileWrite 툴) |
-| 5. Step2 | InitRepo 워크플로우로 `git init` 실행 (GitInit 툴) 및 초기 커밋 |
-| 6. Step3 | CI.Skill의 SetupPipeline으로 `.github/workflows/ci.yml` 작성 및 커밋 |
+| 4. Step1 | scaffold 스킬의 create-structure 워크플로우로 폴더/파일 생성 (FileWrite 툴) |
+| 5. Step2 | init-repo 워크플로우로 `git init` 실행 (GitInit 툴) 및 초기 커밋 |
+| 6. Step3 | ci 스킬의 setup-pipeline으로 `.github/workflows/ci.yml` 작성 및 커밋 |
 | 7. 완료 | "✅ MyApp 프로젝트 생성 및 CI 파이프라인 설정 완료." + 파일 목록 출력 |
 
 - 실제 repo 폴더에 구조와 CI 파일 생성됨
@@ -1206,16 +1206,16 @@ This skill provides templates and steps to scaffold a new software project. It c
 | 구성요소 | 이름 | 역할 |
 |----------|------|------|
 | **Command** | `/fix-bug` | 버그 수정 프로세스 트리거. 버그 ID나 설명을 인수로 받음. 채팅 호출 또는 이슈 트래커 연동 |
-| **Agent** | `BugFixAgent` | 버그 해결 전문 에이전트. "재현→원인찾기→수정→검증→PR" 수행 |
+| **Agent** | `bug-fix-agent` | 버그 해결 전문 에이전트. "재현→원인찾기→수정→검증→PR" 수행 |
 
 **Skills:**
 
 | Skill | 역할 |
 |-------|------|
-| `Diagnosis.Skill` | 버그 증상별 분석 루틴 (null pointer vs performance bug 등) |
-| `CodingGuidelines.Skill` | 프로젝트 코딩 표준/베스트프랙티스 (수정 품질 담보) |
-| `Testing.Skill` | 테스트 작성/실행 관련 지식 |
-| (선택) `Logging.Skill`, `Security.Skill` | 맥락성 skill |
+| `diagnosis` | 버그 증상별 분석 루틴 (null pointer vs performance bug 등) |
+| `coding-guidelines` | 프로젝트 코딩 표준/베스트프랙티스 (수정 품질 담보) |
+| `testing` | 테스트 작성/실행 관련 지식 |
+| (선택) `logging`, `security` | 맥락성 skill |
 
 **Tools:**
 
@@ -1235,28 +1235,28 @@ This skill provides templates and steps to scaffold a new software project. It c
 ├── commands/
 │   └── fix-bug.md                # /fix-bug Command
 ├── agents/
-│   └── BugFixAgent.md            # 버그 수정 에이전트 정의
+│   └── bug-fix-agent.md          # 버그 수정 에이전트 정의
 └── skills/
-    ├── Diagnosis/
+    ├── diagnosis/
     │   ├── SKILL.md
-    │   └── Workflows/
-    │       ├── NullPointer.md
-    │       ├── PerfIssue.md
+    │   └── workflows/
+    │       ├── null-pointer.md
+    │       ├── perf-issue.md
     │       └── ...               # (다양한 버그유형 대응 워크플로우)
-    ├── CodingGuidelines/
+    ├── coding-guidelines/
     │   ├── SKILL.md
     │   └── ...                   # (프로젝트 코딩 표준 관련 docs)
-    └── Testing/
+    └── testing/
         ├── SKILL.md
-        └── Workflows/
-            ├── Reproduce.md      # 재현 방법 (테스트 케이스 작성 등)
-            └── RegressionTest.md # 수정 후 회귀테스트 절차
+        └── workflows/
+            ├── reproduce.md      # 재현 방법 (테스트 케이스 작성 등)
+            └── regression-test.md # 수정 후 회귀테스트 절차
 ```
 
 Naming Convention:
-• fix-bug.md command – 직관적으로, snake-case 또는 kebab-case.
-• BugFixAgent.md – 역할 명확히, PascalCase+Agent.
-• Skills: Diagnosis, CodingGuidelines, Testing – 도메인명 명료하게. Diagnosis 워크플로우 파일은 구체적 버그 유형별 이름.
+• fix-bug.md command – kebab-case.
+• bug-fix-agent.md – kebab-case.
+• Skills: diagnosis, coding-guidelines, testing – kebab-case 도메인명. Diagnosis 워크플로우 파일은 구체적 버그 유형별 kebab-case 이름.
 • Tools configured likely via Agent YAML or platform config, not in our repo structure (except perhaps script wrappers).
 
 **의사코드 구현 요약:**
@@ -1266,22 +1266,22 @@ Naming Convention:
 ```markdown
 /fix-bug <issue_id_or_title>
 
-- Summon @BugFixAgent to analyze and resolve the bug "$1".
+- Summon @bug-fix-agent to analyze and resolve the bug "$1".
 - Provide any available details from issue tracker for context.
 ```
 
-설명: /fix-bug 101 이라고 호출하면, fix-bug.md 커맨드가 BugFixAgent를 호출하면서 환경정보(버그 ID 101번 이슈 내용)을 입력해줌. Command 자체가 상세 로직 담진 않고 에이전트 실행 트리거 역할.
+설명: /fix-bug 101 이라고 호출하면, fix-bug.md 커맨드가 bug-fix-agent를 호출하면서 환경정보(버그 ID 101번 이슈 내용)을 입력해줌. Command 자체가 상세 로직 담진 않고 에이전트 실행 트리거 역할.
 
-**agents/BugFixAgent.md:**
+**agents/bug-fix-agent.md:**
 
 ```yaml
-name: BugFixAgent
+name: bug-fix-agent
 description: "Agent that reproduces bugs, fixes code, and creates a PR."
 configuration:
   model: Claude-2
   max_iterations: 10
   tools: [RunApp, RunTests, ReadLog, SearchCode, EditFile, GitHubCreatePR]
-  skills: [Diagnosis, CodingGuidelines, Testing]
+  skills: [diagnosis, coding-guidelines, testing]
 ```
 
 ```markdown
@@ -1295,12 +1295,12 @@ You are a software bug fixer agent. Follow this high-level process:
 2. Reproduce the bug: use RunTests or RunApp tool with provided steps.
    - If reproduction fails, try alternate inputs or ask for more info.
 3. Once reproduced, identify root cause: use ReadLog for error, SearchCode for error patterns, etc.
-   - Load "Diagnosis" skill to guide analysis based on error type.
+   - Load "diagnosis" skill to guide analysis based on error type.
 4. Devise a fix and implement it: edit code (EditFile tool).
-   - Follow coding best practices (CodingGuidelines skill loaded).
+   - Follow coding best practices (coding-guidelines skill loaded).
 5. Test the fix: run tests again to confirm bug is resolved and no new issues.
    - If tests fail, iterate fix (go back to step 3 or 4 up to 2 retries).
-6. If fix is successful, run additional regression tests (Testing skill might help).
+6. If fix is successful, run additional regression tests (testing skill might help).
 7. Create a Git branch and commit changes, open a Pull Request (GitHubCreatePR tool).
 8. Summarize the bug cause and fix in the PR description and in the response to user.
 9. If at any point something is unclear or cannot be resolved, communicate failure to user with reasons.
@@ -1309,7 +1309,7 @@ You are a software bug fixer agent. Follow this high-level process:
 
 - Ensure no sensitive data is included in outputs (strip any secrets from logs).
 - Limit context: prefer using sub-agents for extensive search if needed (like context search agent).
-- Adhere to project coding standards (CodingGuidelines skill ensures this).
+- Adhere to project coding standards (coding-guidelines skill ensures this).
 
 ## Confirmation:
 
@@ -1320,9 +1320,9 @@ You are a software bug fixer agent. Follow this high-level process:
 
 | Skill | 용도 |
 |-------|------|
-| `Diagnosis.SKILL.md` | 트리거 기반 라우팅: "NullPointerException" → `NullPointer.md`, "Timeout" → `PerfIssue.md` |
-| `CodingGuidelines.SKILL.md` | 스타일 규칙 제공: 함수명 동사 시작, 신규 코드 유닛테스트 필수 등 |
-| `Testing.SKILL.md` | 회귀 테스트 작성 가이드, 테스트 커버리지 확보, 미커버 시나리오용 테스트 생성 |
+| `diagnosis/SKILL.md` | 트리거 기반 라우팅: "NullPointerException" → `null-pointer.md`, "Timeout" → `perf-issue.md` |
+| `coding-guidelines/SKILL.md` | 스타일 규칙 제공: 함수명 동사 시작, 신규 코드 유닛테스트 필수 등 |
+| `testing/SKILL.md` | 회귀 테스트 작성 가이드, 테스트 커버리지 확보, 미커버 시나리오용 테스트 생성 |
 
 **Tools 동작:**
 
@@ -1348,10 +1348,10 @@ You are a software bug fixer agent. Follow this high-level process:
 | 0 | Agent 시작 | 이슈 #101 정보 Input으로 수신 (NullPointerException 에러 보고) |
 | 1 | 이해 | 추가정보 필요 시 "재현 방법?" 질문 → "A 기능 클릭하면 에러" |
 | 2 | 재현 | RunApp 툴로 앱 실행 → 에러 발생 → ReadLog로 스택트레이스 획득 |
-| 3 | 원인 분석 | Diagnosis.Skill 로드 → SearchCode로 `ModuleX line 45` 확인 → `obj.getName()` null 미처리 발견 |
-| 4 | Fix | CodingGuidelines.Skill 참고 → EditFile로 null-check 추가 또는 Optional 사용 |
+| 3 | 원인 분석 | diagnosis 스킬 로드 → SearchCode로 `ModuleX line 45` 확인 → `obj.getName()` null 미처리 발견 |
+| 4 | Fix | coding-guidelines 스킬 참고 → EditFile로 null-check 추가 또는 Optional 사용 |
 | 5 | Test | RunTests 실행 → 모든 테스트 통과, RunApp 재실행 → no crash |
-| 6 | Regression | Testing.Skill 참고, 필요시 새 유닛테스트 작성 |
+| 6 | Regression | testing 스킬 참고, 필요시 새 유닛테스트 작성 |
 | 7 | PR | GitHubCreatePR: branch `bugfix-101-nullptr`, commit message `Fix NPE in ModuleX (fixes #101)` |
 | 8 | 완료 | "✅ 버그 #101 재현 및 수정 완료. 원인: obj null 미처리. PR 링크." |
 
@@ -1453,7 +1453,7 @@ You are a software bug fixer agent. Follow this high-level process:
 | **기능 통합** | 유사 기능은 하나로 합치고 파라미터로 구분 (`/create code --type=class\|interface\|enum`) |
 | **Stable Command Set** | Command 수 10개 이내 유지. 추가는 코드 리뷰 승인 필요 |
 | **Naming Convention** | 직관적이고 범용적인 동사 위주 (`/create`, `/update`, `/delete`), 상세 동작은 인자로 |
-| **Auto-suggestion** | 자동 실행 가능한 건 Skill로 처리 (예: 성능이슈 감지 시 Optimize.Skill 자동 사용) |
+| **Auto-suggestion** | 자동 실행 가능한 건 Skill로 처리 (예: 성능이슈 감지 시 optimize skill 자동 사용) |
 | **Review Checklist** | "자주 쓰나?", "합칠 수 없나?", "Agent가 알아서 할 순 없나?" 3가지 자문 |
 | **Deprecation** | 미사용 command는 Deprecated 표시 후 제거, 자동완성 숨김 |
 
@@ -1622,7 +1622,7 @@ You are a software bug fixer agent. Follow this high-level process:
 
 | 규칙 | 설명 |
 |------|------|
-| **Semantic Versioning** | 큰 변경은 Major 올리고, Agent meta에 버전 요구사항 명시 (`requires Logging.Skill >=2.0`) |
+| **Semantic Versioning** | 큰 변경은 Major 올리고, Agent meta에 버전 요구사항 명시 (`requires logging skill >=2.0`) |
 | **Update Process** | 중앙 관리 배포. 배포일정 공지, sync script 제공 |
 | **Backward Stubs** | 구버전 호출 대비 wrapper 유지 기간 운영. Deprecate 경고 출력 |
 | **Single Source of Truth** | 중앙 리포에서만 정의 관리. 포크본 diverge 방지 |

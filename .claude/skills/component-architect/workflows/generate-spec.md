@@ -69,3 +69,25 @@ After the spec, add:
 - [Important consideration 1]
 - [Important consideration 2]
 ```
+
+## Step 5: Link to Creation Skill
+
+Based on diagnosis, guide to the appropriate creation skill for detailed implementation:
+
+| Diagnosis | Creation Workflow | Skill Location |
+|-----------|-------------------|----------------|
+| ⚡ COMMAND | Spec template is self-contained | N/A (implement directly) |
+| 📚 SKILL | 6-phase creation workflow | `.claude/skills/meta-skill-creator/SKILL.md` |
+| 🤖 AGENT | 5-phase creation workflow | `.claude/skills/meta-agent-creator/SKILL.md` |
+
+Add to output:
+
+```markdown
+## 생성 가이드
+
+진단 결과에 따라 다음 스킬을 로드하여 구현을 진행하세요:
+
+- **SKILL 생성**: `.claude/skills/meta-skill-creator/SKILL.md` (6단계 워크플로우)
+- **AGENT 생성**: `.claude/skills/meta-agent-creator/SKILL.md` (5단계 워크플로우)
+- **COMMAND 생성**: 위 스펙 템플릿을 기반으로 직접 구현
+```

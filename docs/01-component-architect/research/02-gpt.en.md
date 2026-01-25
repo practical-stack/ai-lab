@@ -796,30 +796,30 @@ Below are standard spec writing templates for Command, Skill, and Agent respecti
 **Skill Name:** `<Domain>.<Skill>` (domain and skill identifier)  
 **Description (Purpose/Use Case):** Describe in detail the problem domain this Skill handles and usage triggers.
 
-- _Example:_ **Logging.Skill** – _"Use when adding/modifying logging in code. Do not use in other contexts. (Use when: adding log statements or adjusting log levels. Do NOT use when: database transactions or UI text.)"_
+- _Example:_ **logging** skill – _"Use when adding/modifying logging in code. Do not use in other contexts. (Use when: adding log statements or adjusting log levels. Do NOT use when: database transactions or UI text.)"_
 
 **Not for Use (Non-purpose/Limitations):** Cases or limitations where agent should not misuse this Skill.
 
-- _Example:_ "This skill doesn't help in Debugging situations – use Debug.Skill instead"
+- _Example:_ "This skill doesn't help in Debugging situations – use debug skill instead"
 - _Example:_ "This skill is not suitable for analyzing large log data (context limitations)"
 
 **Skill Files Structure:** (SKILL.md and accompanying file composition)
 
 ```
 skills/
-└── Logging/                    # Domain folder
+└── logging/                    # Domain folder (kebab-case)
     ├── SKILL.md                # Main skill definition
-    ├── Workflows/
-    │   ├── AddLog.md           # New log addition procedure
-    │   └── AdjustLevel.md      # Log level adjustment procedure
-    └── Tools/
+    ├── workflows/
+    │   ├── add-log.md          # New log addition procedure
+    │   └── adjust-level.md     # Log level adjustment procedure
+    └── tools/
         └── format_log.py       # (Example) Log format validation script
 ```
 
 - **Context Files:** Specify additional documents to load as reference besides SKILL.md.
   - _Example:_ `Conventions.md` – Project common logging conventions description (referenced in SKILL.md body).
 - **Tools:** Description and path of accompanying tools/scripts.
-  - _Example:_ `Tools/format_log.py` – Python script, checks format rules given log message as argument, returns result JSON.
+  - _Example:_ `tools/format_log.py` – Python script, checks format rules given log message as argument, returns result JSON.
 
 **Skill Triggers (Trigger Conditions):** Specific patterns for when agent should load this Skill.
 
@@ -838,11 +838,11 @@ skills/
 
 - **Overall Structure:**
   - SKILL.md: YAML frontmatter + **Workflow Routing table** and **skill description** in body.
-  - Workflows: Each detailed work procedure (e.g., AddLog.md is 1)determine log location 2)code insertion 3)format validation 4)test etc.).
+  - Workflows: Each detailed work procedure (e.g., add-log.md is 1)determine log location 2)code insertion 3)format validation 4)test etc.).
 - **Example Workflow:** (Summary of one workflow)
-  - _Example:_ **AddLog.md** – "When Agent executes this workflow, guides to add entry log at function start. 1) Identify function name and input values, 2) Insert `logger.info()` code at that location, 3) Check message format with `format_log.py` tool, 4) Summarize results."
+  - _Example:_ **add-log.md** – "When Agent executes this workflow, guides to add entry log at function start. 1) Identify function name and input values, 2) Insert `logger.info()` code at that location, 3) Check message format with `format_log.py` tool, 4) Summarize results."
 - **Skill Usage in Agent:**
-  - _Example:_ "After loading SKILL.md, Agent reads `## Workflow Routing` table to **select and execute workflow file matching user intent**. When 'log level change' keyword detected, proceeds to AdjustLevel.md."
+  - _Example:_ "After loading SKILL.md, Agent reads `## Workflow Routing` table to **select and execute workflow file matching user intent**. When 'log level change' keyword detected, proceeds to adjust-level.md."
 
 **Output/Effect:** Expected Agent behavior or external effects from applying Skill.
 
@@ -866,9 +866,9 @@ skills/
 - **Unit (Prompt) Test:** Simulate by injecting Skill's Workflow into Agent with small example to verify proper operation.
   - _Example:_ Simple function code + "add log" request + only this Skill loaded → Confirm Agent generates diff adding one log line.
 - **Integration Test:** Test user scenarios with Skill included in full Agent.
-  - _Example:_ User requests "Put debug log in this function" → Confirm Agent loads Logging.Skill and gives result.
+  - _Example:_ User requests "Put debug log in this function" → Confirm Agent loads logging skill and gives result.
 - **Negative Test:** Test that Skill trigger doesn't malfunction.
-  - _Example:_ Verify Logging.Skill is not loaded when "modify shipping(logistics) module" is requested.
+  - _Example:_ Verify logging skill is not loaded when "modify shipping(logistics) module" is requested.
 - **Automated Validation:** Unit test tools included in Skill (`format_log.py`) (correct format/wrong format input cases).
 
 **Observability:**
@@ -890,11 +890,11 @@ skills/
 **Notes:**
 
 - Written according to company coding rules document (link).
-- Related Skill: Debug.Skill (may be loaded together, so adjusted keywords to avoid trigger conflicts with Debug.Skill description).
+- Related Skill: debug skill (may be loaded together, so adjusted keywords to avoid trigger conflicts with debug skill description).
 
 ### 3. Agent Spec Template
 
-**Agent Name:** `<agent name>` – (Name representing role if possible, e.g., _"QA-BugHunter-Agent"_)  
+**Agent Name:** `<agent name>` – (Name representing role if possible, e.g., _"qa-bug-hunter"_)  
 **Goal:** Describe the top-level purpose this Agent should solve or perform.
 
 - _Example:_ "Find cause from bug report and complete code fix and PR."
@@ -932,9 +932,9 @@ You are a code assistant specialized in bug fixing…
   - TestRunner Tool – _"Run tests"_ (local tests only without network).
   - WebSearch Tool – _"Open web search"_ (**disabled** in this agent for security).
 - **Skills:**
-  - Logging.Skill, Debug.Skill – (auto-load when needed)
-  - CodingGuidelines.Skill – (provides project coding style & naming conventions)
-  - _Note:_ This Agent does not load Skills other than above (e.g., UI.Skill and other unrelated domains excluded).
+  - logging skill, debug skill – (auto-load when needed)
+  - coding-guidelines skill – (provides project coding style & naming conventions)
+  - _Note:_ This Agent does not load Skills other than above (e.g., ui skill and other unrelated domains excluded).
 - **Permissions:**
   - GitHub API token (repository access O, organization management X)
   - No Prod DB access (prevent data changes)
@@ -944,11 +944,11 @@ You are a code assistant specialized in bug fixing…
 
 1. **Problem Understanding:** Analyze bug description to extract reproduction clues. Ask user additional questions if needed (1+ times).
 2. **Locate Issue:** Search related code with FileSearch tool. Read related code snippets to diagnose cause.
-3. **Devise Fix:** Plan fix approach matching problem cause. (Auto-load CodingGuidelines.Skill when needed to reference style)
+3. **Devise Fix:** Plan fix approach matching problem cause. (Auto-load coding-guidelines skill when needed to reference style)
 4. **Apply Fix:** Modify that part with CodeEditor tool.
 5. **Test Fix:** Run TestRunner tool. Branch based on results for success/failure.
    - If tests fail → Analyze error logs and return to **step 2** for additional fix attempt (max 2 loop iterations).
-6. **Prepare PR:** When tests pass, refer to Logging.Skill etc. to add log/comment improvements. Push new branch and create PR with GitHub API tool.
+6. **Prepare PR:** When tests pass, refer to logging skill etc. to add log/comment improvements. Push new branch and create PR with GitHub API tool.
 7. **Output Result:** Output summary answer of "bug cause and fix" to user, attach PR link. Guide next steps to reviewers if needed.
 
 **Success Criteria:** When Agent considers work "complete."
@@ -982,7 +982,7 @@ You are a code assistant specialized in bug fixing…
 
 **Logging & Monitoring:**
 
-- This Agent logs all major events (`AGENT=BugHunter step=LocateIssue time=...`).
+- This Agent logs all major events (`AGENT=bug-hunter step=locate-issue time=...`).
 - Attach used skills/tools summary to log with results (for reproducibility).
 - Metrics: Track bug_fix_success_rate, avg_fix_iterations, avg_time_to_fix.
 
@@ -1005,7 +1005,7 @@ You are a code assistant specialized in bug fixing…
 
 **Notes:**
 
-- This Agent strongly depends on internal `CodingGuidelines.Skill` – Testing this Agent needed when that Skill is updated.
+- This Agent strongly depends on internal `coding-guidelines skill` – Testing this Agent needed when that Skill is updated.
 - Future improvement: Complex issues are difficult with LLM alone, so reviewing integration of similar history search (past bug resolution history).
 
 ## E. Example Designs (Applying to My Workflows)
@@ -1028,8 +1028,8 @@ Each case describes file structure, naming conventions, brief implementation, an
 | Component | Name | Role |
 |-----------|------|------|
 | **Command** | `/init-project` | Command executed by human, receives project name etc. as parameters and triggers agent |
-| **Agent** | `ProjectInitAgent` | Project initialization specialist agent, performs multi-step from scaffolding to CI setup |
-| **Skills** | `Scaffold.Skill`, `CI.Skill` | Domain-specific knowledge (language-specific templates/directory structure, CI tool writing guidelines) |
+| **Agent** | `project-init-agent` | Project initialization specialist agent, performs multi-step from scaffolding to CI setup |
+| **Skills** | `scaffold`, `ci` | Domain-specific knowledge (language-specific templates/directory structure, CI tool writing guidelines) |
 | **Tools** | Git CLI, FileWrite, etc. | Perform actual work (create-react-app CLI, etc.) |
 
 > **Structure:** Command → Agent → (Skills) → Tools
@@ -1041,29 +1041,29 @@ Each case describes file structure, naming conventions, brief implementation, an
 ├── commands/
 │   └── init-project.md           # /init-project Command script
 ├── agents/
-│   └── ProjectInitAgent.md       # Project initialization agent definition
+│   └── project-init-agent.md     # Project initialization agent definition
 └── skills/
-    ├── Scaffold/                 # Scaffold.Skill domain
+    ├── scaffold/                 # scaffold skill domain
     │   ├── SKILL.md              # Scaffolding skill overview (trigger: "new project", language keywords, etc.)
-    │   └── Workflows/
-    │       ├── CreateStructure.md  # Directory/file creation procedure
-    │       └── InitRepo.md         # Git init & first commit procedure
-    └── CI/                       # CI.Skill domain
+    │   └── workflows/
+    │       ├── create-structure.md  # Directory/file creation procedure
+    │       └── init-repo.md         # Git init & first commit procedure
+    └── ci/                       # ci skill domain
         ├── SKILL.md              # CI skill overview (trigger: "CI", "pipeline", etc.)
-        └── Workflows/
-            └── SetupPipeline.md  # CI YAML writing and CI setup procedure
+        └── workflows/
+            └── setup-pipeline.md  # CI YAML writing and CI setup procedure
 ```
 
 **Naming Convention:**
 
 | Item | Rule | Example |
 |------|------|---------|
-| Command file | lowercase/kebab-case, intuitive | `init-project.md` |
-| Agent file | UpperCamelCase + "Agent" Suffix | `ProjectInitAgent.md` |
-| Skill directory | TitleCase domain name | `Scaffold`, `CI` |
-| Workflow file | PascalCase task name | `CreateStructure.md`, `SetupPipeline.md` |
+| Command file | kebab-case | `init-project.md` |
+| Agent file | kebab-case | `project-init-agent.md` |
+| Skill directory | kebab-case | `scaffold`, `ci` |
+| Workflow file | kebab-case | `create-structure.md`, `setup-pipeline.md` |
 
-> **Key:** Role should be clearly evident from naming
+> **Key:** All components use kebab-case for consistency
 
 **Minimal Implementation (Pseudo-code Level):**
 
@@ -1072,16 +1072,16 @@ Each case describes file structure, naming conventions, brief implementation, an
 ```markdown
 /init-project <project_name> [--language <lang>]
 
-- Load the `Scaffold` skill and `CI` skill.
-- Ask the ProjectInitAgent to create a new project named "$1" (language: $2).
+- Load the `scaffold` skill and `ci` skill.
+- Ask the project-init-agent to create a new project named "$1" (language: $2).
 ```
 
 Explanation: This Command simply receives project name and language, pre-loads related Skills and requests Agent to start work. (Either @mention Agent directly to call it, or induce agent behavior with internal prompt)
 
-**agents/ProjectInitAgent.md:** (System role and instructions inside)
+**agents/project-init-agent.md:** (System role and instructions inside)
 
 ```yaml
-name: ProjectInitAgent
+name: project-init-agent
 description: "An agent that scaffolds a new project and sets up CI."
 tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 ```
@@ -1091,8 +1091,8 @@ tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 
 ## Instructions:
 
-1. Ensure the "Scaffold" skill is loaded for project structure templates.
-2. Ensure the "CI" skill is loaded for CI configuration templates.
+1. Ensure the "scaffold" skill is loaded for project structure templates.
+2. Ensure the "ci" skill is loaded for CI configuration templates.
 3. Plan: Determine appropriate project structure based on language.
 4. Step 1: Create base project files and folders (use FileWrite tool).
 5. Step 2: Initialize git repository (use GitInit tool), commit scaffold.
@@ -1103,10 +1103,10 @@ tools: ["FileWrite", "GitInit", "TemplateFetch", ...]
 
 (System prompt also includes above procedure + safeguards: "if prod deployment, skip", etc.)
 
-**skills/Scaffold/SKILL.md:**
+**skills/scaffold/SKILL.md:**
 
 ```yaml
-name: Scaffold
+name: scaffold
 description: |
   Project scaffolding instructions.
   USE WHEN: "new project", "initialize repository", "project structure", etc.
@@ -1120,15 +1120,15 @@ description: |
 
 | Workflow            | Trigger keywords                      | File                         |
 | ------------------- | ------------------------------------- | ---------------------------- |
-| **CreateStructure** | "new project", "scaffold", "template" | Workflows/CreateStructure.md |
-| **InitRepo**        | "git init", "initialize repository"   | Workflows/InitRepo.md        |
+| **create-structure** | "new project", "scaffold", "template" | workflows/create-structure.md |
+| **init-repo**        | "git init", "initialize repository"   | workflows/init-repo.md        |
 
 ## About
 
 This skill provides templates and steps to scaffold a new software project. It covers directory structure, sample files, and repository initialization.
 ```
 
-**skills/Scaffold/Workflows/CreateStructure.md:**
+**skills/scaffold/workflows/create-structure.md:**
 
 ```markdown
 **Goal:** Create base structure for a new $LANG project named $PROJECT_NAME.
@@ -1141,7 +1141,7 @@ This skill provides templates and steps to scaffold a new software project. It c
 6. Ensure no file collisions; if directory already exists, warn and stop.
 ```
 
-**skills/CI/Workflows/SetupPipeline.md:**
+**skills/ci/workflows/setup-pipeline.md:**
 
 ```markdown
 **Goal:** Set up CI pipeline (GitHub Actions) for the new project.
@@ -1160,11 +1160,11 @@ This skill provides templates and steps to scaffold a new software project. It c
 | Step | Action |
 |------|--------|
 | 1. Command input | Developer enters `/init-project MyApp --language python` in VSCode Chat |
-| 2. Agent startup | Load Scaffold and CI skills (skill content included in Agent context) |
+| 2. Agent startup | Load scaffold and ci skills (skill content included in Agent context) |
 | 3. Plan establishment | "Step1: Create structure → Step2: Git init → Step3: CI setup" |
-| 4. Step1 | Create folders/files with Scaffold.Skill's CreateStructure workflow (FileWrite tool) |
-| 5. Step2 | Execute `git init` with InitRepo workflow (GitInit tool) and initial commit |
-| 6. Step3 | Write `.github/workflows/ci.yml` and commit with CI.Skill's SetupPipeline |
+| 4. Step1 | Create folders/files with scaffold skill's create-structure workflow (FileWrite tool) |
+| 5. Step2 | Execute `git init` with init-repo workflow (GitInit tool) and initial commit |
+| 6. Step3 | Write `.github/workflows/ci.yml` and commit with ci skill's setup-pipeline |
 | 7. Complete | "✅ MyApp project creation and CI pipeline setup complete." + file list output |
 
 - Structure and CI files actually created in repo folder
@@ -1206,16 +1206,16 @@ This skill provides templates and steps to scaffold a new software project. It c
 | Component | Name | Role |
 |-----------|------|------|
 | **Command** | `/fix-bug` | Triggers bug fix process. Receives bug ID or description as argument. Chat invocation or issue tracker integration |
-| **Agent** | `BugFixAgent` | Bug resolution specialist agent. Performs "reproduce→find cause→fix→verify→PR" |
+| **Agent** | `bug-fix-agent` | Bug resolution specialist agent. Performs "reproduce→find cause→fix→verify→PR" |
 
 **Skills:**
 
 | Skill | Role |
 |-------|------|
-| `Diagnosis.Skill` | Analysis routines by bug symptom (null pointer vs performance bug, etc.) |
-| `CodingGuidelines.Skill` | Project coding standards/best practices (ensures fix quality) |
-| `Testing.Skill` | Test writing/execution related knowledge |
-| (Optional) `Logging.Skill`, `Security.Skill` | Contextual skills |
+| `diagnosis` | Analysis routines by bug symptom (null pointer vs performance bug, etc.) |
+| `coding-guidelines` | Project coding standards/best practices (ensures fix quality) |
+| `testing` | Test writing/execution related knowledge |
+| (Optional) `logging`, `security` | Contextual skills |
 
 **Tools:**
 
@@ -1235,28 +1235,28 @@ This skill provides templates and steps to scaffold a new software project. It c
 ├── commands/
 │   └── fix-bug.md                # /fix-bug Command
 ├── agents/
-│   └── BugFixAgent.md            # Bug fix agent definition
+│   └── bug-fix-agent.md          # Bug fix agent definition
 └── skills/
-    ├── Diagnosis/
+    ├── diagnosis/
     │   ├── SKILL.md
-    │   └── Workflows/
-    │       ├── NullPointer.md
-    │       ├── PerfIssue.md
+    │   └── workflows/
+    │       ├── null-pointer.md
+    │       ├── perf-issue.md
     │       └── ...               # (Various bug type response workflows)
-    ├── CodingGuidelines/
+    ├── coding-guidelines/
     │   ├── SKILL.md
     │   └── ...                   # (Project coding standard related docs)
-    └── Testing/
+    └── testing/
         ├── SKILL.md
-        └── Workflows/
-            ├── Reproduce.md      # Reproduction method (test case writing, etc.)
-            └── RegressionTest.md # Post-fix regression test procedure
+        └── workflows/
+            ├── reproduce.md      # Reproduction method (test case writing, etc.)
+            └── regression-test.md # Post-fix regression test procedure
 ```
 
 Naming Convention:
-• fix-bug.md command – intuitive, snake-case or kebab-case.
-• BugFixAgent.md – clear role, PascalCase+Agent.
-• Skills: Diagnosis, CodingGuidelines, Testing – clear domain names. Diagnosis workflow files named by specific bug type.
+• fix-bug.md command – kebab-case.
+• bug-fix-agent.md – kebab-case.
+• Skills: diagnosis, coding-guidelines, testing – kebab-case domain names. Diagnosis workflow files named by specific bug type in kebab-case.
 • Tools configured likely via Agent YAML or platform config, not in our repo structure (except perhaps script wrappers).
 
 **Pseudo-code Implementation Summary:**
@@ -1266,22 +1266,22 @@ Naming Convention:
 ```markdown
 /fix-bug <issue_id_or_title>
 
-- Summon @BugFixAgent to analyze and resolve the bug "$1".
+- Summon @bug-fix-agent to analyze and resolve the bug "$1".
 - Provide any available details from issue tracker for context.
 ```
 
-Explanation: When called like /fix-bug 101, fix-bug.md command calls BugFixAgent while providing environment info (bug ID 101 issue content) as input. Command itself doesn't contain detailed logic, just serves as agent execution trigger role.
+Explanation: When called like /fix-bug 101, fix-bug.md command calls bug-fix-agent while providing environment info (bug ID 101 issue content) as input. Command itself doesn't contain detailed logic, just serves as agent execution trigger role.
 
-**agents/BugFixAgent.md:**
+**agents/bug-fix-agent.md:**
 
 ```yaml
-name: BugFixAgent
+name: bug-fix-agent
 description: "Agent that reproduces bugs, fixes code, and creates a PR."
 configuration:
   model: Claude-2
   max_iterations: 10
   tools: [RunApp, RunTests, ReadLog, SearchCode, EditFile, GitHubCreatePR]
-  skills: [Diagnosis, CodingGuidelines, Testing]
+  skills: [diagnosis, coding-guidelines, testing]
 ```
 
 ```markdown
@@ -1295,12 +1295,12 @@ You are a software bug fixer agent. Follow this high-level process:
 2. Reproduce the bug: use RunTests or RunApp tool with provided steps.
    - If reproduction fails, try alternate inputs or ask for more info.
 3. Once reproduced, identify root cause: use ReadLog for error, SearchCode for error patterns, etc.
-   - Load "Diagnosis" skill to guide analysis based on error type.
+   - Load "diagnosis" skill to guide analysis based on error type.
 4. Devise a fix and implement it: edit code (EditFile tool).
-   - Follow coding best practices (CodingGuidelines skill loaded).
+   - Follow coding best practices (coding-guidelines skill loaded).
 5. Test the fix: run tests again to confirm bug is resolved and no new issues.
    - If tests fail, iterate fix (go back to step 3 or 4 up to 2 retries).
-6. If fix is successful, run additional regression tests (Testing skill might help).
+6. If fix is successful, run additional regression tests (testing skill might help).
 7. Create a Git branch and commit changes, open a Pull Request (GitHubCreatePR tool).
 8. Summarize the bug cause and fix in the PR description and in the response to user.
 9. If at any point something is unclear or cannot be resolved, communicate failure to user with reasons.
@@ -1309,7 +1309,7 @@ You are a software bug fixer agent. Follow this high-level process:
 
 - Ensure no sensitive data is included in outputs (strip any secrets from logs).
 - Limit context: prefer using sub-agents for extensive search if needed (like context search agent).
-- Adhere to project coding standards (CodingGuidelines skill ensures this).
+- Adhere to project coding standards (coding-guidelines skill ensures this).
 
 ## Confirmation:
 
@@ -1320,9 +1320,9 @@ You are a software bug fixer agent. Follow this high-level process:
 
 | Skill | Purpose |
 |-------|---------|
-| `Diagnosis.SKILL.md` | Trigger-based routing: "NullPointerException" → `NullPointer.md`, "Timeout" → `PerfIssue.md` |
-| `CodingGuidelines.SKILL.md` | Provides style rules: function names start with verb, unit tests required for new code, etc. |
-| `Testing.SKILL.md` | Regression test writing guide, test coverage assurance, test generation for uncovered scenarios |
+| `diagnosis/SKILL.md` | Trigger-based routing: "NullPointerException" → `null-pointer.md`, "Timeout" → `perf-issue.md` |
+| `coding-guidelines/SKILL.md` | Provides style rules: function names start with verb, unit tests required for new code, etc. |
+| `testing/SKILL.md` | Regression test writing guide, test coverage assurance, test generation for uncovered scenarios |
 
 **Tools Operation:**
 
@@ -1348,10 +1348,10 @@ You are a software bug fixer agent. Follow this high-level process:
 | 0 | Agent start | Receives issue #101 info as Input (NullPointerException error report) |
 | 1 | Understanding | If additional info needed, asks "Reproduction method?" → "Error when clicking A feature" |
 | 2 | Reproduction | Execute app with RunApp tool → Error occurs → Get stack trace with ReadLog |
-| 3 | Cause analysis | Load Diagnosis.Skill → Confirm `ModuleX line 45` with SearchCode → Find unhandled null in `obj.getName()` |
-| 4 | Fix | Reference CodingGuidelines.Skill → Add null-check or use Optional with EditFile |
+| 3 | Cause analysis | Load diagnosis skill → Confirm `ModuleX line 45` with SearchCode → Find unhandled null in `obj.getName()` |
+| 4 | Fix | Reference coding-guidelines skill → Add null-check or use Optional with EditFile |
 | 5 | Test | Execute RunTests → All tests pass, RunApp re-execution → no crash |
-| 6 | Regression | Reference Testing.Skill, write new unit test if needed |
+| 6 | Regression | Reference testing skill, write new unit test if needed |
 | 7 | PR | GitHubCreatePR: branch `bugfix-101-nullptr`, commit message `Fix NPE in ModuleX (fixes #101)` |
 | 8 | Complete | "✅ Bug #101 reproduction and fix complete. Cause: obj null unhandled. PR link." |
 
@@ -1455,7 +1455,7 @@ Finally, we organize 12 failure/misuse patterns that frequently appear in Comman
 | **Feature Consolidation** | Combine similar features into one and distinguish with parameters (`/create code --type=class\|interface\|enum`) |
 | **Stable Command Set** | Maintain command count under 10. Addition requires code review approval |
 | **Naming Convention** | Use intuitive, general verbs (`/create`, `/update`, `/delete`), detailed actions as arguments |
-| **Auto-suggestion** | Handle automatically executable ones as Skills (e.g., auto-use Optimize.Skill when performance issues detected) |
+| **Auto-suggestion** | Handle automatically executable ones as Skills (e.g., auto-use optimize skill when performance issues detected) |
 | **Review Checklist** | Self-ask 3 questions: "Frequently used?", "Can it be combined?", "Can Agent handle it automatically?" |
 | **Deprecation** | Mark unused commands as Deprecated then remove, hide from autocomplete |
 
@@ -1624,7 +1624,7 @@ Finally, we organize 12 failure/misuse patterns that frequently appear in Comman
 
 | Rule | Description |
 |------|-------------|
-| **Semantic Versioning** | Increment Major for big changes, specify version requirements in Agent meta (`requires Logging.Skill >=2.0`) |
+| **Semantic Versioning** | Increment Major for big changes, specify version requirements in Agent meta (`requires logging skill >=2.0`) |
 | **Update Process** | Central management deployment. Notify deployment schedule, provide sync script |
 | **Backward Stubs** | Maintain wrapper for old version calls for operation period. Output Deprecate warnings |
 | **Single Source of Truth** | Manage definitions only in central repo. Prevent fork divergence |

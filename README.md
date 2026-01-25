@@ -45,7 +45,7 @@ Recent research on "when to use Command vs Skill vs Agent":
 |-------|--------|
 | Research | [`docs/01-component-architect/`](./docs/01-component-architect/) |
 | Multi-model analysis | Claude, GPT-4, Gemini perspectives |
-| Extracted artifact | [`.claude/skills/ComponentArchitect/`](./.claude/skills/ComponentArchitect/) |
+| Extracted artifact | [`.claude/skills/component-architect/`](./.claude/skills/component-architect/) |
 
 ## Directory Structure
 
@@ -68,7 +68,8 @@ ai-lab/
 
 | # | Topic | Status | Artifact |
 |---|-------|--------|----------|
-| 01 | [Component Architect](./docs/01-component-architect/) | Done | [Skill](./.claude/skills/ComponentArchitect/) |
+| 01 | [Component Architect](./docs/01-component-architect/) | Done | [Skill](./.claude/skills/component-architect/) |
+| 02 | [Naming Convention](./docs/02-naming-convention/) | Done | Reference doc |
 
 ## Adding New Research
 
