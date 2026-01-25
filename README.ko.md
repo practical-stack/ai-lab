@@ -37,22 +37,22 @@ flowchart LR
     Research --> Analyze --> Extract
 ```
 
-## 예시: Component Architect
+## 예시: Structure Organizer
 
 "Command vs Skill vs Agent 선택 기준" 리서치:
 
 | 단계 | 산출물 |
 |------|--------|
-| 리서치 | [`docs/01-component-architect/`](./docs/01-component-architect/) |
+| 리서치 | [`docs/01-structure-organizer/`](./docs/01-structure-organizer/) |
 | 멀티모델 분석 | Claude, GPT-4, Gemini 관점 비교 |
-| 추출 아티팩트 | [`.claude/skills/component-architect/`](./.claude/skills/component-architect/) |
+| 추출 아티팩트 | [`.claude/skills/meta-structure-organizer/`](./.claude/skills/meta-structure-organizer/) |
 
 ## 디렉토리 구조
 
 ```
 ai-lab/
 ├── docs/                     # 리서치 문서
-│   └── 01-component-architect/
+│   └── 01-structure-organizer/
 │       ├── README.md         # 주제 개요
 │       ├── meta-prompt.md    # 재사용 프롬프트
 │       └── research/         # 멀티모델 분석
@@ -68,7 +68,7 @@ ai-lab/
 
 | # | 주제 | 상태 | 아티팩트 |
 |---|------|------|----------|
-| 01 | [Component Architect](./docs/01-component-architect/) | 완료 | [Skill](./.claude/skills/component-architect/) |
+| 01 | [Structure Organizer](./docs/01-structure-organizer/) | 완료 | [Skill](./.claude/skills/meta-structure-organizer/) |
 | 02 | [Naming Convention](./docs/02-naming-convention/) | 완료 | 참조 문서 |
 
 ## 새 리서치 추가

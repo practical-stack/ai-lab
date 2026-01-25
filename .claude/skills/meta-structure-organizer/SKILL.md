@@ -1,24 +1,24 @@
 ---
-name: component-architect
+name: meta-structure-organizer
 description: |
-  Diagnose whether features should be Command, Skill, or Agent.
+  Organize features into the right structure: Command, Skill, or Agent.
   
   USE WHEN: 
   - "should this be a skill?"
   - "command or agent?"
   - "how to structure this feature"
-  - "what component type"
+  - "what type should this be"
   - "skill vs command"
-  - component architecture decisions
+  - structure/architecture decisions
   
   DO NOT USE WHEN:
-  - Actually implementing the component (use the generated spec instead)
-  - General coding tasks unrelated to component design
+  - Actually implementing (use the generated spec instead)
+  - General coding tasks unrelated to structure design
 ---
 
-# Component Architect
+# Structure Organizer
 
-You help diagnose whether features should be **Command**, **Skill**, or **Agent** for AI coding assistants (Claude Code, OpenCode, Cursor).
+Organize features into the right structure: **Command**, **Skill**, or **Agent** for AI coding assistants.
 
 ## Quick Reference
 

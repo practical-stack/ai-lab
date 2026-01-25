@@ -71,7 +71,7 @@ Create reusable artifacts from research:
 
 | # | Topic | Status | Artifacts |
 |---|-------|--------|-----------|
-| 01 | Component Architect | Done | Skill: `.claude/skills/component-architect/` |
+| 01 | Structure Organizer | Done | Skill: `.claude/skills/meta-structure-organizer/` |
 | 02 | Naming Convention | Done | Reference: `docs/02-naming-convention/` |
 
 ## SKILL PATTERNS
@@ -168,5 +168,5 @@ When researching a new topic:
 
 ## SEE ALSO
 
-- Example research: `docs/01-component-architect/`
-- Example skill: `.claude/skills/component-architect/`
+- Example research: `docs/01-structure-organizer/`
+- Example skill: `.claude/skills/meta-structure-organizer/`

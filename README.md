@@ -37,22 +37,22 @@ flowchart LR
     Research --> Analyze --> Extract
 ```
 
-## Example: Component Architect
+## Example: Structure Organizer
 
 Recent research on "when to use Command vs Skill vs Agent":
 
 | Phase | Output |
 |-------|--------|
-| Research | [`docs/01-component-architect/`](./docs/01-component-architect/) |
+| Research | [`docs/01-structure-organizer/`](./docs/01-structure-organizer/) |
 | Multi-model analysis | Claude, GPT-4, Gemini perspectives |
-| Extracted artifact | [`.claude/skills/component-architect/`](./.claude/skills/component-architect/) |
+| Extracted artifact | [`.claude/skills/meta-structure-organizer/`](./.claude/skills/meta-structure-organizer/) |
 
 ## Directory Structure
 
 ```
 ai-lab/
 ├── docs/                     # Research documents
-│   └── 01-component-architect/
+│   └── 01-structure-organizer/
 │       ├── README.md         # Topic overview
 │       ├── meta-prompt.md    # Reusable prompt
 │       └── research/         # Multi-model analysis
@@ -68,7 +68,7 @@ ai-lab/
 
 | # | Topic | Status | Artifact |
 |---|-------|--------|----------|
-| 01 | [Component Architect](./docs/01-component-architect/) | Done | [Skill](./.claude/skills/component-architect/) |
+| 01 | [Structure Organizer](./docs/01-structure-organizer/) | Done | [Skill](./.claude/skills/meta-structure-organizer/) |
 | 02 | [Naming Convention](./docs/02-naming-convention/) | Done | Reference doc |
 
 ## Adding New Research
