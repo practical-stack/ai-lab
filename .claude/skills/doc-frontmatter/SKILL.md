@@ -2,8 +2,8 @@
 name: doc-frontmatter
 description: |
   Generate and validate YAML frontmatter for docs folder documents.
-  Triggers: "frontmatter 추가", "frontmatter 업데이트", "add frontmatter",
-  "generate frontmatter", "validate frontmatter", "문서 메타데이터"
+  Triggers: "add frontmatter", "update frontmatter", "generate frontmatter",
+  "validate frontmatter", "document metadata"
 ---
 
 # Doc Frontmatter

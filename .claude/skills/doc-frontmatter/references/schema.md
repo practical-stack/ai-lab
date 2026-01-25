@@ -1,7 +1,7 @@
 # Frontmatter Schema Reference
 
-> **Source of Truth**: 이 문서는 docs 폴더 frontmatter의 단일 진실 공급원입니다.
-> Schema, Types, Tags 정의를 모두 포함합니다.
+> **Source of Truth**: This document is the single source of truth for docs folder frontmatter.
+> It includes Schema, Types, and Tags definitions.
 
 ---
 
@@ -9,242 +9,242 @@
 
 ```yaml
 ---
-# 필수 필드
-title: "문서 제목"
-description: "50-160자 핵심 요약"
+# Required fields
+title: "Document Title"
+description: "50-160 character summary"
 type: guide                               # tutorial|guide|reference|explanation|adr|troubleshooting|pattern|index
 
-# 선택 필드
-tags: [React, API]                        # 최대 5개
-order: 0                                  # 파일명 prefix와 일치
+# Optional fields
+tags: [React, API]                        # Max 5 tags
+order: 0                                  # Matches filename prefix
 
-# 관계 필드 (의존성이 있는 경우)
-depends_on: [./prerequisite-doc.md]       # 선행 문서 경로
-related: [./related-doc.md]               # 연관 문서 경로
-used_by: [/commands/xxx.md]               # 이 문서가 사용되는 곳
+# Relationship fields (when dependencies exist)
+depends_on: [./prerequisite-doc.md]       # Prerequisite document paths
+related: [./related-doc.md]               # Related document paths
+used_by: [/commands/xxx.md]               # Where this document is used
 ---
 ```
 
 ---
 
-## 1. 필드 정의
+## 1. Field Definitions
 
-### 필수 필드
+### Required Fields
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `title` | `string` | 문서 제목. 검색 최우선 순위 |
-| `description` | `string` | 50-160자 요약. AI 임베딩 및 llms.txt 생성의 핵심 소스 |
-| `type` | `enum` | 문서 유형. 아래 [Type 정의](#2-type-정의) 참조 |
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | `string` | Document title. Highest search priority |
+| `description` | `string` | 50-160 char summary. Core source for AI embeddings and llms.txt generation |
+| `type` | `enum` | Document type. See [Type Definition](#2-type-definition) below |
 
-### 선택 필드
+### Optional Fields
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `tags` | `string[]` | 최대 5개. 아래 [Tags 목록](#3-tags-controlled-vocabulary) 참조 |
-| `order` | `number` | 폴더 내 문서 순서. 파일명 prefix와 일치 (예: `00-xxx.md` → `order: 0`) |
+| Field | Type | Description |
+|-------|------|-------------|
+| `tags` | `string[]` | Max 5 tags. See [Tags List](#3-tags-controlled-vocabulary) below |
+| `order` | `number` | Document order within folder. Matches filename prefix (e.g., `00-xxx.md` → `order: 0`) |
 
-### 관계 필드
+### Relationship Fields
 
-문서 간 의존성이 있는 경우 사용합니다.
+Use when documents have dependencies.
 
-| 필드 | 타입 | 설명 |
-|------|------|------|
-| `depends_on` | `string[]` | 선행 문서 경로. 이 문서를 읽기 전에 먼저 읽어야 하는 문서 |
-| `related` | `string[]` | 연관 문서 경로. 같은 주제의 다른 관점 문서 연결 |
-| `used_by` | `string[]` | 이 문서가 사용되는 곳. 의존성 업데이트 시 영향 범위 파악용 |
+| Field | Type | Description |
+|-------|------|-------------|
+| `depends_on` | `string[]` | Prerequisite document paths. Documents that should be read before this one |
+| `related` | `string[]` | Related document paths. Connect documents with different perspectives on same topic |
+| `used_by` | `string[]` | Where this document is used. For tracking impact when updating dependencies |
 
 ---
 
-## 2. Type 정의
+## 2. Type Definition
 
-| type | 설명 | 예시 |
-|------|------|------|
-| `tutorial` | 단계별 학습 가이드. 처음부터 끝까지 따라하는 형식 | - |
-| `guide` | 특정 작업 수행 방법 | node-install.md, deployment.md |
-| `reference` | API, 스펙, 설정값 등 조회용 정보 | k8s 환경변수, 코드 컨벤션 |
-| `explanation` | 배경, 설계 원칙, 개념 설명 | - |
-| `adr` | 아키텍처 결정 기록 (Architecture Decision Record) | apps-src-folder-structure.adr.md |
-| `troubleshooting` | 문제 해결 가이드 | ingress-routing-troubleshooting.md |
-| `pattern` | 코딩 패턴 및 베스트 프랙티스 | suspense-query-pattern.md |
-| `index` | 폴더의 인덱스 문서 | README.md |
+| type | Description | Example |
+|------|-------------|---------|
+| `tutorial` | Step-by-step learning guide. Follow-along format from start to finish | - |
+| `guide` | How to perform a specific task | node-install.md, deployment.md |
+| `reference` | Lookup information: APIs, specs, configuration values | K8s env vars, code conventions |
+| `explanation` | Background, design principles, concept explanations | - |
+| `adr` | Architecture Decision Record | apps-src-folder-structure.adr.md |
+| `troubleshooting` | Problem-solving guide | ingress-routing-troubleshooting.md |
+| `pattern` | Coding patterns and best practices | suspense-query-pattern.md |
+| `index` | Folder index document | README.md |
 
-### Type 선택 기준
+### Type Selection Criteria
 
-| 비교 | 왼쪽 | 오른쪽 |
-|------|------|--------|
-| **tutorial vs guide** | 학습 목적, 처음부터 끝까지 순서대로, "X를 배워보자" | 작업 목적, 필요한 부분만 참조, "X를 하는 방법" |
-| **reference vs explanation** | 조회용 정보, 스펙/설정값/API, "X는 무엇인가" | 이해를 위한 설명, 배경/원칙/개념, "왜 X인가" |
-| **pattern vs guide** | 반복 사용 가능한 패턴, 코드 패턴, "이렇게 작성하라" | 특정 작업 수행 방법, 설치/설정/배포, "이렇게 하라" |
+| Comparison | Left | Right |
+|------------|------|-------|
+| **tutorial vs guide** | Learning purpose, sequential from start to finish, "Let's learn X" | Task purpose, reference only needed parts, "How to do X" |
+| **reference vs explanation** | Lookup information, specs/configs/APIs, "What is X" | Understanding-focused, background/principles/concepts, "Why X" |
+| **pattern vs guide** | Reusable patterns, code patterns, "Write it this way" | How to perform specific task, install/config/deploy, "Do it this way" |
 
-### Type 결정 플로우
+### Type Decision Flow
 
 ```
-문서 특징 확인
-    ├─ 단계별 따라하기? ────► tutorial
-    ├─ "~하는 방법"? ───────► guide
-    ├─ API, 스펙, 설정값? ──► reference
-    ├─ "왜 ~인가" 설명? ────► explanation
-    ├─ ADR 형식? ───────────► adr
-    ├─ 문제 해결? ──────────► troubleshooting
-    ├─ 코드 패턴? ──────────► pattern
-    └─ README.md? ──────────► index
+Check document characteristics
+    ├─ Step-by-step follow-along? ──► tutorial
+    ├─ "How to do ~"? ─────────────► guide
+    ├─ API, specs, config values? ─► reference
+    ├─ "Why ~" explanation? ───────► explanation
+    ├─ ADR format? ────────────────► adr
+    ├─ Problem solving? ───────────► troubleshooting
+    ├─ Code pattern? ──────────────► pattern
+    └─ README.md? ─────────────────► index
 ```
 
 ---
 
 ## 3. Tags Controlled Vocabulary
 
-문서당 최대 **5개**까지 선택할 수 있습니다.
+Select up to **5 tags** per document.
 
-### 기술 스택
+### Tech Stack
 
-| 태그 | 설명 |
-|------|------|
-| `React` | React 컴포넌트, 훅, 패턴 |
-| `TypeScript` | 타입 정의, 타입 유틸리티 |
-| `Next.js` | Next.js 라우팅, SSR, API Routes |
-| `Kubernetes` | K8s 배포, 설정, 리소스 |
-| `Nx` | Nx 모노레포 설정, 플러그인 |
-| `Tailwind` | Tailwind CSS, 스타일링 |
+| Tag | Description |
+|-----|-------------|
+| `React` | React components, hooks, patterns |
+| `TypeScript` | Type definitions, type utilities |
+| `Next.js` | Next.js routing, SSR, API Routes |
+| `Kubernetes` | K8s deployment, configuration, resources |
+| `Nx` | Nx monorepo setup, plugins |
+| `Tailwind` | Tailwind CSS, styling |
 
-### 도메인
+### Domain
 
-| 태그 | 설명 |
-|------|------|
-| `API` | API 호출, 데이터 페칭, React Query |
-| `Testing` | 단위 테스트, 통합 테스트 |
-| `Deployment` | 배포 프로세스, ArgoCD, GitOps |
-| `CI-CD` | CI/CD 파이프라인, GitHub Actions |
-| `Security` | 보안, 인증, 권한 |
+| Tag | Description |
+|-----|-------------|
+| `API` | API calls, data fetching, React Query |
+| `Testing` | Unit tests, integration tests |
+| `Deployment` | Deployment process, ArgoCD, GitOps |
+| `CI-CD` | CI/CD pipelines, GitHub Actions |
+| `Security` | Security, authentication, authorization |
 
-### 작업 유형
+### Task Type
 
-| 태그 | 설명 |
-|------|------|
-| `Setup` | 환경 설정, 초기 구성 |
-| `Migration` | 마이그레이션, 버전 업그레이드 |
-| `BestPractice` | 베스트 프랙티스, 코딩 패턴 |
-| `Architecture` | 아키텍처, 폴더 구조, 설계 결정 |
+| Tag | Description |
+|-----|-------------|
+| `Setup` | Environment setup, initial configuration |
+| `Migration` | Migration, version upgrades |
+| `BestPractice` | Best practices, coding patterns |
+| `Architecture` | Architecture, folder structure, design decisions |
 
-### 기타
+### Other
 
-| 태그 | 설명 |
-|------|------|
-| `Documentation` | 문서화, 메타 정보 |
-| `Frontmatter` | Frontmatter 스키마, 메타데이터 |
-| `AI` | AI 에이전트, AI 활용 패턴 |
+| Tag | Description |
+|-----|-------------|
+| `Documentation` | Documentation, meta information |
+| `Frontmatter` | Frontmatter schema, metadata |
+| `AI` | AI agents, AI usage patterns |
 
-### 태그 추가 규칙
+### Tag Addition Rules
 
-1. 이 문서에 태그를 먼저 추가
-2. 태그 설명을 명확히 작성
-3. 기존 태그로 대체 가능한지 검토
-4. **태그 총 개수는 20개 이하 유지**
+1. Add tag to this document first
+2. Write clear tag description
+3. Review if existing tags can substitute
+4. **Keep total tag count under 20**
 
 ---
 
-## 4. 필드 상세 명세
+## 4. Field Detailed Specifications
 
 ### title
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | `string` |
-| 필수 | Yes |
-| 용도 | 검색 최우선 순위, 문서 식별 |
+| Property | Value |
+|----------|-------|
+| Type | `string` |
+| Required | Yes |
+| Purpose | Highest search priority, document identification |
 
-**생성 규칙:**
-1. 문서의 첫 번째 H1 헤더 사용
-2. H1이 없으면 파일명에서 추출 (하이픈 → 공백, 첫 글자 대문자)
+**Generation rules:**
+1. Use document's first H1 header
+2. If no H1, extract from filename (hyphen → space, capitalize first letter)
 
 ### description
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | `string` |
-| 필수 | Yes |
-| 길이 | 50-160자 |
-| 용도 | AI 임베딩, llms.txt 생성 |
+| Property | Value |
+|----------|-------|
+| Type | `string` |
+| Required | Yes |
+| Length | 50-160 characters |
+| Purpose | AI embeddings, llms.txt generation |
 
-**생성 규칙:**
-1. 문서가 해결하는 문제 요약
-2. 첫 번째 단락 또는 개요 섹션 참조
-3. 50자 미만이면 경고, 160자 초과 시 잘라냄
+**Generation rules:**
+1. Summarize the problem the document solves
+2. Reference first paragraph or overview section
+3. Warn if under 50 chars, truncate if over 160 chars
 
 ### type
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | `enum` |
-| 필수 | Yes |
-| 허용값 | `tutorial`, `guide`, `reference`, `explanation`, `adr`, `troubleshooting`, `pattern`, `index` |
+| Property | Value |
+|----------|-------|
+| Type | `enum` |
+| Required | Yes |
+| Allowed values | `tutorial`, `guide`, `reference`, `explanation`, `adr`, `troubleshooting`, `pattern`, `index` |
 
 ### tags
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | `string[]` |
-| 필수 | No |
-| 최대 개수 | 5개 |
+| Property | Value |
+|----------|-------|
+| Type | `string[]` |
+| Required | No |
+| Max count | 5 |
 
 ### order
 
-| 속성 | 값 |
-|------|-----|
-| 타입 | `number` |
-| 필수 | No |
-| 용도 | 폴더 내 문서 순서 |
+| Property | Value |
+|----------|-------|
+| Type | `number` |
+| Required | No |
+| Purpose | Document order within folder |
 
-**생성 규칙:**
-- 파일명 prefix에서 추출: `00-guide.md` → `order: 0`
-- prefix 없으면 생략
+**Generation rules:**
+- Extract from filename prefix: `00-guide.md` → `order: 0`
+- Omit if no prefix
 
 ### depends_on / related / used_by
 
-| 속성 | depends_on | related | used_by |
-|------|------------|---------|---------|
-| 타입 | `string[]` | `string[]` | `string[]` |
-| 필수 | No | No | No |
-| 용도 | 선행 문서 명시 | 연관 문서 연결 | 의존성 추적 |
+| Property | depends_on | related | used_by |
+|----------|------------|---------|---------|
+| Type | `string[]` | `string[]` | `string[]` |
+| Required | No | No | No |
+| Purpose | Specify prerequisites | Connect related docs | Track dependencies |
 
-**used_by 대상 경로:**
-- `/commands/*.md` - AI 커맨드 파일
-- `/rules/*.mdc` - AI 룰 파일
-- `/docs/AGENTS.md` - 문서 구조 가이드
+**used_by target paths:**
+- `/commands/*.md` - AI command files
+- `/rules/*.mdc` - AI rule files
+- `/docs/AGENTS.md` - Document structure guide
 
 ---
 
-## 5. 예시
+## 5. Examples
 
-### 최소 frontmatter
+### Minimal frontmatter
 
 ```yaml
 ---
-title: "Node.js 설치 가이드"
-description: "asdf를 사용한 Node.js 버전 관리 및 설치 방법"
+title: "Node.js Installation Guide"
+description: "How to manage and install Node.js versions using asdf"
 type: guide
 ---
 ```
 
-### 권장 frontmatter
+### Recommended frontmatter
 
 ```yaml
 ---
-title: "문서 제목"
-description: "50-160자 핵심 요약"
+title: "Document Title"
+description: "50-160 character core summary"
 type: guide
 tags: [React, API]
 order: 0
 ---
 ```
 
-### 전체 frontmatter
+### Full frontmatter
 
 ```yaml
 ---
-title: "SuspenseQuery 응집도 패턴"
-description: "SuspenseQuery 선언부와 사용처 분리로 인한 데이터 흐름 파악 어려움을 해결하는 패턴"
+title: "SuspenseQuery Cohesion Pattern"
+description: "Pattern to solve the difficulty of understanding data flow caused by separating SuspenseQuery declaration from usage"
 type: pattern
 tags: [React, API, BestPractice]
 order: 3
