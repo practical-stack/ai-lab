@@ -191,4 +191,4 @@ See `references/agent-templates.md` for ready-to-use templates:
 ## References
 
 - **Agent Templates**: See [references/agent-templates.md](references/agent-templates.md) for ready-to-use templates
-- **Agent Patterns**: See [../meta-skill-creator/references/agent-patterns.md](../meta-skill-creator/references/agent-patterns.md) for architecture guidance
+- **Agent Patterns**: See [references/agent-patterns.md](references/agent-patterns.md) for architecture guidance
