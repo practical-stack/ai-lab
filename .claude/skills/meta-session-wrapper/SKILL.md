@@ -1,14 +1,14 @@
 ---
-name: session-wrapper
+name: meta-session-wrapper
 description: |
-  Extract reusable patterns from completed session work and prepare for LLM structure creation.
+  Extract reusable patterns from completed session work.
   Triggers: "wrap this session", "extract workflow", "make this reusable",
   "abstract this work", "create skill from session", "session to skill"
 ---
 
-# Session Wrapper
+# Meta Session Wrapper
 
-Extract and abstract completed work from a session into a reusable pattern that can be converted to a Skill, Agent, or Command.
+Knowledge for extracting and abstracting completed work from a session into a reusable pattern.
 
 ## Quick Reference
 
@@ -16,7 +16,7 @@ Extract and abstract completed work from a session into a reusable pattern that 
 |-------|-------|--------|
 | 1. IDENTIFY | Session history / completed work | Work summary |
 | 2. ABSTRACT | Concrete actions | Generic pattern |
-| 3. FORMALIZE | Pattern description | Feature Request (for `/make-llm-structure`) |
+| 3. FORMALIZE | Pattern description | Feature Request |
 
 ## When to Use
 
@@ -27,7 +27,7 @@ Extract and abstract completed work from a session into a reusable pattern that 
 
 ❌ **DON'T USE WHEN**:
 - Work was one-time only, won't be repeated
-- Already have a clear feature request (use `/make-llm-structure` directly)
+- Already have a clear feature request (use `/create-llm-structure` directly)
 
 ## Workflow
 
@@ -118,7 +118,7 @@ When should this pattern be invoked?
 
 ### Phase 3: FORMALIZE as Feature Request
 
-**Goal**: Output a structured description for `/make-llm-structure`.
+**Goal**: Output a structured description for `/create-llm-structure`.
 
 #### 3.1 Write Feature Request
 
@@ -171,13 +171,15 @@ Before proceeding, verify:
 
 ## Output
 
-After completing this workflow, you have a **Feature Request** ready for:
-
-```
-/make-llm-structure <feature-request>
-```
-
-This will diagnose whether it should be a Command, Skill, or Agent, and generate the appropriate spec template.
+The final output is a **Feature Request** document containing:
+- Name (kebab-case)
+- Description
+- Trigger conditions
+- Inputs/Outputs
+- High-level steps
+- Domain knowledge required
+- Side effects
+- Reusability assessment
 
 ## Example: Learning Content Creator
 
@@ -269,16 +271,11 @@ User says "create learning content" or "research to learning" when research file
 Moderate - whenever new research topic completed
 ```
 
-## Next Steps
+## Output
 
-After formalizing the feature request:
+After completing this workflow, return the **Feature Request** to the calling command.
 
-1. Run: `/make-llm-structure <paste feature request>`
-2. Review diagnosis (Command / Skill / Agent)
-3. Follow the appropriate creation workflow:
-   - **Command**: Implement from spec
-   - **Skill**: Use `meta-skill-creator`
-   - **Agent**: Use `meta-agent-creator`
+The command will handle the next steps (diagnosis, spec generation, implementation).
 
 ## References
 

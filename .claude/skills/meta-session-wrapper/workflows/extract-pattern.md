@@ -243,7 +243,7 @@ Moderate - whenever new research topic is completed
 Run the command:
 
 ```
-/make-llm-structure <paste feature request>
+/create-llm-structure <paste feature request>
 ```
 
 This will diagnose whether it should be:
