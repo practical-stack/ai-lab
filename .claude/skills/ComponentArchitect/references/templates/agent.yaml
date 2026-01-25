@@ -1,0 +1,252 @@
+# ============================================
+# AGENT SPECIFICATION TEMPLATE
+# ============================================
+# Platform: Claude Code / OpenCode / Cursor
+# File Location: agents/{AgentName}.md
+# ============================================
+
+agent:
+  name: "{AgentName}"              # e.g., "BugFixerAgent"
+  version: "1.0.0"
+  
+  goal: |
+    {Top-level purpose this agent achieves}
+  
+  role: |
+    {Responsibility scope and limitations}
+
+# ============================================
+# INPUT / OUTPUT
+# ============================================
+
+input:
+  format: "natural_language | json | mixed"
+  schema:
+    required:
+      - field: "{field1}"
+        type: "string"
+        description: "{What it is}"
+    optional:
+      - field: "{field2}"
+        type: "string"
+  
+  example: |
+    {Example input}
+
+output:
+  format: "markdown | json | mixed"
+  
+  success_example: |
+    {Example successful output}
+  
+  failure_example: |
+    {Example failure report}
+
+# ============================================
+# SYSTEM PROMPT
+# ============================================
+
+system_prompt: |
+  You are {AgentName}, specialized in {domain}.
+  
+  ## Your Role
+  {Role description}
+  
+  ## Constraints
+  - {constraint1}
+  - {constraint2}
+  
+  ## Output Format
+  {format requirements}
+
+# ============================================
+# CAPABILITIES
+# ============================================
+
+capabilities:
+  tools:
+    enabled:
+      - name: "{Tool1}"
+        purpose: "{What it does}"
+        permissions: "{read-only | read-write}"
+    
+    disabled:
+      - name: "{Tool2}"
+        reason: "{Why disabled}"
+  
+  skills:
+    auto_load:
+      - "{Skill1}"
+      - "{Skill2}"
+    
+    excluded:
+      - "{Skill3}"
+  
+  permissions:
+    allowed:
+      - "{permission1}"
+    denied:
+      - "{permission2}"
+
+# ============================================
+# WORKFLOW
+# ============================================
+
+workflow:
+  steps:
+    1:
+      name: "{Step Name}"
+      action: "{What agent does}"
+      tools: ["{tool1}"]
+      next: "2"
+    
+    2:
+      name: "{Step Name}"
+      action: "{What agent does}"
+      loop_condition: "{When to repeat}"
+      max_iterations: 3
+      next: "3 | back to 1"
+    
+    3:
+      name: "Output Result"
+      action: "Generate final response"
+  
+  success_criteria:
+    - "{condition1}"
+    - "{condition2}"
+
+# ============================================
+# AUTONOMY LEVEL
+# ============================================
+
+autonomy:
+  level: "L3_Consultant"
+  
+  # L1: Operator (simple executor)
+  # L2: Collaborator (proposes, requests approval)
+  # L3: Consultant (autonomous in domain, asks for exceptions)
+  # L4: Approver (semi-autonomous)
+  # L5: Observer (fully autonomous)
+  
+  autonomous_actions:
+    - "Read files"
+    - "Run tests"
+  
+  requires_approval:
+    - "Push to remote"
+    - "Delete files"
+  
+  prohibited_actions:
+    - "Force push"
+    - "Access credentials"
+
+# ============================================
+# ERROR HANDLING
+# ============================================
+
+error_handling:
+  retry_policy:
+    max_attempts: 3
+    backoff: "exponential"
+  
+  failure_modes:
+    - code: "GOAL_UNACHIEVABLE"
+      recovery: "Report partial progress, request help"
+    
+    - code: "TOOL_ERROR"
+      recovery: "Retry 2x, then report"
+    
+    - code: "INFINITE_LOOP"
+      recovery: "Stop, report issue"
+  
+  fallback_chain:
+    1: "Retry with simplified approach"
+    2: "Save progress, request human help"
+    3: "Graceful termination with report"
+
+# ============================================
+# GUARDRAILS
+# ============================================
+
+guardrails:
+  always_do:
+    - "Verify before destructive actions"
+    - "Log all major decisions"
+  
+  ask_first:
+    - "Ambiguous situations"
+    - "Actions outside scope"
+  
+  never_do:
+    - "Expose secrets"
+    - "Execute untrusted code"
+  
+  performance_limits:
+    max_parallel_subagents: 5
+    timeout_per_step: "2m"
+    total_timeout: "10m"
+
+# ============================================
+# COLLABORATION
+# ============================================
+
+collaboration:
+  intervention_points:
+    - trigger: "Uncertainty > 70%"
+      action: "Ask clarifying question"
+  
+  handoff_conditions:
+    - condition: "Needs expertise agent lacks"
+      handoff_to: "{other agent}"
+
+# ============================================
+# OBSERVABILITY
+# ============================================
+
+observability:
+  logs:
+    format: "AGENT={name} step={step} status={status}"
+  
+  metrics:
+    - "{name}_success_rate"
+    - "{name}_avg_time"
+
+# ============================================
+# TESTING
+# ============================================
+
+testing:
+  scenarios:
+    - name: "Happy path"
+      input: "{typical input}"
+      expected: "{success}"
+    
+    - name: "Failure recovery"
+      input: "{failing input}"
+      expected: "{graceful handling}"
+
+# ============================================
+# DEPLOYMENT
+# ============================================
+
+deployment:
+  current_version: "1.0.0"
+  rollout_strategy: "Canary (10% → 50% → 100%)"
+  
+  rollback:
+    trigger: "Error rate > 5%"
+    action: "Revert to previous version"
+
+# ============================================
+# OWNERSHIP
+# ============================================
+
+owner:
+  team: "{Team Name}"
+  lead: "{name} ({email})"
+  
+  dependencies:
+    skills:
+      - "{Skill1}"
+    agents:
+      - "{Agent2}"

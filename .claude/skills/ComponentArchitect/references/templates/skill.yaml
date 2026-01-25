@@ -1,0 +1,152 @@
+# ============================================
+# SKILL SPECIFICATION TEMPLATE
+# ============================================
+# Platform: Claude Code / OpenCode / Cursor
+# File Location: skills/{Domain}/{Skill}/SKILL.md
+# ============================================
+
+skill:
+  name: "{Domain}.{SkillName}"     # e.g., "Logging.DebugSkill"
+  version: "1.0.0"
+  
+  description: |
+    {When to use this skill}
+    
+    USE WHEN: {keywords, situations}
+    DO NOT USE WHEN: {exclusions}
+
+  limitations:
+    - "{What it cannot do}"
+    - "{When to use different skill}"
+
+# ============================================
+# TRIGGER CONDITIONS
+# ============================================
+
+triggers:
+  keywords:
+    - "{keyword1}"
+    - "{keyword2}"
+  
+  context_patterns:
+    - "{situation description}"
+  
+  negative_triggers:
+    - "{false positive situation}"
+
+# ============================================
+# FILE STRUCTURE
+# ============================================
+
+structure:
+  root: "skills/{Domain}/{SkillName}/"
+  files:
+    - path: "SKILL.md"
+      purpose: "Main skill definition"
+    
+    - path: "workflows/{Workflow1}.md"
+      purpose: "{What this workflow does}"
+    
+    - path: "references/{doc}.md"
+      purpose: "{Reference documentation}"
+
+# ============================================
+# SKILL CONTENT
+# ============================================
+
+content:
+  frontmatter:
+    name: "{SkillName}"
+    description: "{USE WHEN / DO NOT USE WHEN}"
+  
+  body_sections:
+    - section: "Overview"
+      content: "{Brief domain expertise explanation}"
+    
+    - section: "Workflow Routing"
+      content: |
+        | Intent | Workflow File |
+        |--------|---------------|
+        | {intent1} | workflows/{Workflow1}.md |
+    
+    - section: "Key Principles"
+      content: "{Domain-specific guidelines}"
+    
+    - section: "Success Criteria"
+      content: "{How agent knows task is complete}"
+
+# ============================================
+# WORKFLOWS
+# ============================================
+
+workflows:
+  - name: "{Workflow1}"
+    purpose: "{What it achieves}"
+    steps:
+      1: "{step description}"
+      2: "{step description}"
+    
+    tools_used:
+      - "{tool1}: {how to use}"
+    
+    success_criteria:
+      - "{completion condition}"
+
+# ============================================
+# PREREQUISITES
+# ============================================
+
+prerequisites:
+  context_required:
+    - "{What agent must know before using}"
+  
+  tools_required:
+    - "{Required tool}"
+  
+  permissions_required:
+    - "{Access rights needed}"
+
+# ============================================
+# ERROR HANDLING
+# ============================================
+
+errors:
+  - code: "{ERROR_NAME}"
+    condition: "{When this happens}"
+    handling: "{What agent should do}"
+
+# ============================================
+# TESTING
+# ============================================
+
+testing:
+  unit:
+    - scenario: "Skill loads on keyword"
+      input: "User mentions '{keyword}'"
+      expected: "Skill is loaded"
+    
+    - scenario: "Skill not loaded on false positive"
+      input: "User mentions '{similar but different}'"
+      expected: "Skill is NOT loaded"
+
+# ============================================
+# OBSERVABILITY
+# ============================================
+
+observability:
+  logs:
+    - "SKILL={name} loaded (trigger={reason})"
+  
+  metrics:
+    - "skill_{name}_usage_count"
+
+# ============================================
+# OWNERSHIP
+# ============================================
+
+owner:
+  team: "{Team Name}"
+  contact: "{email}"
+  
+  related_skills:
+    - "{RelatedSkill1}"

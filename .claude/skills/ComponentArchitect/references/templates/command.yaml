@@ -1,0 +1,137 @@
+# ============================================
+# COMMAND SPECIFICATION TEMPLATE
+# ============================================
+# Platform: Claude Code / OpenCode / Cursor
+# File Location: .claude/commands/{name}.md
+# ============================================
+
+command:
+  name: "{command-name}"           # kebab-case, becomes /command-name
+  version: "1.0.0"
+  
+  description: |
+    {One-line purpose description}
+  
+  out_of_scope:
+    - "{What this command does NOT do}"
+    - "{Limitation 2}"
+
+# ============================================
+# INPUT / OUTPUT
+# ============================================
+
+input:
+  parameters:
+    required:
+      - name: "{param1}"
+        type: "string"
+        description: "{What it is}"
+        validation: "{Constraints}"
+    optional:
+      - name: "{param2}"
+        type: "string"
+        default: null
+        description: "{What it is}"
+  
+  example: "/command-name arg1 --flag value"
+
+output:
+  success:
+    format: "markdown"
+    example: |
+      ✅ {Action} completed.
+      - Result: {details}
+  
+  failure:
+    format: "markdown"
+    example: |
+      ❌ {Action} failed: {error_code}
+      - Reason: {explanation}
+
+# ============================================
+# WORKFLOW
+# ============================================
+
+workflow:
+  steps:
+    1: "Validate input parameters"
+    2: "Load required Skill(s): {skill-names}"
+    3: "Execute tool: {tool-name}"
+    4: "Handle success/failure branches"
+    5: "Generate summary response"
+
+  skills_used:
+    - "{Skill1}"
+    - "{Skill2}"
+  
+  tools_used:
+    - "{tool1}"
+    - "{tool2}"
+
+# ============================================
+# ERROR HANDLING
+# ============================================
+
+errors:
+  - code: "INVALID_INPUT"
+    condition: "{When this occurs}"
+    recoverable: true
+    action: "Return error message, suggest correction"
+  
+  - code: "TOOL_TIMEOUT"
+    condition: "Tool does not respond within 30s"
+    recoverable: true
+    action: "Retry once, then report failure"
+
+# ============================================
+# SAFETY
+# ============================================
+
+safety:
+  always_do:
+    - "Validate all inputs before execution"
+    - "{Other mandatory checks}"
+  
+  ask_first:
+    - "Production environment operations"
+    - "Destructive actions"
+  
+  never_do:
+    - "Execute without required parameters"
+    - "Expose secrets in output"
+  
+  dry_run_support: true
+
+# ============================================
+# TESTING
+# ============================================
+
+testing:
+  unit:
+    - scenario: "Valid input"
+      input: "/command-name valid-arg"
+      expected: "Success message"
+    
+    - scenario: "Invalid input"
+      input: "/command-name invalid"
+      expected: "INVALID_INPUT error"
+
+# ============================================
+# OBSERVABILITY
+# ============================================
+
+observability:
+  logs:
+    - "COMMAND={name} step={step} status={status}"
+  
+  metrics:
+    - "{name}_execution_count"
+    - "{name}_success_rate"
+
+# ============================================
+# OWNERSHIP
+# ============================================
+
+owner:
+  team: "{Team Name}"
+  contact: "{email}"
