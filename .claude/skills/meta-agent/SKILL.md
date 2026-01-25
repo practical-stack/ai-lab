@@ -1,5 +1,5 @@
 ---
-name: meta-agent-creator
+name: meta-agent
 description: |
   Guide for creating specialized AI agents (subagents). Use when users want to create
   a new agent, define agent configurations, or need guidance on agent architecture.
