@@ -96,10 +96,3 @@ COMMIT 2: fix: correct button alignment
   - src/components/Button.tsx
   Justification: independent UI fix
 ```
-
-## Related Commands
-
-| Command | Purpose | Status |
-|---------|---------|--------|
-| `/git:pr` | Create pull request | Available |
-| `/git:branch` | Generate branch name | Available |
