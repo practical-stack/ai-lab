@@ -1,6 +1,6 @@
 ---
-title: "Docs 아키텍처 설계 메타프롬프트"
-description: "AI 코딩 에이전트가 효과적으로 문서를 탐색하고 활용할 수 있는 최적의 docs 폴더 구조 도출을 위한 DeepSearch 메타프롬프트"
+title: "Docs Architecture Design Meta-Prompt"
+description: "DeepSearch meta-prompt for deriving optimal docs folder structure that enables AI coding agents to effectively navigate and utilize documentation"
 type: reference
 tags: [Documentation, AI, Frontmatter]
 order: 0
@@ -8,205 +8,207 @@ depends_on: [./README.md]
 used_by: [./raw-results/01-gpt.md, ./raw-results/02-gemini.md, ./raw-results/03-claude.md]
 ---
 
-# AI 개발환경 최적화를 위한 Docs 아키텍처 설계 메타프롬프트
+# Docs Architecture Design Meta-Prompt for AI Development Environment Optimization
 
-> 이 메타프롬프트는 AI 코딩 에이전트(Cursor, Claude Code, Copilot 등)가 효과적으로 문서를 탐색하고 활용할 수 있는 최적의 `docs/` 폴더 구조 및 관리 체계를 도출하기 위한 것입니다.
+[한국어](./00-meta-prompt.ko.md)
 
----
-
-## 🎯 목표
-
-프론트엔드 모노레포의 기술 문서 시스템을 다음 관점에서 재설계:
-
-1. **AI 탐색 최적화**: AI 에이전트가 문서를 빠르고 정확하게 검색하고 참조할 수 있는 구조
-2. **유지보수 가능성**: 팀이 실제로 지속 가능하게 관리할 수 있는 메타데이터 수준
-3. **점진적 도입**: 기존 문서를 유지하면서 단계적으로 개선할 수 있는 전략
-4. **표준 호환**: AGENTS.md, llms.txt 등 신흥 AI 문서 표준과의 호환
+> This meta-prompt is designed to derive optimal `docs/` folder structure and management system that enables AI coding agents (Cursor, Claude Code, Copilot, etc.) to effectively navigate and utilize documentation.
 
 ---
 
-## 📊 현재 상황 (Context)
+## 🎯 Goals
 
-### 문서 규모 및 구조
+Redesign the frontend monorepo technical documentation system from these perspectives:
 
-| 항목 | 현황 |
-|------|------|
-| docs 파일 수 | 약 75개 |
-| Frontmatter 있는 파일 | 일부 (AI 문서화 섹션만) |
-| 폴더 구조 | 번호 prefix 기반 (00-06) |
-| AGENTS.md | ✅ 존재 (docs 내 네비게이션 가이드) |
-| .ai-agents/commands | ✅ 10개 커맨드 파일 |
-| .cursor/rules | ✅ Cursor 룰 파일들 |
+1. **AI Navigation Optimization**: Structure that allows AI agents to search and reference documents quickly and accurately
+2. **Maintainability**: Metadata level that teams can realistically sustain
+3. **Gradual Adoption**: Strategy to improve incrementally while maintaining existing documents
+4. **Standard Compatibility**: Compatibility with emerging AI documentation standards like AGENTS.md, llms.txt
 
-### 현재 폴더 구조
+---
+
+## 📊 Current Situation (Context)
+
+### Documentation Scale and Structure
+
+| Item | Status |
+|------|--------|
+| Number of docs files | ~75 |
+| Files with Frontmatter | Partial (AI documentation section only) |
+| Folder structure | Number prefix-based (00-06) |
+| AGENTS.md | ✅ Exists (navigation guide within docs) |
+| .ai-agents/commands | ✅ 10 command files |
+| .cursor/rules | ✅ Cursor rule files |
+
+### Current Folder Structure
 
 ```
 docs/
-├── 00-meta/                # 문서화 시스템 메타 정보 (Frontmatter 스키마, AI 문서화 방법론)
-├── 01-foundation/          # 기반 (요구사항, 환경설정, 에셋 시스템)
-├── 02-how-we-work/         # 일하는 방법 (개발 프로세스, PR, 배포)
-├── 03-architecture/        # 아키텍처 & 컨벤션
-├── 04-best-practice/       # 코딩 패턴 가이드 (API, 에러처리, 테스트, TS, 스타일, AI)
-├── 05-infrastructure/      # 인프라 (Nx, CI/CD, Kubernetes)
-├── 06-migration/           # 마이그레이션
-├── 07-app-lifecycle/       # 앱 생명주기
-├── README.md               # 전체 문서 인덱스
-└── AGENTS.md               # AI 에이전트용 네비게이션 가이드
+├── 00-meta/                # Documentation system meta info (Frontmatter schema, AI documentation methodology)
+├── 01-foundation/          # Foundation (requirements, setup, asset system)
+├── 02-how-we-work/         # How we work (development process, PR, deployment)
+├── 03-architecture/        # Architecture & conventions
+├── 04-best-practice/       # Coding pattern guides (API, error handling, testing, TS, styling, AI)
+├── 05-infrastructure/      # Infrastructure (Nx, CI/CD, Kubernetes)
+├── 06-migration/           # Migration
+├── 07-app-lifecycle/       # App lifecycle
+├── README.md               # Full document index
+└── AGENTS.md               # Navigation guide for AI agents
 ```
 
-### 기존 리서치에서 검증된 핵심 발견
+### Key Findings Verified from Previous Research
 
-#### 메타데이터 (Frontmatter)
+#### Metadata (Frontmatter)
 
-| 발견 | 근거 |
-|------|------|
-| **3개 필수 필드**로 충분 | title, description, type - GitHub Docs, Astro Starlight 등 대규모 프로젝트 검증 |
-| **5개 이상 필드 = 유지보수 포기** | 6개월 내 준수율 50% 이하로 하락 |
-| **description이 AI 검색의 핵심** | llms.txt 생성, 임베딩 벡터의 주요 소스 |
-| **Diátaxis 4분류 효과적** | tutorial, guide, reference, explanation |
+| Finding | Evidence |
+|---------|----------|
+| **3 required fields** are sufficient | title, description, type - Verified in large projects like GitHub Docs, Astro Starlight |
+| **5+ fields = maintenance abandonment** | Compliance drops below 50% within 6 months |
+| **description is key for AI search** | Primary source for llms.txt generation, embedding vectors |
+| **Diátaxis 4-classification effective** | tutorial, guide, reference, explanation |
 
-#### 문서 관계
+#### Document Relationships
 
-| 발견 | 근거 |
-|------|------|
-| **하이브리드 접근법 최적** | 본문 링크 + 매니페스트(llms.txt) + 최소 관계 필드 |
-| **4가지 관계만 유의미** | prerequisites, related, supersedes, see_also |
-| **백링크는 우선순위 낮음** | 벡터 검색이 대부분 커버, 수동 관리 ROI 낮음 |
-| **GraphRAG는 75개 문서에 과도** | 단순 프론트매터 + llms.txt로 80% 효과 달성 |
+| Finding | Evidence |
+|---------|----------|
+| **Hybrid approach optimal** | In-text links + manifest (llms.txt) + minimal relationship fields |
+| **Only 4 relationships meaningful** | prerequisites, related, supersedes, see_also |
+| **Backlinks are low priority** | Vector search covers most cases, low ROI for manual management |
+| **GraphRAG is overkill for 75 documents** | Simple frontmatter + llms.txt achieves 80% effectiveness |
 
-#### AI 표준
+#### AI Standards
 
-| 표준 | 역할 |
-|------|------|
-| **AGENTS.md** | 프로젝트 규칙, 빌드 명령, 코딩 컨벤션 (20,000+ OSS 프로젝트 채택) |
-| **llms.txt** | 문서 인덱스, AI 탐색용 요약 (784+ 구현체, Vercel 10% 가입 기여) |
-| **.cursor/rules/** | Cursor 전용 지침 (파일 패턴별 조건부 로딩) |
-
----
-
-## 🔍 설계 질문 (DeepSearch 요청)
-
-### Part A: 폴더 구조 최적화
-
-1. **번호 prefix 유지 vs 의미 기반 폴더**
-   - 현재 `00-meta`, `01-foundation`, `02-how-we-work` 등 번호 체계 사용
-   - AI 탐색 관점에서 번호 prefix가 도움이 되는가, 방해가 되는가?
-   - 의미 기반(`guides/`, `reference/`, `architecture/`)으로 전환 시 트레이드오프는?
-
-2. **계층 깊이 최적화**
-   - 현재 최대 4단계 깊이 (`docs/04-best-practice/00-api/patterns/xxx.md`)
-   - AI 에이전트에게 최적의 폴더 깊이는?
-   - 2단계 이내로 평탄화할 경우 장단점은?
-
-3. **인덱스 파일 전략**
-   - 각 폴더의 README.md vs 루트 llms.txt
-   - 계층적 인덱스(폴더별 llms.txt) vs 단일 중앙 인덱스
-   - AI 에이전트가 선호하는 인덱스 구조는?
-
-4. **파일 명명 규칙**
-   - 현재: `00-overview.md`, `suspense-query-cohesion-pattern.md` 혼재
-   - AI 탐색에 최적인 파일명 패턴은?
-   - 일관성 vs 설명적 이름의 균형점은?
-
-### Part B: Frontmatter 스키마 결정
-
-1. **필수 필드 최종 확정**
-   - 현재 후보: `title`, `description`, `type`
-   - `ai_summary` 필드가 `description`과 별도로 필요한가?
-   - 75개 문서 규모에서 정말 3개로 충분한가?
-
-2. **type 분류 체계**
-   - Diátaxis 4분류: `tutorial`, `guide`, `reference`, `explanation`
-   - 현재 사용 중인 타입: `guide`, `reference`, `adr`, `troubleshooting`, `pattern`, `index`
-   - 두 체계를 어떻게 통합하거나 선택할 것인가?
-
-3. **관계 필드 도입 기준**
-   - `prerequisites`: 어떤 문서에 적용해야 하는가?
-   - `supersedes`: 마이그레이션 문서에만 필요한가?
-   - `related`: 양방향 관리 비용 대비 효용은?
-
-4. **tags vs 폴더 구조**
-   - 태그로 교차 분류할 것인가, 폴더 구조로 단일 분류할 것인가?
-   - Controlled vocabulary 크기는 몇 개가 적정한가?
-
-### Part C: AI 에이전트 통합 아키텍처
-
-1. **llms.txt 설계**
-   - docs/llms.txt vs 루트 llms.txt 위치
-   - llms-full.txt(전체 내용 포함) 생성 여부
-   - 자동 생성 vs 수동 큐레이션
-
-2. **AGENTS.md 역할 분리**
-   - 현재 docs/AGENTS.md: 문서 구조 가이드
-   - 루트 AGENTS.md 필요 여부: 프로젝트 전반 규칙
-   - .ai-agents/commands/와의 관계 정리
-
-3. **Cursor/Claude 통합**
-   - .cursor/rules/와 docs의 연결 방식
-   - CLAUDE.md 도입 여부
-   - 문서 참조 패턴(@docs/path vs 절대경로)
-
-4. **검색 파이프라인**
-   - 벡터 검색 vs 그래프 탐색 vs 키워드 필터링
-   - 75개 문서 규모에서 최적의 조합은?
-   - 향후 확장(200+ 문서)을 고려한 설계는?
-
-### Part D: 마이그레이션 전략
-
-1. **Phase 우선순위**
-   - Phase 1(기반 구축): 어떤 문서부터 frontmatter 추가?
-   - Phase 2(확장): 자동화 도구 도입 시점?
-   - Phase 3(최적화): GraphRAG 검토 시점?
-
-2. **기존 구조 호환성**
-   - 번호 prefix를 유지하면서 의미 기반 분류 병행 가능?
-   - 기존 링크 깨짐 방지 전략?
-   - 점진적 마이그레이션 vs 일괄 전환?
-
-3. **자동화 도구**
-   - Frontmatter 자동 생성 도구 (LLM 기반)
-   - 링크 검증 CI (Lychee 등)
-   - llms.txt 빌드 타임 생성
+| Standard | Role |
+|----------|------|
+| **AGENTS.md** | Project rules, build commands, coding conventions (20,000+ OSS projects adopted) |
+| **llms.txt** | Document index, AI navigation summary (784+ implementations, contributed 10% to Vercel signups) |
+| **.cursor/rules/** | Cursor-specific directives (conditional loading by file patterns) |
 
 ---
 
-## 📐 기대 산출물
+## 🔍 Design Questions (DeepSearch Request)
 
-### 1. 최적화된 폴더 구조 제안
+### Part A: Folder Structure Optimization
+
+1. **Number prefix retention vs semantic folders**
+   - Currently using numbering system like `00-meta`, `01-foundation`, `02-how-we-work`
+   - Does number prefix help or hinder AI navigation?
+   - What are the tradeoffs of switching to semantic (`guides/`, `reference/`, `architecture/`)?
+
+2. **Hierarchy depth optimization**
+   - Currently up to 4 levels deep (`docs/04-best-practice/00-api/patterns/xxx.md`)
+   - What's the optimal folder depth for AI agents?
+   - Pros and cons of flattening to 2 levels or less?
+
+3. **Index file strategy**
+   - README.md in each folder vs root llms.txt
+   - Hierarchical index (llms.txt per folder) vs single central index
+   - What index structure do AI agents prefer?
+
+4. **File naming conventions**
+   - Current: mixed `00-overview.md`, `suspense-query-cohesion-pattern.md`
+   - What filename pattern is optimal for AI navigation?
+   - Balance between consistency vs descriptive names?
+
+### Part B: Frontmatter Schema Decision
+
+1. **Finalize required fields**
+   - Current candidates: `title`, `description`, `type`
+   - Is `ai_summary` field needed separately from `description`?
+   - Are 3 fields really sufficient at 75 document scale?
+
+2. **Type classification system**
+   - Diátaxis 4-classification: `tutorial`, `guide`, `reference`, `explanation`
+   - Currently used types: `guide`, `reference`, `adr`, `troubleshooting`, `pattern`, `index`
+   - How to integrate or choose between these two systems?
+
+3. **Relationship field introduction criteria**
+   - `prerequisites`: Which documents should this apply to?
+   - `supersedes`: Only needed for migration documents?
+   - `related`: What's the utility vs cost of bidirectional management?
+
+4. **Tags vs folder structure**
+   - Cross-classify with tags, or single-classify with folder structure?
+   - What's the appropriate size for controlled vocabulary?
+
+### Part C: AI Agent Integration Architecture
+
+1. **llms.txt design**
+   - docs/llms.txt vs root llms.txt location
+   - Whether to generate llms-full.txt (including full content)
+   - Auto-generation vs manual curation
+
+2. **AGENTS.md role separation**
+   - Current docs/AGENTS.md: document structure guide
+   - Whether root AGENTS.md is needed: project-wide rules
+   - Relationship with .ai-agents/commands/
+
+3. **Cursor/Claude integration**
+   - Connection method between .cursor/rules/ and docs
+   - Whether to introduce CLAUDE.md
+   - Document reference patterns (@docs/path vs absolute path)
+
+4. **Search pipeline**
+   - Vector search vs graph traversal vs keyword filtering
+   - Optimal combination at 75 document scale?
+   - Design considering future expansion (200+ documents)?
+
+### Part D: Migration Strategy
+
+1. **Phase priorities**
+   - Phase 1 (foundation): Which documents to add frontmatter first?
+   - Phase 2 (expansion): When to introduce automation tools?
+   - Phase 3 (optimization): When to review GraphRAG?
+
+2. **Existing structure compatibility**
+   - Can semantic classification coexist while maintaining number prefixes?
+   - Strategy to prevent link breakage?
+   - Gradual migration vs batch conversion?
+
+3. **Automation tools**
+   - Frontmatter auto-generation tool (LLM-based)
+   - Link validation CI (Lychee, etc.)
+   - llms.txt build-time generation
+
+---
+
+## 📐 Expected Outputs
+
+### 1. Optimized Folder Structure Proposal
 
 ```
 docs/
-├── llms.txt                    # AI 인덱스
-├── AGENTS.md                   # AI 에이전트 네비게이션 가이드
-├── README.md                   # 인간용 전체 인덱스
-├── [최적화된 하위 구조...]
+├── llms.txt                    # AI index
+├── AGENTS.md                   # AI agent navigation guide
+├── README.md                   # Human-readable full index
+├── [optimized substructure...]
 ```
 
-### 2. Frontmatter 스키마 표준
+### 2. Frontmatter Schema Standard
 
 ```yaml
 ---
-# 필수 필드
+# Required fields
 title: "..."
 description: "..."
 type: guide | reference | tutorial | explanation | adr | troubleshooting
 
-# 권장 필드
+# Recommended fields
 tags: [...]
 sidebar_position: N
 
-# 선택 필드 (해당 시)
+# Optional fields (when applicable)
 prerequisites: [...]
 supersedes: "..."
 last_updated: YYYY-MM-DD
 ---
 ```
 
-### 3. llms.txt 템플릿
+### 3. llms.txt Template
 
 ```markdown
 # Enterprise Web Documentation
-> 프론트엔드 모노레포 기술 문서
+> Frontend monorepo technical documentation
 
 ## Getting Started
 - [...]
@@ -215,75 +217,75 @@ last_updated: YYYY-MM-DD
 - [...]
 ```
 
-### 4. 마이그레이션 로드맵
+### 4. Migration Roadmap
 
-| Phase | 기간 | 목표 | 산출물 |
-|-------|------|------|--------|
-| 0 | 1주 | 파일럿 | 핵심 10개 문서 frontmatter |
-| 1 | 2-4주 | 기반 | 전체 frontmatter, llms.txt |
-| 2 | 4-8주 | 관계 | prerequisites, CI 링크 체크 |
-| 3 | 3개월+ | 최적화 | 자동 생성, 검색 파이프라인 |
+| Phase | Duration | Goal | Outputs |
+|-------|----------|------|---------|
+| 0 | 1 week | Pilot | Frontmatter for core 10 documents |
+| 1 | 2-4 weeks | Foundation | Full frontmatter, llms.txt |
+| 2 | 4-8 weeks | Relationships | prerequisites, CI link checking |
+| 3 | 3+ months | Optimization | Auto-generation, search pipeline |
 
-### 5. 검증 지표
+### 5. Validation Metrics
 
-| 지표 | 측정 방법 | 목표 |
-|------|----------|------|
-| Frontmatter 커버리지 | 파일 수 / 전체 | 100% |
-| AI 검색 정확도 | ask 커맨드 성공률 | >90% |
-| 유지보수 준수율 | 3개월 후 필드 최신성 | >80% |
+| Metric | Measurement Method | Target |
+|--------|-------------------|--------|
+| Frontmatter coverage | file count / total | 100% |
+| AI search accuracy | ask command success rate | >90% |
+| Maintenance compliance | field freshness after 3 months | >80% |
 
 ---
 
-## 🔗 참고 자료 (리서치 결과)
+## 🔗 References (Research Results)
 
-### 내부 문서
-- `01-raw-results/00-meta-prompt.md` - 원본 DeepSearch 요청
-- `01-raw-results/01-gpt.md` - GPT GraphRAG 아키텍처 제안
-- `01-raw-results/02-gemini.md` - Gemini 확장 메타 프롬프트
-- `01-raw-results/03-claude.md` - Claude 실용적 스키마
-- `02-synthesized-results/01-gpt.md` - GPT 종합 결과
-- `02-synthesized-results/02-gemini.md` - Gemini 종합 결과
-- `02-synthesized-results/03-claude.md` - Claude 종합 결과
+### Internal Documents
+- `01-raw-results/00-meta-prompt.md` - Original DeepSearch request
+- `01-raw-results/01-gpt.md` - GPT GraphRAG architecture proposal
+- `01-raw-results/02-gemini.md` - Gemini extended meta-prompt
+- `01-raw-results/03-claude.md` - Claude practical schema
+- `02-synthesized-results/01-gpt.md` - GPT synthesized results
+- `02-synthesized-results/02-gemini.md` - Gemini synthesized results
+- `02-synthesized-results/03-claude.md` - Claude synthesized results
 
-### 외부 표준
-- [llmstxt.org](https://llmstxt.org/) - llms.txt 표준
-- [agents.md](https://agents.md/) - AGENTS.md 표준
-- [Diátaxis](https://diataxis.fr/) - 문서 분류 프레임워크
+### External Standards
+- [llmstxt.org](https://llmstxt.org/) - llms.txt standard
+- [agents.md](https://agents.md/) - AGENTS.md standard
+- [Diátaxis](https://diataxis.fr/) - Documentation classification framework
 - [GitHub Docs Frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter)
-- [MADR 4.0](https://adr.github.io/madr/) - ADR 템플릿
+- [MADR 4.0](https://adr.github.io/madr/) - ADR template
 
 ---
 
-## ✅ 성공 기준
+## ✅ Success Criteria
 
-| 기준 | 설명 |
-|------|------|
-| **실용성** | 75개 문서 규모에서 실제 적용 가능 |
-| **유지보수성** | 팀이 6개월 이상 준수할 수 있는 수준 |
-| **AI 효과성** | Cursor, Claude Code에서 측정 가능한 탐색 개선 |
-| **점진적 도입** | 기존 워크플로우 중단 없이 단계별 적용 |
-| **표준 호환** | llms.txt, AGENTS.md 표준과 일치 |
-
----
-
-## ❓ 열린 질문 (답을 모르는 것들)
-
-1. 번호 prefix가 AI 탐색에 도움이 되는가, 노이즈인가?
-2. 폴더 깊이 2단계 제한이 실제로 AI 성능을 개선하는가?
-3. llms.txt 수동 큐레이션 vs 자동 생성 중 어느 쪽이 품질이 높은가?
-4. tags 필드가 폴더 구조보다 AI 검색에 더 효과적인가?
-5. 200+ 문서로 확장 시 현재 설계가 스케일하는가?
+| Criterion | Description |
+|-----------|-------------|
+| **Practicality** | Actually applicable at 75 document scale |
+| **Maintainability** | Level that teams can sustain for 6+ months |
+| **AI Effectiveness** | Measurable navigation improvement in Cursor, Claude Code |
+| **Gradual Adoption** | Phase-by-phase application without disrupting existing workflows |
+| **Standard Compatibility** | Alignment with llms.txt, AGENTS.md standards |
 
 ---
 
-## 🚀 사용 방법
+## ❓ Open Questions (Unknown Answers)
 
-이 메타프롬프트를 다음 상황에서 사용하세요:
+1. Does number prefix help or add noise to AI navigation?
+2. Does limiting folder depth to 2 levels actually improve AI performance?
+3. Which produces higher quality: manual curation vs auto-generation for llms.txt?
+4. Is tags field more effective for AI search than folder structure?
+5. Does current design scale when expanding to 200+ documents?
 
-1. **DeepSearch 요청**: AI 모델에게 위 질문들을 던져 다양한 관점 수집
-2. **팀 논의 기반**: 설계 질문을 팀 회의 안건으로 활용
-3. **점진적 개선**: Phase별로 산출물을 검증하며 스키마 진화
-4. **벤치마킹**: 다른 OSS 프로젝트 docs 구조와 비교 분석
+---
+
+## 🚀 Usage
+
+Use this meta-prompt in these situations:
+
+1. **DeepSearch Request**: Pose the above questions to AI models to collect diverse perspectives
+2. **Team Discussion Basis**: Use design questions as agenda items for team meetings
+3. **Gradual Improvement**: Validate outputs phase by phase while evolving the schema
+4. **Benchmarking**: Compare against docs structures of other OSS projects
 
 ---
 
