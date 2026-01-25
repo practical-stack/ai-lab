@@ -58,18 +58,14 @@ Most real features need **multiple component types**. Common patterns:
 
 See [combination-patterns.md](references/combination-patterns.md) for details.
 
-## Next Steps (After Diagnosis)
+## Output
 
-After diagnosing the component type, use the appropriate creation skill:
+This skill outputs:
+1. **Diagnosis** - Component type (Command / Skill / Agent / Combination)
+2. **Spec Template** - Filled template from `references/templates/`
+3. **Rationale** - Why this type, why not others
 
-| Diagnosis | Next Action | Creation Skill |
-|-----------|-------------|----------------|
-| ⚡ **COMMAND** | Use spec template directly | [templates/command.yaml](references/templates/command.yaml) |
-| 📚 **SKILL** | Load meta-skill-creator | [meta-skill-creator](../meta-skill-creator/SKILL.md) |
-| 🤖 **AGENT** | Load meta-agent-creator | [meta-agent-creator](../meta-agent-creator/SKILL.md) |
-| **Combination** | Generate specs for all components | Follow order in combination-patterns.md |
-
-> **Note**: This skill diagnoses *what* type to use. The creation skills guide *how* to build it.
+> **Note**: This skill diagnoses *what* type to use. Implementation is handled by the calling Command.
 
 ## Platform Support
 

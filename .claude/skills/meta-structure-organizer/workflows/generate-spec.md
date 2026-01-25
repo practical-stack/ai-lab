@@ -124,34 +124,6 @@ After the spec, add:
 - [Important consideration 2]
 ```
 
-## Step 6: Link to Creation Skill
+## Done
 
-Based on diagnosis, guide to the appropriate creation skill for detailed implementation:
-
-| Diagnosis | Creation Workflow | Skill Location |
-|-----------|-------------------|----------------|
-| ⚡ COMMAND | Spec template is self-contained | N/A (implement directly) |
-| 📚 SKILL | 6-phase creation workflow | `.claude/skills/meta-skill-creator/SKILL.md` |
-| 🤖 AGENT | 5-phase creation workflow | `.claude/skills/meta-agent-creator/SKILL.md` |
-
-Add to output:
-
-```markdown
-## 생성 가이드
-
-진단 결과에 따라 다음 스킬을 로드하여 구현을 진행하세요:
-
-- **SKILL 생성**: `.claude/skills/meta-skill-creator/SKILL.md` (6단계 워크플로우)
-- **AGENT 생성**: `.claude/skills/meta-agent-creator/SKILL.md` (5단계 워크플로우)
-- **COMMAND 생성**: 위 스펙 템플릿을 기반으로 직접 구현
-
-### 조합 패턴의 경우
-
-조합이 필요한 경우, 다음 순서로 구현:
-
-1. **Command 먼저** (진입점)
-2. **Agent 다음** (오케스트레이션 로직)
-3. **Skills 마지막** (도메인 지식)
-
-각 컴포넌트가 서로를 참조할 수 있도록 이름과 구조를 미리 정의하세요.
-```
+Spec generation complete. Return the filled template(s) to the calling command for orchestration.

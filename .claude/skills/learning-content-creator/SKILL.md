@@ -31,7 +31,8 @@ Research Materials → Learning Path (EN) → Translation (KO) → Frontmatter
 |--------|----------|
 | Create learning content from research | [workflows/create-learning.md](workflows/create-learning.md) |
 | Translate EN to KO | [workflows/translate.md](workflows/translate.md) |
-| Add frontmatter to docs | Load skill `doc-frontmatter` |
+
+> **Note**: Phase 4 (Frontmatter) uses the `doc-frontmatter` schema. The calling command handles skill orchestration.
 
 ## Phase 1: ANALYZE Research
 
@@ -249,13 +250,9 @@ Continue to [Module N+1: Title](./0N+1-title.en.md)
 
 **Goal**: Add YAML frontmatter to all learning documents.
 
-### Load Required Skill
+### Frontmatter Schema
 
-```
-Load skill: doc-frontmatter
-```
-
-See `.claude/skills/doc-frontmatter/SKILL.md` for schema.
+Use the frontmatter schema from `doc-frontmatter` skill (see `.claude/skills/doc-frontmatter/references/schema.md`).
 
 ### Frontmatter Template for Learning Content
 

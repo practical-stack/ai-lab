@@ -190,6 +190,6 @@ docs/NN-topic/learning/
 ...
 ```
 
-## Next Step
+## Done
 
-Add frontmatter to all files. Load skill: `doc-frontmatter`
+Translation complete. Return to calling command for frontmatter phase.
