@@ -4,7 +4,7 @@ description: "Understanding how Agent, Skill, Command, and Tool layers work toge
 type: tutorial
 tags: [AI, Architecture]
 order: 2
-depends_on: [./01-fundamentals.en.md]
+depends_on: [./01-fundamentals.md]
 related: [./02-relationships.ko.md]
 ---
 
@@ -458,4 +458,4 @@ What log entries would you expect for this flow:
 
 ## Next Module
 
-[Module 3: Decision Framework](./03-decision-framework.en.md) - Learn when to build a Command vs Skill vs Agent with practical decision trees.
+[Module 3: Decision Framework](./03-decision-framework.md) - Learn when to build a Command vs Skill vs Agent with practical decision trees.

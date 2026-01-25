@@ -4,7 +4,7 @@ description: "12 common anti-patterns in AI agent architecture with prevention s
 type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 6
-depends_on: [./05-examples.en.md]
+depends_on: [./05-examples.md]
 related: [./06-anti-patterns.ko.md]
 ---
 
@@ -596,7 +596,7 @@ Congratulations! You've completed the AI Agent Architecture course.
 
 ## Resources
 
-- [Research Prompt](../research/00-research-prompt.en.md) - Original meta-prompt for research
-- [Claude Research](../research/01-claude.en.md) - Claude's research response
+- [Research Prompt](../research/00-research-prompt.md) - Original meta-prompt for research
+- [Claude Research](../research/01-claude.md) - Claude's research response
 - [GPT Research](../research/02-gpt/) - GPT's comprehensive research response (6 parts)
 - [Extracted Skill](../../../.claude/skills/meta-structure-organizer/) - Practical skill for component decisions

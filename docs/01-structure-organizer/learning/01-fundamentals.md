@@ -340,4 +340,4 @@ Write down:
 
 ## Next Module
 
-[Module 2: Component Relationships & Contracts](./02-relationships.en.md) - Learn how Commands, Skills, and Agents work together in a hierarchical system.
+[Module 2: Component Relationships & Contracts](./02-relationships.md) - Learn how Commands, Skills, and Agents work together in a hierarchical system.

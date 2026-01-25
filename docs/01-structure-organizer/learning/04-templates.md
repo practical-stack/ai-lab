@@ -4,7 +4,7 @@ description: "Ready-to-use specification templates for Command, Skill, and Agent
 type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 4
-depends_on: [./03-decision-framework.en.md]
+depends_on: [./03-decision-framework.md]
 related: [./04-templates.ko.md]
 ---
 
@@ -754,4 +754,4 @@ constraints:
 
 ## Next Module
 
-[Module 5: Real-World Examples](./05-examples.en.md) - See complete implementations of Commands, Skills, and Agents.
+[Module 5: Real-World Examples](./05-examples.md) - See complete implementations of Commands, Skills, and Agents.

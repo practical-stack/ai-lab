@@ -4,7 +4,7 @@ description: "Practical guide with decision trees and checklists to determine wh
 type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 3
-depends_on: [./02-relationships.en.md]
+depends_on: [./02-relationships.md]
 related: [./03-decision-framework.ko.md]
 ---
 
@@ -346,4 +346,4 @@ Uses tools: `file_read`, `test_runner`, `code_search`, `file_edit`
 
 ## Next Module
 
-[Module 4: Practical Design Templates](./04-templates.en.md) - Learn to write specification documents for Commands, Skills, and Agents.
+[Module 4: Practical Design Templates](./04-templates.md) - Learn to write specification documents for Commands, Skills, and Agents.

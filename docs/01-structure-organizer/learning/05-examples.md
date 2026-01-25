@@ -4,7 +4,7 @@ description: "Complete implementations of Commands, Skills, and Agents with proj
 type: tutorial
 tags: [AI, Architecture]
 order: 5
-depends_on: [./04-templates.en.md]
+depends_on: [./04-templates.md]
 related: [./05-examples.ko.md]
 ---
 
@@ -666,4 +666,4 @@ Output to docs/api/ directory.
 
 ## Next Module
 
-[Module 6: Anti-patterns & Best Practices](./06-anti-patterns.en.md) - Learn what NOT to do and how to prevent common mistakes.
+[Module 6: Anti-patterns & Best Practices](./06-anti-patterns.md) - Learn what NOT to do and how to prevent common mistakes.
