@@ -1,55 +1,57 @@
 ---
-title: "Frontmatter 방법론 리서치 자료"
-description: "AI/LLM 친화적 Frontmatter 설계 방법론 도출을 위한 DeepSearch 리서치 과정과 결과물"
+title: "Frontmatter Methodology Research Materials"
+description: "DeepSearch research process and outputs for deriving AI/LLM-friendly Frontmatter design methodology"
 type: index
 tags: [Documentation, AI, Frontmatter, BestPractice]
 depends_on: [../README.md]
 ---
 
-# Frontmatter 방법론 리서치 자료
+# Frontmatter Methodology Research Materials
 
-[00-guide.md](../00-guide.md) 도출을 위한 리서치 과정과 결과물입니다.
+[한국어](./README.ko.md)
 
-## 리서치 과정
+Research process and outputs for deriving [00-guide.md](../00-guide.md).
+
+## Research Process
 
 ```
-1️⃣ 메타프롬프트 설계
+1️⃣ Meta-prompt Design
    └── 00-meta-prompt.md
 
-2️⃣ 1차 DeepSearch (3개 AI 모델)
+2️⃣ 1st DeepSearch (3 AI Models)
    └── raw-results/
-       ├── 01-gpt.md      (GraphRAG 아키텍처 관점)
-       ├── 02-gemini.md   (URN/JSON Schema 관점)
-       └── 03-claude.md   (실용적 최소 스키마 관점)
+       ├── 01-gpt.md      (GraphRAG architecture perspective)
+       ├── 02-gemini.md   (URN/JSON Schema perspective)
+       └── 03-claude.md   (Practical minimal schema perspective)
 
-3️⃣ 2차 종합 분석
+3️⃣ 2nd Synthesized Analysis
    └── synthesized-results/
-       ├── 01-gpt.md      (GPT 종합 분석)
-       ├── 02-gemini.md   (Gemini 종합 분석)
-       └── 03-claude.md   (Claude 종합 분석)
+       ├── 01-gpt.md      (GPT synthesized analysis)
+       ├── 02-gemini.md   (Gemini synthesized analysis)
+       └── 03-claude.md   (Claude synthesized analysis)
 
-4️⃣ 최종 방법론 도출
+4️⃣ Final Methodology Derivation
    └── ../00-guide.md
 ```
 
-## 파일 설명
+## File Descriptions
 
-| 파일 | 설명 |
-|------|------|
-| [00-meta-prompt.md](./00-meta-prompt.md) | DeepSearch에 사용된 메타프롬프트 |
-| [raw-results/](./raw-results/) | 1차 AI 리서치 원본 결과 |
-| [synthesized-results/](./synthesized-results/) | 2차 종합 분석 결과 |
+| File | Description |
+|------|-------------|
+| [00-meta-prompt.md](./00-meta-prompt.md) | Meta-prompt used for DeepSearch |
+| [raw-results/](./raw-results/) | 1st round AI research raw results |
+| [synthesized-results/](./synthesized-results/) | 2nd round synthesized analysis results |
 
-## 핵심 발견
+## Key Findings
 
-| AI 모델 | 핵심 관점 | 복잡도 | 채택 여부 |
-|---------|----------|--------|----------|
-| GPT | GraphRAG 파이프라인, 6단계 마이그레이션 | 높음 | 마이그레이션 로드맵 참고 |
-| Gemini | URN 기반 ID, JSON Schema 검증 | 매우 높음 | 불채택 (과도함) |
-| Claude | 실용적 최소 스키마, 즉시 적용 가능 | 낮음 | **기반 채택** |
+| AI Model | Key Perspective | Complexity | Adoption |
+|----------|-----------------|------------|----------|
+| GPT | GraphRAG pipeline, 6-stage migration | High | Referenced for migration roadmap |
+| Gemini | URN-based ID, JSON Schema validation | Very High | Not adopted (excessive) |
+| Claude | Practical minimal schema, immediately applicable | Low | **Adopted as foundation** |
 
-## 결론
+## Conclusion
 
-Claude의 실용적 스키마를 기반으로, GPT의 점진적 마이그레이션 로드맵과 Gemini의 관계 정의 일부를 결합한 **"Minimal Viable Frontmatter"** 접근법 채택.
+Adopted **"Minimal Viable Frontmatter"** approach combining Claude's practical schema as the foundation, with GPT's gradual migration roadmap and some of Gemini's relationship definitions.
 
-→ 최종 결과: [../00-guide.md](../00-guide.md)
+→ Final Result: [../00-guide.md](../00-guide.md)
