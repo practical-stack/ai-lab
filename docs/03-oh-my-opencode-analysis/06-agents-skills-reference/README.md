@@ -101,5 +101,5 @@ If studying the full system:
 ## See Also
 
 - [../02-design-patterns.md](../02-design-patterns.md) - Pattern explanations
-- [../04-practical-guide.md](../04-practical-guide.md) - How to apply these patterns
-- [../05-prompt-engineering.md](../05-prompt-engineering.md) - Prompt techniques
+- [../PRACTICAL-GUIDE.md](../PRACTICAL-GUIDE.md) - How to apply these patterns
+- [../04-prompt-engineering.md](../04-prompt-engineering.md) - Prompt techniques

@@ -467,6 +467,6 @@ src/
 
 - [00-core-philosophy.md](./00-core-philosophy.md) - Philosophy behind these decisions
 - [02-design-patterns.md](./02-design-patterns.md) - Patterns used in implementation
-- [04-practical-guide.md](./04-practical-guide.md) - How to apply this architecture
-- [05-prompt-engineering.md](./05-prompt-engineering.md) - How prompts structure agent behavior
-- [07-agents-skills-reference/](./07-agents-skills-reference/) - Detailed agent implementations
+- [PRACTICAL-GUIDE.md](./PRACTICAL-GUIDE.md) - How to apply this architecture
+- [04-prompt-engineering.md](./04-prompt-engineering.md) - How prompts structure agent behavior
+- [06-agents-skills-reference/](./06-agents-skills-reference/) - Detailed agent implementations

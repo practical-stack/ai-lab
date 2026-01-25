@@ -528,6 +528,6 @@ delegate_task(
 ## See Also
 
 - [03-anti-patterns.md](./03-anti-patterns.md) - What violates these patterns
-- [04-practical-guide.md](./04-practical-guide.md) - How to adopt these patterns
-- [05-prompt-engineering.md](./05-prompt-engineering.md) - Prompt patterns in detail
-- [07-agents-skills-reference/](./07-agents-skills-reference/) - Concrete examples
+- [PRACTICAL-GUIDE.md](./PRACTICAL-GUIDE.md) - How to adopt these patterns
+- [04-prompt-engineering.md](./04-prompt-engineering.md) - Prompt patterns in detail
+- [06-agents-skills-reference/](./06-agents-skills-reference/) - Concrete examples

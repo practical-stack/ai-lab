@@ -285,5 +285,5 @@ Work like a compiler: markdown in, working code out.
 - [01-architecture.md](./01-architecture.md) - How these philosophies manifest in system design
 - [02-design-patterns.md](./02-design-patterns.md) - Patterns that implement these beliefs
 - [03-anti-patterns.md](./03-anti-patterns.md) - What violates these principles
-- [04-practical-guide.md](./04-practical-guide.md) - How to apply these philosophies to your project
-- [06-eval-methodology.md](./06-eval-methodology.md) - How the system verifies adherence
+- [PRACTICAL-GUIDE.md](./PRACTICAL-GUIDE.md) - How to apply these philosophies to your project
+- [05-eval-methodology.md](./05-eval-methodology.md) - How the system verifies adherence

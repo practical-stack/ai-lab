@@ -527,5 +527,5 @@ When things go wrong, follow this protocol:
 
 - [00-core-philosophy.md](./00-core-philosophy.md) - Why these anti-patterns violate core beliefs
 - [02-design-patterns.md](./02-design-patterns.md) - What to do instead
-- [04-practical-guide.md](./04-practical-guide.md) - How to adopt the correct patterns
-- [06-eval-methodology.md](./06-eval-methodology.md) - How violations are detected
+- [PRACTICAL-GUIDE.md](./PRACTICAL-GUIDE.md) - How to adopt the correct patterns
+- [05-eval-methodology.md](./05-eval-methodology.md) - How violations are detected

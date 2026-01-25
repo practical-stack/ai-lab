@@ -1,8 +1,8 @@
 # Prompt Engineering Patterns
 
-**Document:** 05-prompt-engineering.md  
+**Document:** 04-prompt-engineering.md  
 **Part of:** Oh-My-OpenCode Repository Analysis  
-**Source:** `sisyphus-prompt.md`, `src/features/builtin-skills/`, `src/hooks/`, `06-eval-methodology.md`
+**Source:** `sisyphus-prompt.md`, `src/features/builtin-skills/`, `src/hooks/`, `05-eval-methodology.md`
 
 ---
 
@@ -417,7 +417,7 @@ describe("Todo Continuation Enforcer", () => {
 
 ## Evaluation: How Oh-My-OpenCode Verifies Prompt Compliance
 
-Oh-My-OpenCode doesn't just write good prompts—it verifies that agents follow them. See [06-eval-methodology.md](./06-eval-methodology.md) for complete details.
+Oh-My-OpenCode doesn't just write good prompts—it verifies that agents follow them. See [05-eval-methodology.md](./05-eval-methodology.md) for complete details.
 
 ### Evaluation Layers
 
@@ -566,6 +566,6 @@ Needs sharing/versioning?
 
 - [02-design-patterns.md](./02-design-patterns.md) - 7-section delegation prompt pattern
 - [03-anti-patterns.md](./03-anti-patterns.md) - What prompts should prevent
-- [04-practical-guide.md](./04-practical-guide.md) - How to apply these prompt patterns
-- [06-eval-methodology.md](./06-eval-methodology.md) - Complete evaluation methodology details
-- [07-agents-skills-reference/](./07-agents-skills-reference/) - Concrete examples
+- [PRACTICAL-GUIDE.md](./PRACTICAL-GUIDE.md) - How to apply these prompt patterns
+- [05-eval-methodology.md](./05-eval-methodology.md) - Complete evaluation methodology details
+- [06-agents-skills-reference/](./06-agents-skills-reference/) - Concrete examples
