@@ -4,7 +4,7 @@ description: "Command/Skill/Agent 설계의 12가지 실패 패턴과 증상, �
 type: explanation
 tags: [Architecture, AI]
 order: 6
-related: ["./06-anti-patterns.en.md"]
+related: ["./06-anti-patterns.md"]
 depends_on: [./README.md]
 ---
 

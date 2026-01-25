@@ -4,7 +4,7 @@ description: "작업 복잡성과 재사용성 기반 Command, Skill, Agent 결�
 type: explanation
 tags: [Architecture, AI]
 order: 3
-related: ["./03-decision-rules.en.md"]
+related: ["./03-decision-rules.md"]
 depends_on: [./README.md]
 ---
 

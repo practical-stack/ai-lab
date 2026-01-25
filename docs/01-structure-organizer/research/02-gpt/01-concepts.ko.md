@@ -4,7 +4,7 @@ description: "Command, Skill, Agent의 정확한 정의와 분리 방법, 프레
 type: explanation
 tags: [Architecture, AI]
 order: 1
-related: ["./01-concepts.en.md"]
+related: ["./01-concepts.md"]
 depends_on: [./README.md]
 ---
 
