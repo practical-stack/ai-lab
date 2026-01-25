@@ -33,27 +33,27 @@ function validateBeforePackage(skillPath: string): { valid: boolean; error?: str
   const skillMdPath = join(skillPath, "SKILL.md");
   
   if (!existsSync(skillMdPath)) {
-    return { valid: false, error: "SKILL.md 파일이 없습니다" };
+    return { valid: false, error: "SKILL.md file not found" };
   }
 
   const content = readFileSync(skillMdPath, "utf-8");
   const todoMatches = content.match(/\[TODO[^\]]*\]/gi);
   
   if (todoMatches && todoMatches.length > 0) {
-    return { valid: false, error: `완료되지 않은 TODO 항목이 ${todoMatches.length}개 있습니다` };
+    return { valid: false, error: `${todoMatches.length} unresolved TODO item(s) found` };
   }
 
   const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
   if (!frontmatterMatch) {
-    return { valid: false, error: "YAML frontmatter가 없습니다" };
+    return { valid: false, error: "YAML frontmatter not found" };
   }
 
   if (!frontmatterMatch[1].includes("name:")) {
-    return { valid: false, error: "frontmatter에 'name' 필드가 없습니다" };
+    return { valid: false, error: "Missing 'name' field in frontmatter" };
   }
 
   if (!frontmatterMatch[1].includes("description:")) {
-    return { valid: false, error: "frontmatter에 'description' 필드가 없습니다" };
+    return { valid: false, error: "Missing 'description' field in frontmatter" };
   }
 
   return { valid: true };
@@ -64,19 +64,19 @@ function packageSkill(skillPath: string, outputDir?: string): PackageResult {
   const skillName = basename(resolvedPath);
 
   if (!existsSync(resolvedPath)) {
-    return { success: false, error: `스킬 폴더를 찾을 수 없습니다: ${resolvedPath}` };
+    return { success: false, error: `Skill folder not found: ${resolvedPath}` };
   }
 
   if (!statSync(resolvedPath).isDirectory()) {
-    return { success: false, error: `경로가 디렉토리가 아닙니다: ${resolvedPath}` };
+    return { success: false, error: `Path is not a directory: ${resolvedPath}` };
   }
 
-  console.log("🔍 패키징 전 검증 중...");
+  console.log("🔍 Validating before packaging...");
   const validation = validateBeforePackage(resolvedPath);
   if (!validation.valid) {
     return { success: false, error: validation.error };
   }
-  console.log("✅ 검증 통과\n");
+  console.log("✅ Validation passed\n");
 
   const targetDir = outputDir ? resolve(outputDir) : process.cwd();
   if (!existsSync(targetDir)) {
@@ -86,7 +86,7 @@ function packageSkill(skillPath: string, outputDir?: string): PackageResult {
   const outputPath = join(targetDir, `${skillName}.skill`);
   const files = getAllFiles(resolvedPath);
 
-  console.log("📦 파일 패키징 중:");
+  console.log("📦 Packaging files:");
   
   try {
     const zipCommand = `cd "${resolvedPath}" && zip -r "${outputPath}" .`;
@@ -97,11 +97,11 @@ function packageSkill(skillPath: string, outputDir?: string): PackageResult {
       console.log(`   - ${relativePath}`);
     }
 
-    console.log(`\n✅ 패키징 완료: ${outputPath}`);
+    console.log(`\n✅ Packaging complete: ${outputPath}`);
     return { success: true, outputPath };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return { success: false, error: `패키징 오류: ${message}` };
+    return { success: false, error: `Packaging error: ${message}` };
   }
 }
 
@@ -109,8 +109,8 @@ function main(): void {
   const args = process.argv.slice(2);
 
   if (args.length < 1) {
-    console.log("사용법: bun scripts/package-skill.ts <skill-folder> [output-dir]");
-    console.log("\n예시:");
+    console.log("Usage: bun scripts/package-skill.ts <skill-folder> [output-dir]");
+    console.log("\nExamples:");
     console.log("  bun scripts/package-skill.ts .claude/skills/my-skill");
     console.log("  bun scripts/package-skill.ts .claude/skills/my-skill ./dist");
     process.exit(1);
@@ -119,9 +119,9 @@ function main(): void {
   const skillPath = args[0];
   const outputDir = args[1];
 
-  console.log(`📦 스킬 패키징: ${skillPath}`);
+  console.log(`📦 Packaging skill: ${skillPath}`);
   if (outputDir) {
-    console.log(`   출력 디렉토리: ${outputDir}`);
+    console.log(`   Output directory: ${outputDir}`);
   }
   console.log();
 
@@ -130,7 +130,7 @@ function main(): void {
   if (result.success) {
     process.exit(0);
   } else {
-    console.error(`❌ 오류: ${result.error}`);
+    console.error(`❌ Error: ${result.error}`);
     process.exit(1);
   }
 }

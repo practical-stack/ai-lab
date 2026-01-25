@@ -11,106 +11,106 @@ import { join, resolve } from "path";
 const SKILL_MD_TEMPLATE = `---
 name: {{SKILL_NAME}}
 description: |
-  [TODO: 스킬의 목적과 사용 시점을 명확하게 설명하세요]
-  [TODO: 트리거 조건을 포함하세요 - 예: "~할 때 사용", "~라고 말하면 활성화"]
-  트리거: "키워드1", "키워드2", "keyword3"
+  [TODO: Clearly describe the skill's purpose and when to use it]
+  [TODO: Include trigger conditions - e.g., "use when...", "activates on..."]
+  Triggers: "keyword1", "keyword2", "keyword3"
 ---
 
 # {{SKILL_TITLE}}
 
-## 개요
+## Overview
 
-[TODO: 이 스킬이 무엇을 하는지 1-2문장으로 설명하세요]
+[TODO: Describe what this skill does in 1-2 sentences]
 
-## 빠른 시작
+## Quick Start
 
-[TODO: 즉시 사용 가능한 예시를 제공하세요]
+[TODO: Provide immediately usable examples]
 
 \`\`\`bash
-# 예시 명령어
+# Example command
 bun scripts/example.ts
 \`\`\`
 
-## 사용 가이드
+## Usage Guide
 
-### 기본 사용법
+### Basic Usage
 
-[TODO: 기본적인 사용 방법을 설명하세요]
+[TODO: Explain basic usage]
 
-### 고급 기능
+### Advanced Features
 
-[TODO: 필요한 경우 고급 기능을 설명하세요]
+[TODO: Describe advanced features if needed]
 
-## 리소스
+## Resources
 
 ### scripts/
 
-실행 가능한 스크립트들이 포함됩니다.
+Contains executable scripts.
 
-- \`example.ts\` - 예시 스크립트 (필요에 따라 수정하거나 삭제하세요)
+- \`example.ts\` - Example script (modify or delete as needed)
 
 ### references/
 
-상세 문서가 필요한 경우 이 디렉토리에 추가합니다.
+Add detailed documentation here when needed.
 
-- \`guide.md\` - 상세 가이드 (필요에 따라 수정하거나 삭제하세요)
+- \`guide.md\` - Detailed guide (modify or delete as needed)
 
 ### assets/
 
-출력물에 사용되는 파일들이 포함됩니다.
+Contains files used for outputs.
 
-- 템플릿, 이미지, 설정 파일 등
+- Templates, images, config files, etc.
 
 ---
 
-**불필요한 디렉토리나 파일은 삭제하세요.** 모든 스킬이 세 가지 리소스 유형을 모두 필요로 하지는 않습니다.
+**Delete unnecessary directories or files.** Not all skills need all three resource types.
 `;
 
 const EXAMPLE_SCRIPT_TEMPLATE = `#!/usr/bin/env node
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
-  console.log("{{SKILL_NAME}} 스크립트 실행 중...");
-  console.log("인자:", args);
-  console.log("✅ 스크립트 실행 완료");
+  console.log("Running {{SKILL_NAME}} script...");
+  console.log("Arguments:", args);
+  console.log("✅ Script execution complete");
 }
 
 main().catch((error) => {
-  console.error("❌ 오류 발생:", error.message);
+  console.error("❌ Error:", error.message);
   process.exit(1);
 });
 `;
 
-const REFERENCE_TEMPLATE = `# {{SKILL_TITLE}} - 상세 가이드
+const REFERENCE_TEMPLATE = `# {{SKILL_TITLE}} - Detailed Guide
 
-이 문서는 상세 레퍼런스 문서의 플레이스홀더입니다.
-실제 내용으로 교체하거나 필요 없으면 삭제하세요.
+This document is a placeholder for detailed reference documentation.
+Replace with actual content or delete if not needed.
 
-## 레퍼런스 문서가 유용한 경우
+## When Reference Docs Are Useful
 
-- 종합적인 API 문서
-- 상세 워크플로우 가이드
-- 복잡한 다단계 프로세스
-- SKILL.md에 담기엔 너무 긴 정보
-- 특정 사용 사례에만 필요한 콘텐츠
+- Comprehensive API documentation
+- Detailed workflow guides
+- Complex multi-step processes
+- Information too lengthy for SKILL.md
+- Content needed only for specific use cases
 
-## 구조 제안
+## Suggested Structure
 
-### API 레퍼런스 예시
+### API Reference Example
 
-- 개요
-- 인증
-- 엔드포인트 및 예시
-- 에러 코드
-- 속도 제한
+- Overview
+- Authentication
+- Endpoints and examples
+- Error codes
+- Rate limits
 
-### 워크플로우 가이드 예시
+### Workflow Guide Example
 
-- 사전 요구사항
-- 단계별 지침
-- 일반적인 패턴
-- 문제 해결
-- 모범 사례
+- Prerequisites
+- Step-by-step instructions
+- Common patterns
+- Troubleshooting
+- Best practices
 `;
 
 function toTitleCase(skillName: string): string {
@@ -122,16 +122,16 @@ function toTitleCase(skillName: string): string {
 
 function validateSkillName(name: string): { valid: boolean; error?: string } {
   if (!name) {
-    return { valid: false, error: "스킬 이름이 필요합니다" };
+    return { valid: false, error: "Skill name is required" };
   }
   if (name.length > 40) {
-    return { valid: false, error: "스킬 이름은 40자를 초과할 수 없습니다" };
+    return { valid: false, error: "Skill name cannot exceed 40 characters" };
   }
   if (!/^[a-z0-9-]+$/.test(name)) {
-    return { valid: false, error: "스킬 이름은 소문자, 숫자, 하이픈만 사용할 수 있습니다" };
+    return { valid: false, error: "Skill name must use only lowercase letters, numbers, and hyphens" };
   }
   if (name.startsWith("-") || name.endsWith("-")) {
-    return { valid: false, error: "스킬 이름은 하이픈으로 시작하거나 끝날 수 없습니다" };
+    return { valid: false, error: "Skill name cannot start or end with a hyphen" };
   }
   return { valid: true };
 }
@@ -158,7 +158,7 @@ function initSkill(skillName: string, basePath: string): InitResult {
   const skillDir = resolve(basePath, skillName);
 
   if (existsSync(skillDir)) {
-    return { success: false, error: `스킬 디렉토리가 이미 존재합니다: ${skillDir}` };
+    return { success: false, error: `Skill directory already exists: ${skillDir}` };
   }
 
   try {
@@ -166,50 +166,50 @@ function initSkill(skillName: string, basePath: string): InitResult {
     mkdirSync(join(skillDir, "scripts"), { recursive: true });
     mkdirSync(join(skillDir, "references"), { recursive: true });
     mkdirSync(join(skillDir, "assets"), { recursive: true });
-    console.log(`✅ 스킬 디렉토리 생성됨: ${skillDir}`);
+    console.log(`✅ Skill directory created: ${skillDir}`);
 
     const skillMdContent = applyTemplate(SKILL_MD_TEMPLATE, skillName);
     writeFileSync(join(skillDir, "SKILL.md"), skillMdContent, "utf-8");
-    console.log("✅ SKILL.md 생성됨");
+    console.log("✅ SKILL.md created");
 
     const scriptContent = applyTemplate(EXAMPLE_SCRIPT_TEMPLATE, skillName);
     const scriptPath = join(skillDir, "scripts", "example.ts");
     writeFileSync(scriptPath, scriptContent, "utf-8");
     chmodSync(scriptPath, 0o755);
-    console.log("✅ scripts/example.ts 생성됨");
+    console.log("✅ scripts/example.ts created");
 
     const refContent = applyTemplate(REFERENCE_TEMPLATE, skillName);
     writeFileSync(join(skillDir, "references", "guide.md"), refContent, "utf-8");
-    console.log("✅ references/guide.md 생성됨");
+    console.log("✅ references/guide.md created");
 
     writeFileSync(join(skillDir, "assets", ".gitkeep"), "", "utf-8");
-    console.log("✅ assets/.gitkeep 생성됨");
+    console.log("✅ assets/.gitkeep created");
 
-    console.log(`\n✅ 스킬 '${skillName}' 초기화 완료: ${skillDir}`);
-    console.log("\n다음 단계:");
-    console.log("1. SKILL.md의 [TODO] 항목들을 완성하세요");
-    console.log("2. scripts/, references/, assets/ 내 예시 파일을 수정하거나 삭제하세요");
-    console.log("3. 준비가 되면 validate-skill.ts를 실행하여 구조를 검증하세요");
+    console.log(`\n✅ Skill '${skillName}' initialized: ${skillDir}`);
+    console.log("\nNext steps:");
+    console.log("1. Complete the [TODO] items in SKILL.md");
+    console.log("2. Modify or delete example files in scripts/, references/, assets/");
+    console.log("3. Run validate-skill.ts to verify structure when ready");
 
     return { success: true, path: skillDir };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return { success: false, error: `디렉토리 생성 오류: ${message}` };
+    return { success: false, error: `Directory creation error: ${message}` };
   }
 }
 
 function printUsage(): void {
   console.log(`
-스킬 초기화 도구
+Skill Initializer
 
-사용법:
+Usage:
   bun scripts/init-skill.ts <skill-name> --path <path>
 
-인자:
-  skill-name    스킬 이름 (kebab-case, 예: my-awesome-skill)
-  --path        스킬이 생성될 경로
+Arguments:
+  skill-name    Skill name (kebab-case, e.g., my-awesome-skill)
+  --path        Path where skill will be created
 
-예시:
+Examples:
   bun scripts/init-skill.ts my-new-skill --path .claude/skills
   bun scripts/init-skill.ts api-helper --path .opencode/skills
 `);
@@ -227,15 +227,15 @@ function main(): void {
   const skillName = args[0];
   const basePath = args[pathIndex + 1];
 
-  console.log(`🚀 스킬 초기화 중: ${skillName}`);
-  console.log(`   위치: ${basePath}\n`);
+  console.log(`🚀 Initializing skill: ${skillName}`);
+  console.log(`   Location: ${basePath}\n`);
 
   const result = initSkill(skillName, basePath);
 
   if (result.success) {
     process.exit(0);
   } else {
-    console.error(`❌ 오류: ${result.error}`);
+    console.error(`❌ Error: ${result.error}`);
     process.exit(1);
   }
 }
