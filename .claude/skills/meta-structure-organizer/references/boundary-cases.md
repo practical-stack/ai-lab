@@ -1,6 +1,6 @@
 # Boundary Cases
 
-10 common confusions when distinguishing Command, Skill, and Agent.
+12 common confusions when distinguishing Command, Skill, and Agent.
 
 ## Case 1: Command calls multiple Skills internally
 
@@ -141,6 +141,49 @@
 
 ---
 
+---
+
+## Case 11: Command or Agent Ambiguity
+
+**Question:** "Generate API documentation from code" - Command or Agent?
+
+**Answer:** **상황에 따라 다름**
+
+| Scenario | Result | Reason |
+|----------|--------|--------|
+| Simple JSDoc extraction | ⚡ COMMAND | Fixed procedure, no judgment |
+| Code analysis + doc generation | 🤖 AGENT | Needs to understand code semantics |
+| Integration with existing docs | 🤖 AGENT | Requires contextual decisions |
+| Template-based generation | ⚡ COMMAND | Predictable transformation |
+
+**Decision criteria:**
+- Does it require understanding code meaning? → Agent
+- Is it a mechanical transformation? → Command
+- Does it need to make contextual decisions? → Agent
+
+---
+
+## Case 12: Skill vs Rule Distinction
+
+**Question:** "Project coding standards" - should this be a Skill or a Rule (CLAUDE.md)?
+
+**Answer:** **적용 범위에 따라 결정**
+
+| Application Scope | Result | Example |
+|-------------------|--------|---------|
+| Specific domain only | 📚 SKILL | "React component patterns" (only when writing React) |
+| All code, always | 📋 RULE | "Never commit secrets" (always enforced) |
+| Specific file types | 📚 SKILL | "Python docstring format" (only .py files) |
+| Project-wide conventions | 📋 RULE | "Use kebab-case for files" (all files) |
+
+**Decision criteria:**
+- Must it apply to ALL work? → Rule (CLAUDE.md/AGENTS.md)
+- Should it auto-load only for specific contexts? → Skill
+- Is it triggered by keywords? → Skill
+- Is it a hard constraint? → Rule
+
+---
+
 ## Quick Reference
 
 | Situation | Do This |
@@ -152,3 +195,5 @@
 | Must run every time | → Embed in workflow |
 | Multiple similar commands | → One Command + Skill |
 | One agent doing everything | → Split to specialized agents |
+| Command or Agent unclear | → Check if needs code understanding (Case 11) |
+| Skill or Rule unclear | → Check application scope (Case 12) |
