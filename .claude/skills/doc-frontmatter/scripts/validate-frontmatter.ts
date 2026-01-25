@@ -2,12 +2,12 @@
 /**
  * validate-frontmatter.ts
  *
- * docs 폴더의 frontmatter 유효성을 검증합니다.
+ * Validates frontmatter in docs folder markdown files.
  *
- * 사용법:
+ * Usage:
  *   bun scripts/validate-frontmatter.ts <path>
  *
- * 예시:
+ * Examples:
  *   bun scripts/validate-frontmatter.ts docs/
  *   bun scripts/validate-frontmatter.ts docs/01-foundation/
  */
@@ -16,7 +16,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from "fs";
 import { join, relative } from "path";
 
 // ============================================================================
-// 타입 정의
+// Type Definitions
 // ============================================================================
 
 interface ValidationResult {
@@ -36,7 +36,7 @@ type DocumentType =
   | "index";
 
 // ============================================================================
-// 상수
+// Constants
 // ============================================================================
 
 const VALID_TAGS = [
@@ -72,11 +72,11 @@ const VALID_TYPES: DocumentType[] = [
 ];
 
 // ============================================================================
-// 유틸리티 함수
+// Utility Functions
 // ============================================================================
 
 /**
- * 재귀적으로 .md 파일 찾기
+ * Recursively find .md files
  */
 function findMarkdownFiles(dir: string): string[] {
   const files: string[] = [];
@@ -87,7 +87,7 @@ function findMarkdownFiles(dir: string): string[] {
     const stat = statSync(fullPath);
 
     if (stat.isDirectory()) {
-      // node_modules, .git 등 제외
+      // Exclude node_modules, .git, etc.
       if (!item.startsWith(".") && item !== "node_modules") {
         files.push(...findMarkdownFiles(fullPath));
       }
@@ -100,7 +100,7 @@ function findMarkdownFiles(dir: string): string[] {
 }
 
 /**
- * Frontmatter 파싱
+ * Parse frontmatter
  */
 function parseFrontmatter(content: string): Record<string, unknown> | null {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -117,7 +117,7 @@ function parseFrontmatter(content: string): Record<string, unknown> | null {
     const key = line.slice(0, colonIndex).trim();
     let value = line.slice(colonIndex + 1).trim();
 
-    // 배열 처리
+    // Array handling
     if (value.startsWith("[") && value.endsWith("]")) {
       const arrayContent = value.slice(1, -1);
       frontmatter[key] = arrayContent
@@ -125,17 +125,17 @@ function parseFrontmatter(content: string): Record<string, unknown> | null {
         .map((item) => item.trim().replace(/^["']|["']$/g, ""))
         .filter(Boolean);
     }
-    // 문자열 처리
+    // String handling
     else if (value.startsWith('"') && value.endsWith('"')) {
       frontmatter[key] = value.slice(1, -1);
     } else if (value.startsWith("'") && value.endsWith("'")) {
       frontmatter[key] = value.slice(1, -1);
     }
-    // 숫자 처리
+    // Number handling
     else if (!isNaN(Number(value)) && value !== "") {
       frontmatter[key] = Number(value);
     }
-    // 기타
+    // Other
     else {
       frontmatter[key] = value;
     }
@@ -145,7 +145,7 @@ function parseFrontmatter(content: string): Record<string, unknown> | null {
 }
 
 /**
- * 단일 파일 검증
+ * Validate single file
  */
 function validateFile(filePath: string): ValidationResult {
   const result: ValidationResult = {
@@ -157,52 +157,52 @@ function validateFile(filePath: string): ValidationResult {
   const content = readFileSync(filePath, "utf-8");
   const frontmatter = parseFrontmatter(content);
 
-  // Frontmatter 존재 여부
+  // Check frontmatter existence
   if (!frontmatter) {
-    result.errors.push("frontmatter가 없습니다");
+    result.errors.push("No frontmatter found");
     return result;
   }
 
-  // 필수 필드 검증
+  // Required field validation
   if (!frontmatter.title) {
-    result.errors.push("필수 필드 누락: title");
+    result.errors.push("Missing required field: title");
   } else if (typeof frontmatter.title !== "string") {
-    result.errors.push("title은 문자열이어야 합니다");
+    result.errors.push("title must be a string");
   }
 
   if (!frontmatter.description) {
-    result.errors.push("필수 필드 누락: description");
+    result.errors.push("Missing required field: description");
   } else if (typeof frontmatter.description !== "string") {
-    result.errors.push("description은 문자열이어야 합니다");
+    result.errors.push("description must be a string");
   } else {
     const desc = frontmatter.description as string;
     if (desc.length < 50) {
-      result.warnings.push(`description이 너무 짧습니다 (${desc.length}자, 권장: 50-160자)`);
+      result.warnings.push(`description is too short (${desc.length} chars, recommended: 50-160)`);
     } else if (desc.length > 160) {
-      result.warnings.push(`description이 너무 깁니다 (${desc.length}자, 권장: 50-160자)`);
+      result.warnings.push(`description is too long (${desc.length} chars, recommended: 50-160)`);
     }
   }
 
   if (!frontmatter.type) {
-    result.errors.push("필수 필드 누락: type");
+    result.errors.push("Missing required field: type");
   } else if (!VALID_TYPES.includes(frontmatter.type as DocumentType)) {
     result.errors.push(
-      `유효하지 않은 type: ${frontmatter.type} (허용: ${VALID_TYPES.join(", ")})`
+      `Invalid type: ${frontmatter.type} (allowed: ${VALID_TYPES.join(", ")})`
     );
   }
 
-  // 선택 필드 검증
+  // Optional field validation
   if (frontmatter.tags) {
     if (!Array.isArray(frontmatter.tags)) {
-      result.errors.push("tags는 배열이어야 합니다");
+      result.errors.push("tags must be an array");
     } else {
       const tags = frontmatter.tags as string[];
       if (tags.length > 5) {
-        result.warnings.push(`tags가 너무 많습니다 (${tags.length}개, 최대: 5개)`);
+        result.warnings.push(`Too many tags (${tags.length}, max: 5)`);
       }
       for (const tag of tags) {
         if (!VALID_TAGS.includes(tag)) {
-          result.warnings.push(`알 수 없는 tag: ${tag}`);
+          result.warnings.push(`Unknown tag: ${tag}`);
         }
       }
     }
@@ -210,16 +210,16 @@ function validateFile(filePath: string): ValidationResult {
 
   if (frontmatter.order !== undefined) {
     if (typeof frontmatter.order !== "number") {
-      result.errors.push("order는 숫자여야 합니다");
+      result.errors.push("order must be a number");
     }
   }
 
-  // 관계 필드 검증
+  // Relationship field validation
   const relationFields = ["depends_on", "related", "used_by"];
   for (const field of relationFields) {
     if (frontmatter[field]) {
       if (!Array.isArray(frontmatter[field])) {
-        result.errors.push(`${field}는 배열이어야 합니다`);
+        result.errors.push(`${field} must be an array`);
       }
     }
   }
@@ -228,7 +228,7 @@ function validateFile(filePath: string): ValidationResult {
 }
 
 // ============================================================================
-// 메인 함수
+// Main Function
 // ============================================================================
 
 async function main() {
@@ -236,9 +236,9 @@ async function main() {
 
   if (args.length === 0) {
     console.log(`
-사용법: bun validate-frontmatter.ts <path>
+Usage: bun validate-frontmatter.ts <path>
 
-예시:
+Examples:
   bun validate-frontmatter.ts docs/
   bun validate-frontmatter.ts docs/01-foundation/
   bun validate-frontmatter.ts docs/01-foundation/00-setup.md
@@ -249,7 +249,7 @@ async function main() {
   const targetPath = args[0];
 
   if (!existsSync(targetPath)) {
-    console.error(`❌ 경로를 찾을 수 없습니다: ${targetPath}`);
+    console.error(`❌ Path not found: ${targetPath}`);
     process.exit(1);
   }
 
@@ -258,7 +258,7 @@ async function main() {
     ? findMarkdownFiles(targetPath)
     : [targetPath];
 
-  console.log(`\n🔍 ${files.length}개 파일 검증 중...\n`);
+  console.log(`\n🔍 Validating ${files.length} file(s)...\n`);
 
   let totalErrors = 0;
   let totalWarnings = 0;
@@ -271,7 +271,7 @@ async function main() {
     totalWarnings += result.warnings.length;
   }
 
-  // 결과 출력
+  // Output results
   for (const result of results) {
     if (result.errors.length > 0 || result.warnings.length > 0) {
       console.log(`📄 ${relative(process.cwd(), result.file)}`);
@@ -288,19 +288,19 @@ async function main() {
     }
   }
 
-  // 요약
+  // Summary
   console.log("─".repeat(50));
-  console.log(`\n📊 검증 결과:`);
-  console.log(`   총 파일: ${files.length}개`);
-  console.log(`   에러: ${totalErrors}개`);
-  console.log(`   경고: ${totalWarnings}개`);
+  console.log(`\n📊 Validation Results:`);
+  console.log(`   Total files: ${files.length}`);
+  console.log(`   Errors: ${totalErrors}`);
+  console.log(`   Warnings: ${totalWarnings}`);
 
   if (totalErrors === 0 && totalWarnings === 0) {
-    console.log(`\n✅ 모든 파일이 유효합니다!`);
+    console.log(`\n✅ All files are valid!`);
   } else if (totalErrors === 0) {
-    console.log(`\n⚠️  경고가 있지만 필수 요구사항은 충족합니다.`);
+    console.log(`\n⚠️  Warnings found, but required fields are satisfied.`);
   } else {
-    console.log(`\n❌ ${totalErrors}개의 에러를 수정해주세요.`);
+    console.log(`\n❌ Please fix ${totalErrors} error(s).`);
     process.exit(1);
   }
 }

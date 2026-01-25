@@ -2,12 +2,12 @@
 /**
  * generate-frontmatter.ts
  *
- * 문서 내용을 분석하여 YAML frontmatter를 생성합니다.
+ * Analyzes document content to generate YAML frontmatter.
  *
- * 사용법:
+ * Usage:
  *   bun scripts/generate-frontmatter.ts <file-path>
  *
- * 예시:
+ * Examples:
  *   bun scripts/generate-frontmatter.ts docs/01-foundation/00-setup.md
  */
 
@@ -15,7 +15,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 import { basename, dirname, relative } from "path";
 
 // ============================================================================
-// 타입 정의
+// Type Definitions
 // ============================================================================
 
 interface Frontmatter {
@@ -40,29 +40,29 @@ type DocumentType =
   | "index";
 
 // ============================================================================
-// 상수
+// Constants
 // ============================================================================
 
 const VALID_TAGS = [
-  // 기술 스택
+  // Tech stack
   "React",
   "TypeScript",
   "Next.js",
   "Kubernetes",
   "Nx",
   "Tailwind",
-  // 도메인
+  // Domain
   "API",
   "Testing",
   "Deployment",
   "CI-CD",
   "Security",
-  // 작업 유형
+  // Task type
   "Setup",
   "Migration",
   "BestPractice",
   "Architecture",
-  // 기타
+  // Other
   "Documentation",
   "Frontmatter",
   "AI",
@@ -80,11 +80,11 @@ const VALID_TYPES: DocumentType[] = [
 ];
 
 // ============================================================================
-// 유틸리티 함수
+// Utility Functions
 // ============================================================================
 
 /**
- * 기존 frontmatter 파싱
+ * Parse existing frontmatter
  */
 function parseFrontmatter(content: string): {
   frontmatter: Record<string, unknown> | null;
@@ -98,7 +98,7 @@ function parseFrontmatter(content: string): {
   const yamlContent = match[1];
   const body = match[2];
 
-  // 간단한 YAML 파싱 (복잡한 경우 yaml 라이브러리 사용 권장)
+  // Simple YAML parsing (for complex cases, use yaml library)
   const frontmatter: Record<string, unknown> = {};
   const lines = yamlContent.split("\n");
 
@@ -109,7 +109,7 @@ function parseFrontmatter(content: string): {
     const key = line.slice(0, colonIndex).trim();
     let value = line.slice(colonIndex + 1).trim();
 
-    // 배열 처리
+    // Array handling
     if (value.startsWith("[") && value.endsWith("]")) {
       const arrayContent = value.slice(1, -1);
       frontmatter[key] = arrayContent
@@ -117,17 +117,17 @@ function parseFrontmatter(content: string): {
         .map((item) => item.trim().replace(/^["']|["']$/g, ""))
         .filter(Boolean);
     }
-    // 문자열 처리
+    // String handling
     else if (value.startsWith('"') && value.endsWith('"')) {
       frontmatter[key] = value.slice(1, -1);
     } else if (value.startsWith("'") && value.endsWith("'")) {
       frontmatter[key] = value.slice(1, -1);
     }
-    // 숫자 처리
+    // Number handling
     else if (!isNaN(Number(value)) && value !== "") {
       frontmatter[key] = Number(value);
     }
-    // 기타
+    // Other
     else {
       frontmatter[key] = value;
     }
@@ -137,7 +137,7 @@ function parseFrontmatter(content: string): {
 }
 
 /**
- * 첫 번째 H1 헤더 추출
+ * Extract first H1 header
  */
 function extractTitle(content: string): string | null {
   const match = content.match(/^#\s+(.+)$/m);
@@ -145,7 +145,7 @@ function extractTitle(content: string): string | null {
 }
 
 /**
- * 파일명에서 title 생성
+ * Generate title from filename
  */
 function titleFromFilename(filename: string): string {
   // 00-guide.md -> guide
@@ -158,7 +158,7 @@ function titleFromFilename(filename: string): string {
 }
 
 /**
- * 파일명에서 order 추출
+ * Extract order from filename
  */
 function extractOrder(filename: string): number | undefined {
   const match = basename(filename).match(/^(\d+)-/);
@@ -166,10 +166,10 @@ function extractOrder(filename: string): number | undefined {
 }
 
 /**
- * 문서 내용에서 description 생성
+ * Generate description from document content
  */
 function generateDescription(content: string, title: string): string {
-  // H1 이후 첫 번째 단락 찾기
+  // Find first paragraph after H1
   const lines = content.split("\n");
   let foundH1 = false;
   let description = "";
@@ -185,12 +185,12 @@ function generateDescription(content: string, title: string): string {
     }
   }
 
-  // description이 없으면 title 기반 생성
+  // Generate title-based description if none found
   if (!description) {
-    description = `${title}에 대한 문서입니다.`;
+    description = `Documentation about ${title}.`;
   }
 
-  // 50-160자 제한
+  // Limit to 50-160 characters
   if (description.length > 160) {
     description = description.slice(0, 157) + "...";
   }
@@ -199,72 +199,71 @@ function generateDescription(content: string, title: string): string {
 }
 
 /**
- * 문서 type 결정
+ * Determine document type
  */
 function determineType(content: string, filename: string): DocumentType {
   const lowerContent = content.toLowerCase();
   const lowerFilename = filename.toLowerCase();
 
-  // 파일명 기반 판단
+  // Filename-based detection
   if (lowerFilename.includes("readme")) return "index";
   if (lowerFilename.includes(".adr.")) return "adr";
   if (lowerFilename.includes("troubleshoot")) return "troubleshooting";
 
-  // 내용 기반 판단
-  if (lowerContent.includes("## 상태") && lowerContent.includes("## 컨텍스트"))
+  // Content-based detection
+  if (lowerContent.includes("## status") && lowerContent.includes("## context"))
     return "adr";
-  if (lowerContent.includes("## 문제") && lowerContent.includes("## 해결"))
+  if (lowerContent.includes("## problem") && lowerContent.includes("## solution"))
     return "troubleshooting";
-  if (lowerContent.includes("패턴") || lowerContent.includes("pattern"))
+  if (lowerContent.includes("pattern"))
     return "pattern";
   if (
-    lowerContent.includes("단계") &&
+    lowerContent.includes("step") &&
     (lowerContent.includes("1.") || lowerContent.includes("step"))
   )
     return "tutorial";
   if (
-    lowerContent.includes("방법") ||
     lowerContent.includes("how to") ||
-    lowerContent.includes("가이드")
+    lowerContent.includes("guide")
   )
     return "guide";
   if (
     lowerContent.includes("api") ||
-    lowerContent.includes("스펙") ||
-    lowerContent.includes("설정")
+    lowerContent.includes("spec") ||
+    lowerContent.includes("config")
   )
     return "reference";
-  if (lowerContent.includes("왜") || lowerContent.includes("배경"))
+  if (lowerContent.includes("why") || lowerContent.includes("background"))
     return "explanation";
 
-  return "guide"; // 기본값
+  return "guide"; // Default
 }
 
 /**
- * 문서 내용에서 tags 추출
+ * Extract tags from document content
  */
 function extractTags(content: string): string[] {
   const lowerContent = content.toLowerCase();
   const tags: string[] = [];
 
   const tagKeywords: Record<string, string[]> = {
-    React: ["react", "컴포넌트", "훅", "hook", "jsx"],
-    TypeScript: ["typescript", "타입", "interface", "type"],
+    React: ["react", "component", "hook", "jsx"],
+    TypeScript: ["typescript", "type", "interface"],
     "Next.js": ["next.js", "next", "ssr", "app router"],
     Kubernetes: ["kubernetes", "k8s", "pod", "deployment"],
-    Nx: ["nx", "모노레포", "monorepo"],
-    Tailwind: ["tailwind", "css", "스타일"],
+    Nx: ["nx", "monorepo"],
+    Tailwind: ["tailwind", "css", "style"],
     API: ["api", "fetch", "query", "mutation"],
-    Testing: ["test", "테스트", "jest", "vitest"],
-    Deployment: ["deploy", "배포", "argocd"],
+    Testing: ["test", "jest", "vitest"],
+    Deployment: ["deploy", "argocd"],
     "CI-CD": ["ci", "cd", "github actions", "pipeline"],
-    Security: ["security", "보안", "인증", "auth"],
-    Setup: ["setup", "설치", "설정", "install"],
-    Migration: ["migration", "마이그레이션", "upgrade"],
-    BestPractice: ["best practice", "베스트", "권장"],
-    Architecture: ["architecture", "아키텍처", "구조"],
-    Documentation: ["documentation", "문서", "docs"],
-    Frontmatter: ["frontmatter", "메타데이터"],
+    Security: ["security", "auth"],
+    Setup: ["setup", "install", "config"],
+    Migration: ["migration", "upgrade"],
+    BestPractice: ["best practice", "recommended"],
+    Architecture: ["architecture", "structure"],
+    Documentation: ["documentation", "docs"],
+    Frontmatter: ["frontmatter", "metadata"],
     AI: ["ai", "llm", "agent"],
   };
 
@@ -274,12 +273,12 @@ function extractTags(content: string): string[] {
     }
   }
 
-  // 최대 5개로 제한
+  // Limit to max 5
   return tags.slice(0, 5);
 }
 
 /**
- * Frontmatter를 YAML 문자열로 변환
+ * Convert Frontmatter to YAML string
  */
 function frontmatterToYaml(fm: Frontmatter): string {
   const lines: string[] = ["---"];
@@ -314,7 +313,7 @@ function frontmatterToYaml(fm: Frontmatter): string {
 }
 
 // ============================================================================
-// 메인 함수
+// Main Function
 // ============================================================================
 
 async function main() {
@@ -322,13 +321,13 @@ async function main() {
 
   if (args.length === 0) {
     console.log(`
-사용법: bun generate-frontmatter.ts <file-path> [options]
+Usage: bun generate-frontmatter.ts <file-path> [options]
 
-옵션:
-  --dry-run    파일을 수정하지 않고 결과만 출력
-  --force      기존 frontmatter가 있어도 덮어쓰기
+Options:
+  --dry-run    Preview result without modifying file
+  --force      Overwrite even if frontmatter exists
 
-예시:
+Examples:
   bun generate-frontmatter.ts docs/01-foundation/00-setup.md
   bun generate-frontmatter.ts docs/01-foundation/00-setup.md --dry-run
 `);
@@ -340,7 +339,7 @@ async function main() {
   const force = args.includes("--force");
 
   if (!existsSync(filePath)) {
-    console.error(`❌ 파일을 찾을 수 없습니다: ${filePath}`);
+    console.error(`❌ File not found: ${filePath}`);
     process.exit(1);
   }
 
@@ -348,12 +347,12 @@ async function main() {
   const { frontmatter: existingFm, body } = parseFrontmatter(content);
 
   if (existingFm && !force) {
-    console.log(`ℹ️  이미 frontmatter가 있습니다: ${filePath}`);
-    console.log("   --force 옵션으로 덮어쓸 수 있습니다.");
+    console.log(`ℹ️  Frontmatter already exists: ${filePath}`);
+    console.log("   Use --force option to overwrite.");
     process.exit(0);
   }
 
-  // Frontmatter 생성
+  // Generate frontmatter
   const title = extractTitle(body) || titleFromFilename(filePath);
   const description = generateDescription(body, title);
   const type = determineType(body, filePath);
@@ -371,15 +370,15 @@ async function main() {
   const yamlContent = frontmatterToYaml(newFrontmatter);
   const newContent = `${yamlContent}\n${body.startsWith("\n") ? body : "\n" + body}`;
 
-  console.log(`\n📄 파일: ${filePath}`);
-  console.log(`\n생성된 frontmatter:`);
+  console.log(`\n📄 File: ${filePath}`);
+  console.log(`\nGenerated frontmatter:`);
   console.log(yamlContent);
 
   if (dryRun) {
-    console.log("\n🔍 --dry-run 모드: 파일이 수정되지 않았습니다.");
+    console.log("\n🔍 --dry-run mode: File was not modified.");
   } else {
     writeFileSync(filePath, newContent, "utf-8");
-    console.log("\n✅ frontmatter가 추가되었습니다.");
+    console.log("\n✅ Frontmatter added successfully.");
   }
 }
 
