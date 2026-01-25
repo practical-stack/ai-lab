@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 1
 related: ["./01-concepts.en.md"]
+depends_on: [./README.md]
 ---
 
 # AI Agent 아키텍처: Command, Skill, Agent 설계 가이드

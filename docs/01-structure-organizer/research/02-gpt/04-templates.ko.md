@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 4
 related: ["./04-templates.en.md"]
+depends_on: [./README.md]
 ---
 
 # D. 설계 템플릿 (스펙 폼)

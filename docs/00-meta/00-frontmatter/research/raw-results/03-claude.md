@@ -5,6 +5,8 @@ type: reference
 tags: [AI, Documentation, Frontmatter, BestPractice]
 ai_summary: "즉시 적용 가능한 최소 스키마 제안, GitHub Docs/MADR/Obsidian 등 실제 사례 기반 근거 제시"
 created: 2025-01-20
+depends_on: [../00-meta-prompt.md]
+related: [./01-gpt.md, ./02-gemini.md]
 ---
 
 # 실용적 Frontmatter 스키마 설계

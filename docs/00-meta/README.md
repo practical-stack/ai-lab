@@ -3,6 +3,7 @@ title: "문서화 시스템 메타 정보"
 description: "docs 폴더 문서 작성을 위한 frontmatter 스키마, 태그 controlled vocabulary, 타입 정의 및 작성 가이드를 제공합니다."
 type: index
 tags: [Documentation, Frontmatter]
+used_by: [/.claude/skills/doc-frontmatter/SKILL.md]
 ---
 
 # 문서화 시스템 메타 정보

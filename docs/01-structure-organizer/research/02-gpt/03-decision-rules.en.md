@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 3
 related: ["./03-decision-rules.ko.md"]
+depends_on: [./README.md]
 ---
 
 # C. Decision Rules for "When to Create What" (Decision Tree + Checklist)

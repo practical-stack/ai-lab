@@ -3,6 +3,7 @@ title: "2차 종합 분석 결과"
 description: "GPT, Gemini, Claude 세 AI 모델의 1차 DeepSearch 결과를 바탕으로 추가 질문과 함께 진행한 심층 종합 분석입니다."
 type: index
 tags: [AI, Documentation, Frontmatter]
+depends_on: [../raw-results/README.md]
 ---
 
 # 2차 종합 분석 결과

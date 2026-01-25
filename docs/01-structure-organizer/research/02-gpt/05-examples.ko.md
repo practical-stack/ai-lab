@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 5
 related: ["./05-examples.en.md"]
+depends_on: [./README.md]
 ---
 
 # E. 예시 설계 (내 워크플로우 적용)

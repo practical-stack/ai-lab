@@ -4,6 +4,8 @@ description: "AI 코딩 에이전트를 위한 프론트엔드 모노레포 문�
 type: reference
 tags: [AI, Documentation, Frontmatter, Architecture]
 order: 2
+depends_on: [./README.md]
+related: [./01-gpt.md, ./03-claude.md]
 ---
 
 # AI 코딩 에이전트를 위한 프론트엔드 모노레포 정보 아키텍처

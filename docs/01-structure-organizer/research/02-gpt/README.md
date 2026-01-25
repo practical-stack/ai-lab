@@ -4,6 +4,7 @@ description: "Comprehensive design guide for Command, Skill, and Agent architect
 type: index
 tags: [Architecture, AI]
 order: 2
+depends_on: [../00-research-prompt.en.md]
 ---
 
 # GPT-4 Research: AI Agent Architecture Guide

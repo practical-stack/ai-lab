@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 6
 related: ["./06-anti-patterns.en.md"]
+depends_on: [./README.md]
 ---
 
 # F. 안티패턴 & 가드레일

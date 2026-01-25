@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 2
 related: ["./02-relationships.en.md"]
+depends_on: [./README.md]
 ---
 
 # B. 관계 모델 (연관 구조)

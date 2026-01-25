@@ -3,6 +3,7 @@ title: "Frontmatter 방법론 리서치 자료"
 description: "AI/LLM 친화적 Frontmatter 설계 방법론 도출을 위한 DeepSearch 리서치 과정과 결과물"
 type: index
 tags: [Documentation, AI, Frontmatter, BestPractice]
+depends_on: [../README.md]
 ---
 
 # Frontmatter 방법론 리서치 자료

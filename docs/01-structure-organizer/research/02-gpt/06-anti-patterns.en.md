@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 6
 related: ["./06-anti-patterns.ko.md"]
+depends_on: [./README.md]
 ---
 
 # F. Anti-patterns & Guardrails

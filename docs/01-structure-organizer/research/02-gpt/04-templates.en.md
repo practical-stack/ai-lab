@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 4
 related: ["./04-templates.ko.md"]
+depends_on: [./README.md]
 ---
 
 # D. Design Templates (Spec Forms)

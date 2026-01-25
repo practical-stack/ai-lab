@@ -4,6 +4,8 @@ description: "DeepSearch 리서치 결과를 종합 분석한 AI 친화적 문�
 type: reference
 tags: [AI, Documentation, Frontmatter, Architecture]
 order: 1
+depends_on: [./README.md]
+related: [./02-gemini.md, ./03-claude.md]
 ---
 
 # AI 친화적 문서 메타데이터 및 관계 패턴

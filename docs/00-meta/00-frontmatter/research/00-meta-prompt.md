@@ -4,6 +4,8 @@ description: "AI 코딩 에이전트가 효과적으로 문서를 탐색하고 �
 type: reference
 tags: [Documentation, AI, Frontmatter]
 order: 0
+depends_on: [./README.md]
+used_by: [./raw-results/01-gpt.md, ./raw-results/02-gemini.md, ./raw-results/03-claude.md]
 ---
 
 # AI 개발환경 최적화를 위한 Docs 아키텍처 설계 메타프롬프트

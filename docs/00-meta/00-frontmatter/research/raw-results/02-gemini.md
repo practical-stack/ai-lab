@@ -5,6 +5,8 @@ type: reference
 tags: [AI, Documentation, Frontmatter, Architecture]
 ai_summary: "URN 기반 문서 ID, JSON Schema 검증, MCP 서버 통합 등 엔터프라이즈급 문서 그래프 시스템 설계"
 created: 2025-01-20
+depends_on: [../00-meta-prompt.md]
+related: [./01-gpt.md, ./03-claude.md]
 ---
 
 # 확장된 메타 프롬프트 아키텍처

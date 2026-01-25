@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 1
 related: ["./01-concepts.ko.md"]
+depends_on: [./README.md]
 ---
 
 # AI Agent Architecture: Command, Skill, Agent Design Guide

@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 3
 related: ["./03-decision-rules.en.md"]
+depends_on: [./README.md]
 ---
 
 # C. "언제 무엇을 만들지" 결정 규칙 (결정 트리 + 체크리스트)

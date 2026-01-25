@@ -5,6 +5,7 @@ type: explanation
 tags: [Architecture, AI]
 order: 2
 related: ["./02-relationships.ko.md"]
+depends_on: [./README.md]
 ---
 
 # B. Relationship Model (Association Structure)

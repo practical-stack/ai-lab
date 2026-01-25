@@ -3,6 +3,8 @@ title: "1차 DeepSearch 결과"
 description: "GPT, Gemini, Claude 세 AI 모델의 문서 메타데이터 시스템 설계 분석 원본"
 type: index
 tags: [AI, Documentation, Frontmatter]
+depends_on: [../00-meta-prompt.md]
+related: [../synthesized-results/README.md]
 ---
 
 # 1차 DeepSearch 결과

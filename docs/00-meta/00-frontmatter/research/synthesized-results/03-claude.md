@@ -4,6 +4,8 @@ description: "75개 마크다운 문서 모노레포에서 검증된 3가지 필
 type: reference
 tags: [AI, Documentation, Frontmatter, BestPractice]
 order: 3
+depends_on: [./README.md]
+related: [./01-gpt.md, ./02-gemini.md]
 ---
 
 # AI 친화적 기술 문서 메타데이터 시스템

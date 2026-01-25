@@ -5,6 +5,8 @@ type: reference
 tags: [AI, Documentation, Frontmatter, Architecture]
 ai_summary: "docs와 agents를 동적으로 연결하는 GraphRAG 파이프라인, 6단계 마이그레이션 로드맵 제안"
 created: 2025-01-20
+depends_on: [../00-meta-prompt.md]
+related: [./02-gemini.md, ./03-claude.md]
 ---
 
 # AI Agent 기반 문서 시스템 아키텍처 제안
