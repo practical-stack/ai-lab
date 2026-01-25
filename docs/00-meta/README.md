@@ -1,84 +1,86 @@
 ---
-title: "문서화 시스템 메타 정보"
-description: "docs 폴더 문서 작성을 위한 frontmatter 스키마, 태그 controlled vocabulary, 타입 정의 및 작성 가이드를 제공합니다."
+title: "Documentation System Meta Information"
+description: "Frontmatter schema, tag controlled vocabulary, type definitions, and authoring guide for docs folder documentation."
 type: index
 tags: [Documentation, Frontmatter]
 used_by: [/.claude/skills/doc-frontmatter/SKILL.md]
 ---
 
-# 문서화 시스템 메타 정보
+# Documentation System Meta Information
 
-docs 폴더 문서 작성을 위한 스키마, 태그, 가이드입니다.
+[한국어](./README.ko.md)
+
+Schema, tags, and guides for writing documentation in the docs folder.
 
 ---
 
-## 폴더 구조
+## Folder Structure
 
 ```
 00-meta/
-└── 00-frontmatter/              # Frontmatter 시스템
-    ├── 00-guide.md              # 적용 가이드
-    ├── 01-schema.md             # 스키마 정의 (Source of Truth)
-    ├── 02-tags.md               # 태그 목록 (Source of Truth)
-    ├── 03-types.md              # 타입 정의 (Source of Truth)
-    ├── 04-requirement.md        # 요구사항
-    ├── 05-adr.md                # 설계 결정 기록
-    └── research/                # 리서치 자료
+└── 00-frontmatter/              # Frontmatter System
+    ├── 00-guide.md              # Application Guide
+    ├── 01-schema.md             # Schema Definition (Source of Truth)
+    ├── 02-tags.md               # Tag List (Source of Truth)
+    ├── 03-types.md              # Type Definition (Source of Truth)
+    ├── 04-requirement.md        # Requirements
+    ├── 05-adr.md                # Architecture Decision Record
+    └── research/                # Research Materials
 ```
 
 ---
 
-## 문서 목록
+## Document List
 
-| 문서 | 설명 | 용도 |
-|------|------|------|
-| [00-guide.md](./00-frontmatter/00-guide.md) | Frontmatter 적용 가이드 | 문서 작성 시 참고 |
-| [01-schema.md](./00-frontmatter/01-schema.md) | Frontmatter 스키마 정의 | **Source of Truth** |
+| Document | Description | Purpose |
+|----------|-------------|---------|
+| [00-guide.md](./00-frontmatter/00-guide.md) | Frontmatter Application Guide | Reference when writing docs |
+| [01-schema.md](./00-frontmatter/01-schema.md) | Frontmatter Schema Definition | **Source of Truth** |
 | [02-tags.md](./00-frontmatter/02-tags.md) | Tags Controlled Vocabulary | **Source of Truth** |
-| [03-types.md](./00-frontmatter/03-types.md) | 문서 Type 정의 | **Source of Truth** |
-| [04-requirement.md](./00-frontmatter/04-requirement.md) | 시스템 요구사항 정의 | 배경 이해 |
-| [05-adr.md](./00-frontmatter/05-adr.md) | 설계 결정 기록 (ADR) | 설계 근거 |
+| [03-types.md](./00-frontmatter/03-types.md) | Document Type Definition | **Source of Truth** |
+| [04-requirement.md](./00-frontmatter/04-requirement.md) | System Requirements Definition | Background understanding |
+| [05-adr.md](./00-frontmatter/05-adr.md) | Architecture Decision Record (ADR) | Design rationale |
 
 ---
 
 ## Source of Truth
 
-| 항목 | 문서 |
-|------|------|
-| Frontmatter 필드 정의 | [01-schema.md](./00-frontmatter/01-schema.md) |
-| 사용 가능한 태그 | [02-tags.md](./00-frontmatter/02-tags.md) |
-| 문서 Type | [03-types.md](./00-frontmatter/03-types.md) |
+| Item | Document |
+|------|----------|
+| Frontmatter Field Definition | [01-schema.md](./00-frontmatter/01-schema.md) |
+| Available Tags | [02-tags.md](./00-frontmatter/02-tags.md) |
+| Document Types | [03-types.md](./00-frontmatter/03-types.md) |
 
 ---
 
-## 빠른 참조
+## Quick Reference
 
-### 필수 필드
+### Required Fields
 
 ```yaml
 ---
-title: "문서 제목"
-description: "50-160자 핵심 요약"
+title: "Document Title"
+description: "50-160 character core summary"
 type: guide  # tutorial | guide | reference | explanation | adr | troubleshooting | pattern | index
 ---
 ```
 
-### 권장 필드
+### Recommended Fields
 
 ```yaml
-tags: [React, API]  # 02-tags.md에서 선택, 최대 5개
-order: 0            # 파일명 prefix와 일치
+tags: [React, API]  # Select from 02-tags.md, max 5
+order: 0            # Match filename prefix
 ```
 
 ---
 
-## 리서치 자료
+## Research Materials
 
-[research/](./00-frontmatter/research/) - 스키마 도출 과정의 DeepSearch 리서치 자료
+[research/](./00-frontmatter/research/) - DeepSearch research materials from schema derivation process
 
 ---
 
-## 관련 문서
+## Related Documents
 
-- [docs/AGENTS.md](../AGENTS.md) - AI 에이전트용 문서 구조 가이드
-- [docs/README.md](../README.md) - 전체 문서 인덱스
+- [docs/AGENTS.md](../AGENTS.md) - Document structure guide for AI agents
+- [docs/README.md](../README.md) - Full document index
