@@ -30,9 +30,10 @@ Load the **git-master** skill and execute in COMMIT mode:
    - Detect commit style (SEMANTIC/PLAIN/SHORT)
    - Output detection result before proceeding
 
-3. **Atomic Planning**:
-   - Split by directory/module FIRST
-   - Apply minimum commit rule: `min_commits = ceil(file_count / 3)`
+3. **Purpose-Based Grouping**:
+   - Group by **logical purpose**, NOT by file count or directory
+   - Same feature/fix/refactor = same commit (even if 10+ files)
+   - Different purposes = different commits (even if same directory)
    - Pair tests with implementation
    - Output commit plan with justifications
 
@@ -45,10 +46,16 @@ Load the **git-master** skill and execute in COMMIT mode:
 
 | Rule | Enforcement |
 |------|-------------|
-| 3+ files = 2+ commits minimum | Hard block |
-| Different directories = different commits | Unless tightly coupled |
+| Same purpose = same commit | Even if 10+ files across directories |
+| Different purposes = different commits | Even if in same directory |
 | Test + implementation = same commit | Always |
 | Match detected style | Never default to semantic |
+
+### Anti-Pattern: Over-Splitting
+
+**WRONG**: 3 files → 3 commits (splitting by file)
+**WRONG**: 2 directories → 2 commits (splitting by directory)
+**CORRECT**: 1 feature → 1 commit (grouping by purpose)
 
 ## Safety
 
