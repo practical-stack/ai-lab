@@ -1,184 +1,159 @@
-# Oh My PStack: Meta Skill & Agent Development Workspace
+# AI Lab: LLM Research Workspace
 
-This workspace aggregates AI agent/skill repositories to study patterns and create **meta-skills** (skills that create skills) and **meta-agents** (agents that create agents).
+Research workspace for analyzing hyped LLM tools and extracting actionable insights.
 
 ## PURPOSE
 
-Study existing implementations → Extract patterns → Build meta-level tooling
+Research trending topics → Multi-model analysis → Extract reusable artifacts
 
-**Goal**: Create skills and agents that help build better skills and agents.
+**Goal**: Turn LLM hype into practical, reusable knowledge (skills, prompts, patterns).
 
 ## DIRECTORY STRUCTURE
 
 ```
-oh-my-pstack/
-├── .claude-plugin/       ← Claude Code plugin manifest
-├── .opencode/            ← OpenCode plugin
-├── skills/               ← Shared skills (both platforms)
-├── agents/               ← Shared agent definitions
-├── meta-skill-en/        ← Your work (meta-skill development)
-├── meta-skill-ko/        ← Your work (meta-skill development)
-├── AGENTS.md             ← This file
-├── README.md
-└── refs/                 ← Reference repositories (gitignored)
-    ├── oh-my-opencode/
-    ├── oh-my-claudecode/
-    ├── skills/
-    ├── agent-skills/
-    ├── plugins-for-claude-natives/
-    └── claude-cookbooks/
+ai-lab/
+├── docs/                         # Research documents
+│   └── NN-topic-name/
+│       ├── README.md             # Topic overview (EN + KO)
+│       ├── meta-prompt.md        # Reusable prompt template
+│       └── research/             # Multi-model analysis
+│           ├── 00-research-prompt.md
+│           ├── 01-claude.md
+│           ├── 02-gpt.md
+│           └── 03-gemini.md
+├── .claude/                      # Claude Code artifacts
+│   ├── skills/                   # Extracted skills
+│   │   └── SkillName/SKILL.md
+│   └── commands/                 # Custom commands
+├── meta-skill/                   # Meta-level tooling
+├── refs/                         # Reference repositories (gitignored)
+├── AGENTS.md                     # This file
+└── README.md
 ```
 
-## REFERENCE REPOSITORIES
+## RESEARCH WORKFLOW
 
-Each folder in `refs/` is an independent git repo with its own history:
+### Phase 1: Research
 
-| Repo | Runtime | Focus | Key Patterns |
-|------|---------|-------|--------------|
-| `refs/oh-my-opencode/` | Bun | OpenCode orchestration | Agent definitions, multi-model routing, hooks |
-| `refs/oh-my-claudecode/` | Node.js | Claude Code orchestration | Tiered agents, model routing, state management |
-| `refs/skills/` | - | Official skill collection | **Has `skill-creator`** - existing meta-skill |
-| `refs/agent-skills/` | - | Vercel-focused skills | Skill packaging patterns |
-| `refs/plugins-for-claude-natives/` | - | Claude Code plugins | Plugin architecture |
-| `refs/claude-cookbooks/` | Python/uv | Jupyter notebooks | Examples, patterns |
+Create `docs/NN-topic-name/` with:
 
-## SKILL PATTERNS (from analysis)
+| File | Purpose |
+|------|---------|
+| `README.md` | Topic overview, quick reference |
+| `README.ko.md` | Korean version (if needed) |
+| `meta-prompt.md` | Reusable prompt for the topic |
+| `research/00-research-prompt.md` | Initial research prompt |
+
+### Phase 2: Multi-Model Analysis
+
+Run the research prompt against multiple models:
+
+| File | Model |
+|------|-------|
+| `research/01-claude.md` | Claude (Sonnet/Opus) |
+| `research/02-gpt.md` | GPT-4 |
+| `research/03-gemini.md` | Gemini |
+
+Compare and synthesize insights.
+
+### Phase 3: Extract Artifacts
+
+Create reusable artifacts from research:
+
+| Artifact Type | Location | When to Use |
+|---------------|----------|-------------|
+| **Skill** | `.claude/skills/SkillName/` | Domain knowledge for AI assistants |
+| **Command** | `.claude/commands/` | User-triggered procedures |
+| **Prompt** | `docs/NN-topic/meta-prompt.md` | Reusable prompt templates |
+| **Pattern** | Document in README | General best practices |
+
+## CURRENT RESEARCH
+
+| # | Topic | Status | Artifacts |
+|---|-------|--------|-----------|
+| 01 | Component Architect | Done | Skill: `.claude/skills/ComponentArchitect/` |
+
+## SKILL PATTERNS
 
 ### SKILL.md Structure
+
 ```yaml
 ---
-name: skill-name           # Required: kebab-case
-description: When to use   # Required: triggers + purpose
+name: SkillName
+description: |
+  When to use this skill.
+  USE WHEN: keyword triggers
+  DO NOT USE WHEN: exclusions
 ---
 # Skill Title
-[Markdown instructions]
+
+[Instructions for the AI]
+
+## Workflow Routing
+| Intent | Workflow |
+|--------|----------|
+| Action A | [workflows/a.md](workflows/a.md) |
+
+## Core Resources
+| Resource | Purpose |
+|----------|---------|
+| [Reference](references/ref.md) | Description |
 ```
 
 ### Skill Directory Layout
+
 ```
-skill-name/
+SkillName/
 ├── SKILL.md              # Required: frontmatter + instructions
-├── scripts/              # Optional: executable code (bash/python)
-├── references/           # Optional: docs loaded on-demand  
-└── assets/               # Optional: templates, images, fonts
+├── workflows/            # Optional: step-by-step procedures
+├── references/           # Optional: on-demand documentation
+└── assets/               # Optional: templates, images
 ```
 
-### Key Principles (from `skill-creator`)
-1. **Concise is key** - Context window is shared; only add what Claude doesn't know
+### Key Principles
+
+1. **Concise** - Only add what AI doesn't already know
 2. **Progressive disclosure** - Metadata always loaded, body on trigger, references on-demand
-3. **Degrees of freedom** - Match specificity to task fragility
+3. **Actionable** - Focus on "what to do", not background theory
 
-## AGENT PATTERNS (from analysis)
+## REFERENCE REPOSITORIES
 
-### Agent Definition Structure (oh-my-claudecode)
-```typescript
-interface AgentConfig {
-  name: string;           // e.g., "architect", "explore"
-  description: string;    // When to use this agent
-  prompt: string;         // System prompt (or loaded from .md)
-  tools: string[];        // Allowed tools: ['Read', 'Glob', 'Edit', ...]
-  model: 'opus' | 'sonnet' | 'haiku';
-}
-```
+Optional reference repos can be cloned to `refs/` (gitignored):
 
-### Model Tier Routing
-| Tier | Model | Use Case |
-|------|-------|----------|
-| HIGH | opus | Complex analysis, architecture, debugging |
-| MEDIUM | sonnet | Standard tasks, moderate complexity |
-| LOW | haiku | Simple lookups, fast operations |
+| Repo | Focus |
+|------|-------|
+| `refs/oh-my-claudecode/` | Claude Code multi-agent orchestration |
+| `refs/skills/` | Official Claude skill collection |
+| `refs/agent-skills/` | Vercel-focused Claude skills |
 
-### Agent Categories
-| Type | Examples | Purpose |
-|------|----------|---------|
-| Orchestrators | sisyphus, atlas | Coordinate work, delegate |
-| Specialists | architect, designer, writer | Domain expertise |
-| Explorers | explore, librarian, researcher | Search and research |
-| Executors | executor | Direct implementation |
+## RESEARCH CHECKLIST
 
-## EXISTING META-TOOLS
+When researching a new topic:
 
-### `skill-creator` (refs/skills/skills/skill-creator/)
-Already implements meta-skill pattern:
-- Guides skill creation process
-- Includes `init_skill.py` and `package_skill.py` scripts
-- Progressive disclosure documentation
-
-### Orchestrator Patterns (refs/oh-my-*/src/agents/)
-Study how orchestrators delegate to specialists - same pattern applies to meta-agents.
-
-## BUILD / TEST COMMANDS
-
-### oh-my-opencode (Bun)
-```bash
-cd refs/oh-my-opencode
-bun run build && bun test
-bun test src/file.test.ts  # Single test
-```
-
-### oh-my-claudecode (Node.js)
-```bash
-cd refs/oh-my-claudecode
-npm run build && npm run test:run
-npx vitest run src/path/to/file.test.ts
-```
-
-### claude-cookbooks (Python)
-```bash
-cd refs/claude-cookbooks
-make install && make check && make test
-```
+- [ ] Create `docs/NN-topic-name/` structure
+- [ ] Write initial research prompt
+- [ ] Run against Claude, GPT, Gemini
+- [ ] Compare and synthesize findings
+- [ ] Identify extractable artifacts
+- [ ] Create skill/command/prompt as appropriate
+- [ ] Update research topics table in README
 
 ## CODE CONVENTIONS
 
-### TypeScript
-- **Naming**: kebab-case files, `createXXX` factories, PascalCase types
-- **Imports**: External alphabetical, then internal relative
-- **Errors**: Always handle explicitly, never empty catch
-- **Forbidden**: `as any`, `@ts-ignore`, empty catch blocks
+### Markdown Files
+
+- **Language**: English primary, Korean (`*.ko.md`) when needed
+- **Frontmatter**: YAML for metadata
+- **Headings**: Start with `#`, use hierarchy
+- **Tables**: For structured comparisons
 
 ### Skill Files
-- **Frontmatter**: Only `name` + `description` in YAML
-- **Body**: Imperative/infinitive form instructions
+
+- **Frontmatter**: `name` + `description` required
+- **Body**: Imperative/infinitive form
 - **Size**: Keep SKILL.md under 500 lines, split to references/
-
-## META-DEVELOPMENT WORKFLOW
-
-### Creating a Meta-Skill
-1. Study existing skills in `refs/skills/`, `refs/agent-skills/`, `refs/oh-my-*/skills/`
-2. Identify patterns that can be generalized
-3. Use `skill-creator` as template
-4. Include scripts that automate repetitive creation tasks
-
-### Creating a Meta-Agent
-1. Study agent definitions in `refs/oh-my-*/src/agents/`
-2. Analyze orchestrator patterns (delegation, verification)
-3. Define agent config with appropriate model tier
-4. Create prompt that guides agent creation
-
-## PATTERN EXTRACTION CHECKLIST
-
-When studying a repo:
-- [ ] How are skills/agents defined? (structure, fields)
-- [ ] What's the naming convention? (files, exports)
-- [ ] How does delegation work? (prompts, tools)
-- [ ] What validation exists? (schemas, tests)
-- [ ] What's reusable as meta-tooling?
-
-## KEY FILES TO STUDY
-
-| Purpose | Location |
-|---------|----------|
-| Skill creation guide | `refs/skills/skills/skill-creator/SKILL.md` |
-| Skill template | `refs/skills/template/SKILL.md` |
-| Agent definitions | `refs/oh-my-claudecode/src/agents/definitions.ts` |
-| Orchestrator prompts | `refs/oh-my-claudecode/skills/orchestrate/SKILL.md` |
-| Agent council (multi-AI) | `refs/plugins-for-claude-natives/plugins/agent-council/` |
-| Background agents | `refs/oh-my-opencode/src/features/background-agent/` |
 
 ## SEE ALSO
 
-- `refs/oh-my-opencode/AGENTS.md` - Full OpenCode implementation details
-- `refs/oh-my-claudecode/AGENTS.md` - Full ClaudeCode implementation details
-- `refs/agent-skills/AGENTS.md` - Skill packaging guide
-- `refs/skills/skills/skill-creator/SKILL.md` - Meta-skill reference implementation
+- Example research: `docs/01-component-architect/`
+- Example skill: `.claude/skills/ComponentArchitect/`

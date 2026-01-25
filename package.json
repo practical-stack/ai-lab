@@ -1,37 +1,15 @@
 {
-  "name": "oh-my-pstack",
+  "name": "ai-lab",
   "version": "0.1.0",
-  "description": "Meta-skill and meta-agent development workspace - Dual plugin for Claude Code and OpenCode",
-  "type": "module",
-  "main": ".opencode/plugins/oh-my-pstack.ts",
-  "files": [
-    ".claude-plugin",
-    ".opencode",
-    "skills",
-    "agents"
-  ],
+  "description": "Research workspace for analyzing LLM tools and extracting actionable insights",
+  "private": true,
   "keywords": [
-    "claude-code",
-    "opencode",
-    "plugin",
-    "meta-skill",
-    "meta-agent",
-    "ai-tooling"
+    "llm",
+    "research",
+    "claude",
+    "gpt",
+    "gemini",
+    "ai-skills"
   ],
-  "author": "Oh My PStack Contributors",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pstack/oh-my-pstack.git"
-  },
-  "devDependencies": {
-    "@opencode-ai/plugin": "^1.0.220",
-    "typescript": "^5.7.0"
-  },
-  "peerDependencies": {
-    "@opencode-ai/plugin": ">=1.0.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "license": "MIT"
 }
