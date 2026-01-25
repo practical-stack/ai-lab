@@ -1,5 +1,7 @@
 # AI Lab
 
+[한국어](./README.ko.md)
+
 > Research workspace for analyzing hyped LLM tools and extracting actionable insights.
 
 ## Purpose
@@ -12,14 +14,27 @@ Study trending LLM tools, frameworks, and patterns to:
 
 ## Workflow
 
-```
-Research (docs/)           Analyze (multi-model)        Extract (artifacts)
-      │                           │                           │
-      ▼                           ▼                           ▼
-docs/01-topic/             research/01-claude.md      .claude/skills/TopicSkill/
-├── README.md              research/02-gpt.md         .opencode/skills/...
-├── meta-prompt.md         research/03-gemini.md      prompts/...
-└── research/
+```mermaid
+flowchart LR
+    subgraph Research["1. Research"]
+        R1[docs/NN-topic/]
+        R2[README.md]
+        R3[meta-prompt.md]
+    end
+
+    subgraph Analyze["2. Analyze"]
+        A1[01-claude.md]
+        A2[02-gpt.md]
+        A3[03-gemini.md]
+    end
+
+    subgraph Extract["3. Extract"]
+        E1[.claude/skills/]
+        E2[.claude/commands/]
+        E3[prompts/]
+    end
+
+    Research --> Analyze --> Extract
 ```
 
 ## Example: Component Architect
@@ -44,7 +59,6 @@ ai-lab/
 ├── .claude/                  # Claude Code artifacts
 │   ├── skills/               # Extracted skills
 │   └── commands/             # Custom commands
-├── meta-skill/               # Meta-level tooling
 ├── refs/                     # Reference repositories (gitignored)
 ├── AGENTS.md                 # AI agent instructions
 └── README.md
