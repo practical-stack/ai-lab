@@ -126,11 +126,11 @@ AI 에이전트 아키텍처가 처음이라면:
 
 ### 파일 위치
 
-| 플랫폼 | Commands | Skills | Rules |
-|--------|----------|--------|-------|
-| Claude Code | `.claude/commands/` | `.claude/skills/` | `CLAUDE.md` |
-| Cursor | `.cursor/commands/` | `.cursor/rules/` | `.cursorrules` |
-| OpenCode | `.opencode/commands/` | `skills/` | `AGENTS.md` |
+| 플랫폼 | Commands | Skills | Agents |
+|--------|----------|--------|--------|
+| Claude Code | `.claude/commands/` | `.claude/skills/` | Subagent via Task |
+| Cursor | `.cursor/commands/` | `.cursor/skills/` | `.cursor/agents/` |
+| OpenCode | `.opencode/commands/` | `skills/` | `agents/*.md` |
 
 ---
 

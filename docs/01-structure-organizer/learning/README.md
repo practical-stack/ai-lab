@@ -126,11 +126,11 @@ Multi-step planning needed?
 
 ### File Locations
 
-| Platform | Commands | Skills | Rules |
-|----------|----------|--------|-------|
-| Claude Code | `.claude/commands/` | `.claude/skills/` | `CLAUDE.md` |
-| Cursor | `.cursor/commands/` | `.cursor/rules/` | `.cursorrules` |
-| OpenCode | `.opencode/commands/` | `skills/` | `AGENTS.md` |
+| Platform | Commands | Skills | Agents |
+|----------|----------|--------|--------|
+| Claude Code | `.claude/commands/` | `.claude/skills/` | Subagent via Task |
+| Cursor | `.cursor/commands/` | `.cursor/skills/` | `.cursor/agents/` |
+| OpenCode | `.opencode/commands/` | `skills/` | `agents/*.md` |
 
 ---
 
