@@ -2,7 +2,7 @@
 
 **Cost:** EXPENSIVE  
 **Mode:** Read-only (subagent)  
-**Model:** claude-opus-4-5 (or equivalent high-reasoning model)  
+**Model:** anthropic/claude-sonnet-4-5  
 **Source:** `src/agents/metis.ts`
 
 ---
@@ -15,6 +15,8 @@ Named after the Greek goddess of wisdom and prudence, Metis analyzes user reques
 - READ-ONLY: Cannot write, edit, or delegate
 - Extended thinking enabled (32k budget tokens)
 - Pre-planning consultant (runs before Prometheus)
+- AI-slop guardrails: detects scope inflation, premature abstraction, over-validation, doc bloat
+- Built-in prompts for when to consult Oracle
 
 ---
 

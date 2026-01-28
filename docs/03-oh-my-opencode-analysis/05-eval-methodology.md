@@ -1,7 +1,7 @@
 # Oh-My-OpenCode Evaluation Methodology
 
-**Created:** 2026-01-25
-**Repository:** `code-yeongyu/oh-my-opencode` (v3.0.1)
+**Analyzed:** 2026-01-28  
+**Repository:** `code-yeongyu/oh-my-opencode` (v3.1.3)
 
 ---
 
@@ -676,6 +676,113 @@ the agent has failed.
 
 ---
 
+## 8. Hook System (v3.1+ — 32+ Hooks)
+
+### Purpose
+
+The hook system is the primary enforcement mechanism — it intercepts lifecycle events (message submission, tool execution, session stop) and injects guardrails, context, and recovery logic.
+
+### Source Reference
+
+**Directory**: `src/hooks/` (32+ TypeScript hook modules)  
+**Entry**: `src/hooks/index.ts`
+
+### Hook Lifecycle Events
+
+Hooks execute in a specific order per lifecycle event:
+
+| Lifecycle Event | Hooks (Execution Order) |
+|----------------|------------------------|
+| **UserPromptSubmit** | keywordDetector → claudeCodeHooks → autoSlashCommand → startWork |
+| **PreToolUse** | questionLabelTruncator → claudeCodeHooks → nonInteractiveEnv → commentChecker → directoryAgentsInjector → directoryReadmeInjector → rulesInjector → prometheusMdOnly → sisyphusJuniorNotepad → atlasHook |
+| **PostToolUse** | claudeCodeHooks → toolOutputTruncator → contextWindowMonitor → commentChecker → directoryAgentsInjector → directoryReadmeInjector → rulesInjector → emptyTaskResponseDetector → agentUsageReminder → interactiveBashSession → editErrorRecovery → delegateTaskRetry → atlasHook → taskResumeInfo |
+| **Stop** | todoContinuationEnforcer, ralphLoop, sessionNotification |
+| **onSummarize** | anthropicContextWindowLimitRecovery, compactionContextInjector |
+
+### Hooks by Category
+
+#### Quality Control Hooks
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `comment-checker` | PreToolUse/PostToolUse | Captures edits, runs CLI comment checker, appends AI slop warnings |
+| `agent-usage-reminder` | PostToolUse | Nudges to use specialized agents (explore/librarian) when direct tools used |
+| `category-skill-reminder` | PostToolUse | Reminds about category-specific skills |
+| `subagent-question-blocker` | PreToolUse | Blocks subagents from asking questions (they should execute, not ask) |
+
+#### Orchestration Hooks
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `atlas` | PostToolUse/Stop | Orchestrator guardrails: no direct edits outside `.sisyphus/`, boulder continuation, verification reminders |
+| `todo-continuation-enforcer` | Stop | Forces completion via countdown + toast injection |
+| `ralph-loop` | Stop | Self-referential dev loop — re-injects task until complete |
+| `start-work` | UserPromptSubmit | Starts Sisyphus work session from plan |
+| `delegate-task-retry` | PostToolUse | Retries failed delegations |
+| `prometheus-md-only` | PreToolUse | Planner read-only guard (prevents Prometheus from writing code) |
+| `sisyphus-junior-notepad` | PreToolUse | Injects/handles junior notepad context |
+
+#### Context Management Hooks
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `directory-agents-injector` | PreToolUse/PostToolUse | Auto-injects nearest `AGENTS.md` up directory chain on file operations |
+| `directory-readme-injector` | PreToolUse/PostToolUse | Auto-injects nearest `README.md` up directory chain |
+| `rules-injector` | PreToolUse/PostToolUse | Copilot-style rules via frontmatter matchers on read/write/edit |
+| `context-window-monitor` | PostToolUse | Checks Anthropic context usage, injects reminder at threshold |
+| `anthropic-context-window-limit-recovery` | onSummarize | Auto-summarize and recover when hitting context limit |
+| `compaction-context-injector` | onSummarize | Injects context during message compaction |
+| `tool-output-truncator` | PostToolUse | Token-aware truncation for heavy tool outputs |
+
+#### Session & Recovery Hooks
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `session-recovery` | Event | Auto-recover from crashes/aborts |
+| `edit-error-recovery` | PostToolUse | Recover from edit tool failures (e.g., string not found) |
+| `session-notification` | Event | Session lifecycle notifications (OS-level) |
+| `task-resume-info` | PostToolUse | Injects resume info for cancelled background tasks |
+| `background-notification` | Event | OS notifications for background task completion |
+
+#### Environment Hooks
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `keyword-detector` | UserPromptSubmit | Detects ultrawork/search/analyze keywords, injects mode directives |
+| `auto-slash-command` | UserPromptSubmit | Auto-detects `/command` patterns, replaces with command template |
+| `think-mode` | chat.params | Dynamic thinking budget and cleanup |
+| `thinking-block-validator` | PostToolUse | Validates `<thinking>` block format |
+| `interactive-bash-session` | PostToolUse | Manages tmux session state |
+| `non-interactive-env` | PreToolUse | Adjusts behavior for non-TTY environments |
+| `auto-update-checker` | Event | Plugin update checks |
+| `empty-task-response-detector` | PostToolUse | Detects empty agent responses |
+| `question-label-truncator` | PreToolUse | Trims overly long question labels in tool inputs |
+
+#### Claude Code Compatibility
+
+| Hook | Lifecycle | Purpose |
+|------|-----------|---------|
+| `claude-code-hooks` | All | Runs external scripts from `.claude/settings.json` with exit-code semantics (0=pass, 1=warn, 2=block) |
+
+### Hook Architecture Pattern
+
+All hooks follow the same factory pattern:
+
+```typescript
+export function createXXXHook(deps: HookDependencies): Hook {
+  return {
+    name: "xxx-hook",
+    lifecycle: ["PreToolUse", "PostToolUse"],
+    handler: async (event) => {
+      // Hook logic
+      return { action: "pass" | "warn" | "block", message?: "..." }
+    }
+  }
+}
+```
+
+---
+
 ## Summary: Evaluation Philosophy
 
 | Principle | Implementation |
@@ -687,6 +794,9 @@ the agent has failed.
 | **Test behavior** | 99 BDD-style test files |
 | **Require evidence** | LSP diagnostics, build pass, test pass |
 | **Ultimate criterion** | Code indistinguishable from senior engineer |
+| **Context awareness** | Directory AGENTS.md/README.md auto-injection (v3.1+) |
+| **Recovery** | Session/edit/context recovery hooks (v3.1+) |
+| **Guardrails** | Atlas/Prometheus enforcement hooks (v3.1+) |
 
 ### Key Insight
 
@@ -695,6 +805,9 @@ Oh-My-OpenCode treats evaluation as a **trust problem**:
 - Agents will add unnecessary comments → External tool detects and warns
 - Agents will skip analysis steps → BLOCKING patterns force output
 - Agents will leave broken code → Evidence requirements catch failures
+- Agents won't know codebase patterns → Directory injectors auto-provide context (v3.1+)
+- Agents will crash or hit context limits → Recovery hooks auto-handle (v3.1+)
+- Orchestrator agents will break protocol → Atlas/Prometheus hooks enforce rules (v3.1+)
 
 **The system assumes agents lie (or are optimistic). Verification is non-negotiable.**
 
@@ -702,16 +815,22 @@ Oh-My-OpenCode treats evaluation as a **trust problem**:
 
 ## Appendix: File References
 
-| File | Lines | Purpose |
-|------|-------|---------|
-| `src/hooks/todo-continuation-enforcer.ts` | 489 | Forces task completion |
-| `src/hooks/todo-continuation-enforcer.test.ts` | 200+ | BDD tests for enforcer |
-| `src/hooks/comment-checker/index.ts` | 200+ | AI slop detection hook |
-| `src/hooks/comment-checker/cli.test.ts` | 69 | BDD tests for comment checker |
-| `src/cli/doctor/types.ts` | 114 | Check result types |
-| `src/cli/doctor/checks/index.ts` | 38 | Check registry |
-| `src/cli/doctor/checks/config.ts` | 123 | Config validation |
-| `src/cli/doctor/runner.test.ts` | 154 | BDD tests for doctor |
-| `src/features/builtin-skills/git-master/SKILL.md` | 1100+ | BLOCKING pattern examples |
-| `docs/ultrawork-manifesto.md` | 198 | Philosophy (indistinguishable code) |
-| `sisyphus-prompt.md` | 738 | Evidence requirements |
+| File | Purpose |
+|------|---------|
+| `src/hooks/todo-continuation-enforcer.ts` | Forces task completion |
+| `src/hooks/comment-checker/index.ts` | AI slop detection hook |
+| `src/hooks/atlas/index.ts` | Orchestrator guardrails |
+| `src/hooks/ralph-loop/index.ts` | Self-referential dev loop |
+| `src/hooks/auto-slash-command/index.ts` | Auto /command detection |
+| `src/hooks/rules-injector/index.ts` | Copilot-style rules |
+| `src/hooks/directory-agents-injector/index.ts` | AGENTS.md injection |
+| `src/hooks/directory-readme-injector/index.ts` | README.md injection |
+| `src/hooks/anthropic-context-window-limit-recovery/index.ts` | Context recovery |
+| `src/hooks/session-recovery/index.ts` | Crash recovery |
+| `src/hooks/delegate-task-retry/index.ts` | Task retry |
+| `src/hooks/keyword-detector/index.ts` | Mode keyword detection |
+| `src/hooks/claude-code-hooks/index.ts` | Claude Code compatibility |
+| `src/cli/doctor/types.ts` | Check result types |
+| `src/cli/doctor/checks/index.ts` | Check registry |
+| `src/features/builtin-skills/git-master/SKILL.md` | BLOCKING pattern examples |
+| `docs/ultrawork-manifesto.md` | Philosophy (indistinguishable code) |

@@ -2,7 +2,7 @@
 
 **Cost:** EXPENSIVE  
 **Mode:** Read-only (subagent)  
-**Model:** claude-opus-4-5 (or equivalent high-reasoning model)  
+**Model:** anthropic/claude-sonnet-4-5  
 **Source:** `src/agents/momus.ts`
 
 ---
@@ -15,6 +15,8 @@ Named after Momus, the Greek god of satire and mockery who found fault in everyt
 - READ-ONLY: Cannot write, edit, or delegate
 - Extended thinking enabled (32k budget tokens)
 - Evaluates plans, NOT design decisions
+- Extensive input validation (ignores system wrappers, accepts single plan path)
+- Enforces language matching with plan content
 
 ---
 

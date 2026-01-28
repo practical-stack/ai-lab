@@ -1,7 +1,7 @@
 # Oh-My-OpenCode Repository Analysis
 
-**Analyzed:** 2026-01-25  
-**Repository:** `code-yeongyu/oh-my-opencode` (v3.0.1)  
+**Analyzed:** 2026-01-28  
+**Repository:** `code-yeongyu/oh-my-opencode` (v3.1.3)  
 **Depth Level:** Deep
 
 ---
@@ -94,10 +94,14 @@ Subagents are stateless. Your delegation prompt must include EVERYTHING.
 | Category | Key Files |
 |----------|-----------|
 | Philosophy | `docs/ultrawork-manifesto.md` |
-| Main Agent | `sisyphus-prompt.md` (738 lines) |
-| Verification | `src/hooks/todo-continuation-enforcer.ts` (489 lines) |
+| Main Agent | `sisyphus-prompt.md` (auto-generated) |
+| Verification | `src/hooks/todo-continuation-enforcer.ts` |
 | Skills | `src/features/builtin-skills/git-master/SKILL.md` (1100+ lines) |
-| Delegation | `src/tools/delegate-task/tools.ts` (1039 lines) |
+| Delegation | `src/tools/delegate-task/tools.ts` |
+| Agents | `src/agents/*.ts` (10 agent factories) |
+| Hooks | `src/hooks/` (32+ TypeScript hooks) |
+| Tools | `src/tools/` (12+ tool modules) |
+| MCPs | `src/mcp/` (websearch, context7, grep_app) |
 
 ---
 

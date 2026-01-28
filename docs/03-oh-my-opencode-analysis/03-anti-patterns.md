@@ -2,7 +2,8 @@
 
 **Document:** 03-anti-patterns.md  
 **Part of:** Oh-My-OpenCode Repository Analysis  
-**Source:** `AGENTS.md`, `CONTRIBUTING.md`, `src/agents/AGENTS.md`
+**Source:** `AGENTS.md`, `CONTRIBUTING.md`, `src/agents/AGENTS.md`  
+
 
 ---
 
@@ -329,6 +330,90 @@ git push origin v1.2.3
 
 ---
 
+### 10. Prometheus Writing Code
+
+| Prohibition | Reason | Source |
+|-------------|--------|--------|
+| Prometheus agent calling Write/Edit tools | Prometheus is a planner only — enforced by `prometheus-md-only` hook | src/agents/AGENTS.md |
+
+**Why This Matters:**
+
+Prometheus exists to create plans, not execute them. If it writes code, it bypasses the delegation chain and produces unverified output.
+
+**Bad Example:**
+```typescript
+// BAD: Prometheus writes code directly
+// (Blocked by prometheus-md-only hook at PreToolUse)
+await write("src/feature/index.ts", code)  // BLOCKED
+await edit("src/utils.ts", ...)             // BLOCKED
+```
+
+**Good Example:**
+```markdown
+// GOOD: Prometheus outputs a plan
+## Task 1: Add feature module
+- Create src/feature/index.ts with [specific requirements]
+- Follow pattern in src/existing/index.ts:10-30
+- Delegate to sisyphus-junior for execution
+```
+
+---
+
+### 11. Subagent Asking Questions
+
+| Prohibition | Reason | Source |
+|-------------|--------|--------|
+| Subagents using question/clarification tools | Subagents should execute, not ask — enforced by `subagent-question-blocker` hook | src/hooks/subagent-question-blocker |
+
+**Why This Matters:**
+
+Subagents receive complete context via the 6-section delegation prompt. If they need to ask questions, the delegation prompt was incomplete. Asking blocks the workflow.
+
+**Bad Example:**
+```typescript
+// BAD: Subagent asks instead of executing
+question("Should I use X or Y for this implementation?")
+// Blocks parent orchestrator, wastes time
+```
+
+**Good Example:**
+```typescript
+// GOOD: Subagent picks the pattern matching existing code
+const existingPattern = await grep("similar implementation")
+// Follows established pattern without asking
+await write("src/feature.ts", codeFollowingPattern)
+```
+
+---
+
+### 12. Overwriting Notepad
+
+| Prohibition | Reason | Source |
+|-------------|--------|--------|
+| Overwriting notepad files instead of appending | Notepad is append-only knowledge base; overwrite loses accumulated wisdom | Atlas agent prompt |
+
+**Why This Matters:**
+
+The notepad (`.sisyphus/notepads/`) accumulates learnings, decisions, and issues across multiple delegations. Overwriting destroys institutional knowledge that subsequent subagents need.
+
+**Bad Example:**
+```typescript
+// BAD: Overwrite entire notepad
+await write(".sisyphus/notepads/plan/learnings.md", newContent)
+// Previous learnings from 5 delegations: GONE
+```
+
+**Good Example:**
+```typescript
+// GOOD: Append new findings
+await edit(".sisyphus/notepads/plan/learnings.md", {
+  oldString: "",  // Append at end
+  newString: "\n## Delegation 6 Findings\n- Convention: use camelCase for handlers\n"
+})
+```
+
+---
+
 ## Soft Guidelines (Discouraged)
 
 These are not forbidden but generally indicate suboptimal approaches.
@@ -520,6 +605,9 @@ When things go wrong, follow this protocol:
 | **Git** | Giant commits (3+ files) |
 | **Publishing** | Direct `bun publish` |
 | **Code Quality** | AI slop (excessive comments, over-abstraction) |
+| **Role Violation** | Prometheus writing code (v3.1+) |
+| **Workflow Blocking** | Subagents asking questions instead of executing (v3.1+) |
+| **Knowledge Loss** | Overwriting notepad instead of appending (v3.1+) |
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Cost:** FREE  
 **Mode:** Read-only (subagent)  
-**Model:** Fast/cheap model (e.g., claude-haiku)  
+**Model:** opencode/gpt-5-nano  
 **Source:** `src/agents/explore.ts`
 
 ---
@@ -15,6 +15,8 @@ Explore is a codebase search specialist. Think of it as "contextual grep" - it f
 - READ-ONLY: Cannot write, edit, or delegate
 - Designed for parallel execution (`run_in_background=true`)
 - Returns structured results with absolute paths
+- Mandatory structured response with `<analysis>` and `<results>` blocks
+- Requires 3+ parallel tool calls on first action
 
 ---
 

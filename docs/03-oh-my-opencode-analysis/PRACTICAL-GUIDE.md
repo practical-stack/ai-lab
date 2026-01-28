@@ -136,6 +136,20 @@ Approach: [how you'll do it]
 
 ---
 
+## What's New in v3.1.3
+
+This guide is based on **v3.1.3** of Oh-My-OpenCode, which introduced several new patterns and features:
+
+- **Multi-Source Skill Loading** - Merge skills from multiple sources (builtin, config, user, project)
+- **Skill-Embedded MCP** - Declare MCPs directly within skill frontmatter
+- **Boulder State Persistence** - Track plan progress across sessions
+- **Metadata-Driven Prompt Assembly** - Dynamically generate system prompts from configuration
+- **State-Driven Orchestration** - Maintain orchestrator state for complex workflows
+
+All patterns in this guide apply to v3.1.3. Refer to [02-design-patterns.md](./02-design-patterns.md) for architectural details.
+
+---
+
 ## Pattern Index
 
 For detailed implementation of each pattern, see [PRACTICAL-GUIDE.patterns/](./PRACTICAL-GUIDE.patterns/).

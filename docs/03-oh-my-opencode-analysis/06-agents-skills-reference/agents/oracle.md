@@ -2,7 +2,7 @@
 
 **Cost:** EXPENSIVE  
 **Mode:** Read-only (subagent)  
-**Model:** claude-opus-4-5 (or equivalent high-reasoning model)  
+**Model:** openai/gpt-5.2  
 **Source:** `src/agents/oracle.ts`
 
 ---
@@ -13,8 +13,9 @@ Oracle is a strategic technical advisor with deep reasoning capabilities. It ope
 
 **Key Characteristics:**
 - READ-ONLY: Cannot write, edit, or delegate
-- Extended thinking enabled (32k budget tokens)
+- GPT-specific config: `reasoningEffort: "medium"`, `textVerbosity: "high"`; non-GPT gets 32k thinking budget
 - Each consultation is standalone (no follow-up dialogue)
+- Effort tagging required in responses (Quick/Short/Medium/Large)
 
 ---
 

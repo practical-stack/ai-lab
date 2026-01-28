@@ -2,7 +2,8 @@
 
 **Document:** 01-architecture.md  
 **Part of:** Oh-My-OpenCode Repository Analysis  
-**Source:** `docs/guide/understanding-orchestration-system.md`, `src/agents/`, `src/tools/delegate-task/`
+**Source:** `docs/guide/understanding-orchestration-system.md`, `src/agents/`, `src/tools/delegate-task/`  
+
 
 ---
 
@@ -415,47 +416,140 @@ switch(task.domain) {
 | **Trade-off** | Documentation overhead, but AI agents stay informed |
 | **Implementation** | 9 AGENTS.md files across codebase |
 
+### Decision 8: Built-in MCPs (v3.1+)
+
+| Aspect | Rationale |
+|--------|-----------|
+| **Why** | Agents need external knowledge (web, docs, code search) |
+| **Trade-off** | Dependency on external services |
+| **Implementation** | 3 built-in MCPs: websearch (Exa), Context7, grep_app |
+
+### Decision 9: Multi-Source Skill Loading (v3.1+)
+
+| Aspect | Rationale |
+|--------|-----------|
+| **Why** | Skills from multiple sources (builtin, user, project, Claude compat) |
+| **Trade-off** | Merge complexity, but maximum flexibility |
+| **Implementation** | Priority: `builtin < config < user < opencode < project < opencode-project` |
+
+### Decision 10: Skill-Embedded MCP Support (v3.1+)
+
+| Aspect | Rationale |
+|--------|-----------|
+| **Why** | Skills can declare MCP servers in frontmatter or mcp.json |
+| **Trade-off** | Runtime complexity, but skills gain tool access |
+| **Implementation** | `SkillMcpManager` manages stdio/HTTP lifecycle with idle cleanup |
+
+### Decision 11: Dynamic Prompt Generation (v3.1+)
+
+| Aspect | Rationale |
+|--------|-----------|
+| **Why** | System prompts must reflect runtime state (available tools, categories, skills) |
+| **Trade-off** | Build-time generation script |
+| **Implementation** | `dynamic-agent-prompt-builder.ts` auto-generates prompt tables |
+
 ---
 
 ## Module Boundaries
 
-| Module | Lines (LOC) | Purpose | Extension Points |
-|--------|-------------|---------|------------------|
-| `src/agents/` | 10 agents | Agent definitions | `agentSources` in utils.ts |
-| `src/hooks/` | 31 hooks | Lifecycle interception | `createXXXHook()` factory |
-| `src/tools/` | 20+ tools | Agent capabilities | `builtinTools` object |
-| `src/features/` | Background, skills, Claude compat | Core functionality | Loaders, managers |
-| `src/mcp/` | 3 MCPs | External services | `createBuiltinMcps()` |
+| Module | Components | Purpose | Extension Points |
+|--------|-----------|---------|------------------|
+| `src/agents/` | 10 agents + prompt builder | Agent definitions + dynamic prompts | `agentSources` in utils.ts |
+| `src/hooks/` | 32+ hooks | Lifecycle interception | `createXXXHook()` factory |
+| `src/tools/` | 13 tool modules | Agent capabilities | `builtinTools` object |
+| `src/features/` | 17 feature modules | Core functionality | Loaders, managers |
+| `src/mcp/` | 3 built-in MCPs | External services | `createBuiltinMcps()` |
 | `src/config/` | Zod schemas | Type-safe configuration | Schema validation |
+| `src/cli/` | CLI entry point | Command-line interface | CLI commands |
+| `src/shared/` | Shared utilities | Cross-cutting concerns | Utility functions |
 
 ### Source File Overview
 
 ```
 src/
-├── agents/                    # Agent definitions
+├── agents/                    # Agent definitions (10 agents)
 │   ├── AGENTS.md             # Agent system documentation
-│   ├── sisyphus.ts           # Main orchestrator
-│   ├── junior.ts             # Task executor
-│   ├── oracle.ts             # Strategic advisor
-│   ├── explore.ts            # Codebase searcher
-│   ├── librarian.ts          # Documentation expert
-│   └── utils.ts              # Agent utilities
+│   ├── sisyphus.ts           # Main orchestrator (primary)
+│   ├── atlas.ts              # Plan executor orchestrator (primary)
+│   ├── sisyphus-junior.ts    # Focused task executor (subagent)
+│   ├── oracle.ts             # Strategic advisor (read-only)
+│   ├── explore.ts            # Codebase searcher (read-only)
+│   ├── librarian.ts          # Documentation expert (read-only)
+│   ├── metis.ts              # Pre-planning consultant (read-only)
+│   ├── momus.ts              # Plan reviewer (read-only)
+│   ├── prometheus-prompt.ts  # Strategic planner prompt
+│   ├── multimodal-looker.ts  # Vision analyzer (read-only)
+│   ├── dynamic-agent-prompt-builder.ts  # Auto-generates prompts
+│   ├── types.ts              # Agent metadata/types
+│   ├── utils.ts              # Agent utilities, model fallback
+│   └── index.ts              # Exports
 │
-├── hooks/                     # Lifecycle hooks
+├── hooks/                     # Lifecycle hooks (32+)
 │   ├── AGENTS.md             # Hook system documentation
+│   ├── atlas/                # Orchestrator guardrails
 │   ├── todo-continuation-enforcer.ts  # Forces completion
 │   ├── comment-checker/      # AI slop detection
-│   └── ...                   # Other hooks
+│   ├── ralph-loop/           # Self-referential dev loop
+│   ├── auto-slash-command/   # Auto-detect /commands
+│   ├── rules-injector/       # Copilot-style rules
+│   ├── directory-agents-injector/  # Auto-inject AGENTS.md
+│   ├── directory-readme-injector/  # Auto-inject README.md
+│   ├── anthropic-context-window-limit-recovery/  # Context recovery
+│   ├── session-recovery/     # Crash recovery
+│   ├── think-mode/           # Dynamic thinking budget
+│   ├── keyword-detector/     # Mode keyword detection
+│   ├── claude-code-hooks/    # Claude Code compatibility
+│   └── ...                   # 18+ more hooks
 │
-├── tools/                     # Agent capabilities
+├── tools/                     # Agent capabilities (13 modules)
 │   ├── AGENTS.md             # Tool system documentation
-│   ├── delegate-task/        # Category delegation
-│   └── ...                   # Other tools
+│   ├── lsp/                  # LSP tools (6: goto, refs, symbols, diagnostics, rename)
+│   ├── ast-grep/             # AST pattern search/replace
+│   ├── grep/                 # Regex content search
+│   ├── glob/                 # File pattern matching
+│   ├── delegate-task/        # Category-based delegation
+│   ├── call-omo-agent/       # Run explore/librarian subagents
+│   ├── background-task/      # Background task management
+│   ├── session-manager/      # Session history/search
+│   ├── interactive-bash/     # Tmux command execution
+│   ├── look-at/              # Multimodal file analysis
+│   ├── skill/                # Skill loading
+│   ├── skill-mcp/            # Skill-embedded MCP invocation
+│   └── slashcommand/         # Command rendering
 │
-├── features/                  # Core functionality
-│   ├── background-agent/     # Background task management
-│   ├── builtin-skills/       # Skill definitions
-│   └── opencode-skill-loader/ # Skill loading system
+├── features/                  # Core functionality (17 modules)
+│   ├── AGENTS.md             # Features documentation
+│   ├── background-agent/     # Background task lifecycle
+│   ├── builtin-skills/       # Built-in skills (4: git-master, frontend-ui-ux, dev-browser, agent-browser)
+│   ├── builtin-commands/     # Built-in commands (init-deep, ralph-loop, ulw-loop, cancel-ralph, refactor, start-work)
+│   ├── opencode-skill-loader/ # Multi-source skill discovery + merge
+│   ├── skill-mcp-manager/    # MCP client lifecycle for skill MCPs
+│   ├── context-injector/     # Context block registration + injection
+│   ├── hook-message-injector/ # Synthetic message injection
+│   ├── boulder-state/        # Plan progress persistence
+│   ├── sisyphus-tasks/       # Task storage + schemas
+│   ├── sisyphus-swarm/       # Swarm mailbox protocol
+│   ├── task-toast-manager/   # UI toasts for background tasks
+│   ├── tmux-subagent/        # Tmux pane orchestration
+│   ├── claude-code-agent-loader/    # Load .claude/agents/*.md
+│   ├── claude-code-command-loader/  # Load .claude/commands/
+│   ├── claude-code-mcp-loader/      # Load .mcp.json
+│   ├── claude-code-plugin-loader/   # Claude plugin compatibility
+│   └── claude-code-session-state/   # Session ID tracking
+│
+├── mcp/                       # Built-in MCPs (3)
+│   ├── AGENTS.md             # MCP system documentation
+│   ├── websearch.ts          # Exa web search (EXA_API_KEY)
+│   ├── context7.ts           # Library docs (CONTEXT7_API_KEY)
+│   └── grep-app.ts           # GitHub code search (no auth)
+│
+├── shared/                    # Shared utilities
+│   ├── AGENTS.md
+│   └── ...
+│
+├── cli/                       # CLI entry point
+│   ├── AGENTS.md
+│   └── ...
 │
 └── config/                    # Configuration
     └── schema.ts             # Zod config schemas

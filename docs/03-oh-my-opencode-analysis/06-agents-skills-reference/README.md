@@ -19,7 +19,10 @@ Agents are specialized LLM configurations for specific roles.
 
 | Agent | Cost | Role | When to Use |
 |-------|------|------|-------------|
-| [Atlas](./agents/atlas.md) | EXPENSIVE | Orchestrator | Coordinate complex multi-step tasks |
+| [Sisyphus](./agents/sisyphus.md) | EXPENSIVE | Primary orchestrator | Main workflow orchestration (default) |
+| [Atlas](./agents/atlas.md) | EXPENSIVE | Plan executor | Execute plans via `/start-work` |
+| [Sisyphus Junior](./agents/sisyphus-junior.md) | MODERATE | Task executor | Execute delegated atomic tasks |
+| [Prometheus](./agents/prometheus.md) | EXPENSIVE | Strategic planner | Interview-based planning |
 | [Oracle](./agents/oracle.md) | EXPENSIVE | Strategic advisor | Deep debugging, architecture decisions |
 | [Explore](./agents/explore.md) | FREE | Codebase search | Find patterns in YOUR codebase |
 | [Librarian](./agents/librarian.md) | CHEAP | External docs | Find patterns in EXTERNAL repos/docs |
@@ -87,13 +90,16 @@ If studying the full system:
 
 ```
 1. agents/README.md     ← Agent system overview
-2. oracle.md            ← Read-only advisor pattern
-3. explore.md           ← Cheap parallel agent pattern
-4. atlas.md             ← Orchestrator pattern
+2. sisyphus.md          ← Primary orchestrator pattern (NEW)
+3. oracle.md            ← Read-only advisor pattern
+4. explore.md           ← Cheap parallel agent pattern
+5. atlas.md             ← Plan executor orchestrator pattern
+6. sisyphus-junior.md   ← Focused executor pattern (NEW)
+7. prometheus.md        ← Interview-based planning pattern (NEW)
 
-5. skills/README.md     ← Skill structure pattern
-6. git-master.md        ← Reference implementation (MOST IMPORTANT)
-7. frontend-ui-ux.md    ← Identity-based skill pattern
+8. skills/README.md     ← Skill structure pattern
+9. git-master.md        ← Reference implementation (MOST IMPORTANT)
+10. frontend-ui-ux.md   ← Identity-based skill pattern
 ```
 
 ---

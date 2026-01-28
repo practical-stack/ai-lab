@@ -2,7 +2,7 @@
 
 **Cost:** CHEAP  
 **Mode:** Read-only (subagent)  
-**Model:** Sonnet-class model  
+**Model:** opencode/big-pickle  
 **Source:** `src/agents/librarian.ts`
 
 ---
@@ -14,7 +14,10 @@ Librarian is a specialized open-source codebase understanding agent. It searches
 **Key Characteristics:**
 - READ-ONLY: Cannot write, edit, or delegate
 - Designed for parallel execution (`run_in_background=true`)
-- Returns evidence with GitHub permalinks
+- Returns evidence with GitHub permalinks (mandatory citation format)
+- Four request types: Conceptual, Implementation, Context, Comprehensive
+- "Current year" enforcement for searches
+- Doc discovery pipeline: official docs → version check → sitemap → targeted pages
 
 ---
 

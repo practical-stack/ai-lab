@@ -6,15 +6,18 @@ This directory documents how oh-my-opencode implements its agent system.
 
 ## Agent Overview
 
-| Agent | Cost | Mode | Primary Role |
-|-------|------|------|--------------|
-| [Atlas](./atlas.md) | EXPENSIVE | Primary | Task orchestration |
-| [Oracle](./oracle.md) | EXPENSIVE | Read-only | Strategic advisor, debugging |
-| [Explore](./explore.md) | FREE | Read-only | Codebase parallel search |
-| [Librarian](./librarian.md) | CHEAP | Read-only | External docs/OSS search |
-| [Metis](./metis.md) | EXPENSIVE | Read-only | Intent classification, pre-planning |
-| [Momus](./momus.md) | EXPENSIVE | Read-only | Plan review (4 criteria) |
-| [Multimodal Looker](./multimodal-looker.md) | CHEAP | Read-only | Image/PDF analysis |
+| Agent | Cost | Mode | Model | Primary Role |
+|-------|------|------|-------|--------------|
+| [Sisyphus](./sisyphus.md) | EXPENSIVE | Primary | claude-opus-4-5 | Main workflow orchestration |
+| [Atlas](./atlas.md) | EXPENSIVE | Primary | claude-opus-4-5 | Plan execution orchestration |
+| [Sisyphus Junior](./sisyphus-junior.md) | MODERATE | Subagent | (category-based) | Focused task execution |
+| [Prometheus](./prometheus.md) | EXPENSIVE | Subagent | claude-opus-4-5 | Strategic planning (interview) |
+| [Oracle](./oracle.md) | EXPENSIVE | Read-only | gpt-5.2 | Strategic advisor, debugging |
+| [Explore](./explore.md) | FREE | Read-only | gpt-5-nano | Codebase parallel search |
+| [Librarian](./librarian.md) | CHEAP | Read-only | big-pickle | External docs/OSS search |
+| [Metis](./metis.md) | EXPENSIVE | Read-only | claude-sonnet-4-5 | Intent classification, pre-planning |
+| [Momus](./momus.md) | EXPENSIVE | Read-only | claude-sonnet-4-5 | Plan review (4 criteria) |
+| [Multimodal Looker](./multimodal-looker.md) | CHEAP | Read-only | claude-sonnet-4-5 | Image/PDF analysis |
 
 ---
 
@@ -24,23 +27,28 @@ This directory documents how oh-my-opencode implements its agent system.
 
 | Scenario | Agent |
 |----------|-------|
+| Default orchestration mode | sisyphus |
 | "How does X work in our codebase?" | explore |
 | "How does this library work?" | librarian |
 | "I'm stuck after 2+ failed attempts" | oracle |
+| "Plan this complex task" | prometheus |
 | "Review this plan before I start" | momus |
 | "What's the hidden intent here?" | metis |
-| "Execute this todo list" | atlas |
+| "Execute this work plan" | atlas |
+| "Do this specific task" | sisyphus-junior |
 | "What's in this screenshot?" | multimodal-looker |
 
 ### By Cost Consideration
 
-| Need | Cheap | Expensive |
-|------|-------|-----------|
-| Code search | explore, librarian | - |
-| Deep analysis | - | oracle, metis |
-| Plan review | - | momus |
-| Orchestration | - | atlas |
-| Media analysis | multimodal-looker | - |
+| Need | Cheap | Moderate | Expensive |
+|------|-------|----------|-----------|
+| Code search | explore, librarian | - | - |
+| Deep analysis | - | - | oracle, metis |
+| Planning | - | - | prometheus |
+| Plan review | - | - | momus |
+| Orchestration | - | - | sisyphus, atlas |
+| Task execution | - | sisyphus-junior | - |
+| Media analysis | multimodal-looker | - | - |
 
 ---
 
@@ -105,7 +113,10 @@ export function createOracleAgent(model: string): AgentConfig {
 
 For studying the agent system:
 
-1. **oracle.md** - Read-only advisor pattern
-2. **explore.md** - Cheap parallel agent pattern
-3. **atlas.md** - Orchestrator pattern (most complex)
-4. Others as needed
+1. **sisyphus.md** - Primary orchestrator pattern (v3.1+)
+2. **oracle.md** - Read-only advisor pattern
+3. **explore.md** - Cheap parallel agent pattern
+4. **atlas.md** - Plan executor orchestrator pattern
+5. **sisyphus-junior.md** - Focused task executor (v3.1+)
+6. **prometheus.md** - Interview-based planner (v3.1+)
+7. Others as needed

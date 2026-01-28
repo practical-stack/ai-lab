@@ -2,7 +2,7 @@
 
 **Cost:** EXPENSIVE  
 **Mode:** Primary (orchestrator)  
-**Model:** claude-opus-4-5 or claude-sonnet  
+**Model:** anthropic/claude-opus-4-5  
 **Source:** `src/agents/atlas.ts`
 
 ---
@@ -16,6 +16,9 @@ Named after the Greek Titan who holds up the celestial heavens, Atlas holds up t
 - Uses `delegate_task()` to coordinate specialists
 - NEVER writes code directly - only delegates
 - Extended thinking enabled (32k budget tokens)
+- Dynamic prompt builder generates categories, agents, skills, and decision matrix
+- Notepad protocol: append-only rules, inherited wisdom passed to subagents
+- Session resumption mandatory for retries using `session_id`
 
 ---
 

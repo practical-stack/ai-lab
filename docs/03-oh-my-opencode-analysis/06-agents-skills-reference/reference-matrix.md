@@ -8,7 +8,10 @@
 
 | Agent | Cost | Mode | Write? | Thinking | Use For |
 |-------|------|------|--------|----------|---------|
-| atlas | EXPENSIVE | Primary | Delegates | 32k | Orchestration |
+| sisyphus | EXPENSIVE | Primary | Delegates + Direct | 32k | Main orchestration (default) |
+| atlas | EXPENSIVE | Primary | Delegates only | 32k | Plan execution (`/start-work`) |
+| sisyphus-junior | MODERATE | Executor | Yes | 32k | Delegated task execution |
+| prometheus | EXPENSIVE | Planner | Edit/Bash | 32k | Interview-based planning |
 | oracle | EXPENSIVE | Read-only | No | 32k | Strategy, debugging |
 | metis | EXPENSIVE | Read-only | No | 32k | Pre-planning |
 | momus | EXPENSIVE | Read-only | No | 32k | Plan review |
@@ -141,6 +144,36 @@ delegate_task(category="quick", prompt="Fix the previous...")
 | Temperature > 0.3 | Determinism |
 | Trust "I'm done" | Verify first |
 | Sequential cheap agents | Use background |
+
+---
+
+## Tool Inventory (v3.1.3)
+
+| Tool | Purpose |
+|------|---------|
+| `lsp_goto_definition` | Jump to symbol definition |
+| `lsp_find_references` | Find all usages across workspace |
+| `lsp_symbols` | Document/workspace symbol search |
+| `lsp_diagnostics` | Errors, warnings from language server |
+| `lsp_prepare_rename` | Check if rename is valid |
+| `lsp_rename` | Rename symbol across workspace |
+| `ast_grep_search` | AST-aware code pattern search |
+| `ast_grep_replace` | AST-aware code pattern replace |
+| `grep` | Regex content search across files |
+| `glob` | File pattern matching |
+| `delegate_task` | Category-based task delegation |
+| `call_omo_agent` | Run explore/librarian subagents |
+| `background_output` | Get background task result |
+| `background_cancel` | Cancel background tasks |
+| `interactive_bash` | Tmux command execution |
+| `look_at` | Multimodal file analysis |
+| `skill` | Load skill instructions |
+| `skill_mcp` | Invoke skill-embedded MCP servers |
+| `slashcommand` | List and render commands |
+| `session_list` | List sessions |
+| `session_read` | Read session messages |
+| `session_search` | Search across sessions |
+| `session_info` | Session metadata |
 
 ---
 

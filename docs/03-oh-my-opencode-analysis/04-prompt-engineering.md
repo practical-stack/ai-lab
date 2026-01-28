@@ -2,13 +2,14 @@
 
 **Document:** 04-prompt-engineering.md  
 **Part of:** Oh-My-OpenCode Repository Analysis  
-**Source:** `sisyphus-prompt.md`, `src/features/builtin-skills/`, `src/hooks/`, `05-eval-methodology.md`
+**Source:** `sisyphus-prompt.md`, `src/features/builtin-skills/`, `src/hooks/`, `05-eval-methodology.md`  
+
 
 ---
 
 ## Overview
 
-Oh-My-OpenCode employs sophisticated prompt engineering techniques to control AI agent behavior reliably. This document covers six major patterns plus evaluation mechanisms that ensure agents follow instructions.
+Oh-My-OpenCode employs sophisticated prompt engineering techniques to control AI agent behavior reliably. This document covers seven major patterns plus evaluation mechanisms that ensure agents follow instructions.
 
 ---
 
@@ -415,6 +416,73 @@ describe("Todo Continuation Enforcer", () => {
 
 ---
 
+## Pattern 7: Metadata-Driven Prompt Assembly (v3.1+)
+
+### Description
+
+System prompts are dynamically built from structured metadata objects (`AgentPromptMetadata`) rather than static strings. Each agent declares its cost, triggers, use/avoid scenarios, which feed into auto-generated prompt sections. This extends Pattern 5 (Dynamic Prompt Generation) with a typed, composable implementation.
+
+### Location
+
+`src/agents/dynamic-agent-prompt-builder.ts`
+
+### Structure
+
+```typescript
+// Each agent declares structured metadata
+interface AgentPromptMetadata {
+  name: string
+  cost: "FREE" | "CHEAP" | "MODERATE" | "EXPENSIVE"
+  triggers: DelegationTrigger[]   // When to invoke this agent
+  useWhen: string[]               // Scenarios where this agent excels
+  avoidWhen: string[]             // Scenarios to avoid
+}
+
+// Triggers map observable signals to agent actions
+interface DelegationTrigger {
+  signal: string    // "External library mentioned"
+  action: string    // "fire librarian background"
+}
+
+// Builder functions produce markdown fragments
+function buildToolSelectionTable(tools: AvailableTool[]): string
+function buildDelegationMatrix(agents: AgentPromptMetadata[]): string
+function buildKeyTriggers(agents: AgentPromptMetadata[]): string
+function buildCategoryTable(categories: AvailableCategory[]): string
+function buildSkillTable(skills: AvailableSkill[]): string
+
+// Tool names categorized for prompt economy
+// "lsp_goto_definition" → "LSP tools"
+// "ast_grep_search" → "AST-grep"
+// Reduces token count while preserving meaning
+```
+
+### Generated Prompt Sections
+
+| Section | Source Data | Purpose |
+|---------|------------|---------|
+| Tool Selection Table | `AvailableTool[]` | Know what tools exist |
+| Delegation Matrix | `AgentPromptMetadata[]` | Know when to delegate |
+| Key Triggers | `DelegationTrigger[]` | Auto-detect delegation signals |
+| Category Table | `AvailableCategory[]` | Know routing options |
+| Skill Table | `AvailableSkill[]` | Know available knowledge |
+| Oracle Section | Agent metadata | When to consult Oracle |
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Accuracy** | Prompt always matches actual available capabilities |
+| **Extensibility** | Add agents/skills/tools without editing prompt templates |
+| **Token economy** | Tool categorization compresses content |
+| **Single source of truth** | Metadata drives both runtime and prompt |
+
+### Relationship to Pattern 5
+
+Pattern 5 described the *concept* of dynamic prompt generation with a simplified example. Pattern 7 shows the *production implementation*: typed metadata objects → composable builder functions → markdown fragments → complete system prompts. The key advancement is that prompt content is fully data-driven, not template-driven.
+
+---
+
 ## Evaluation: How Oh-My-OpenCode Verifies Prompt Compliance
 
 Oh-My-OpenCode doesn't just write good prompts—it verifies that agents follow them. See [05-eval-methodology.md](./05-eval-methodology.md) for complete details.
@@ -558,6 +626,7 @@ Needs sharing/versioning?
 | **Runtime Control** | System directives | Programmatic behavior modification |
 | **Accurate Context** | Dynamic generation | Prompt matches capabilities |
 | **Clear Testing** | BDD comments | Readable, preserved tests |
+| **Data-Driven Prompts** | Metadata-driven assembly (v3.1+) | Typed, composable, auto-accurate |
 | **Independent Verification** | Evaluation hooks | Don't trust, verify |
 
 ---

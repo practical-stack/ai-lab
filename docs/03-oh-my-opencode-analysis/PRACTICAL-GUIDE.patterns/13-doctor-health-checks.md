@@ -322,7 +322,7 @@ function determineExitCode(results: CheckResult[]): number {
 $ myapp doctor
 
 Installation
-  ✅ Main Tool .................. Installed (v3.0.1)
+  ✅ Main Tool .................. Installed (v3.1.3)
   ✅ Plugin ..................... Registered
 
 Configuration
@@ -344,7 +344,7 @@ Tools
   ✅ MCP: context7 .............. Connected
 
 Updates
-  ✅ Version .................... Up to date (v3.0.1)
+  ✅ Version .................... Up to date (v3.1.3)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Results: 10 passed, 2 warnings, 1 failed

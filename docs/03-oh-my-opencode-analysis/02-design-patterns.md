@@ -2,7 +2,8 @@
 
 **Document:** 02-design-patterns.md  
 **Part of:** Oh-My-OpenCode Repository Analysis  
-**Source:** `sisyphus-prompt.md`, `src/tools/delegate-task/`, `src/features/builtin-skills/`
+**Source:** `sisyphus-prompt.md`, `src/tools/delegate-task/`, `src/features/builtin-skills/`  
+
 
 ---
 
@@ -496,6 +497,373 @@ delegate_task(
 
 ---
 
+## Pattern 8: Multi-Source Skill Loading
+
+### Description
+
+Skills are loaded from 6 sources with explicit merge priority, enabling extensibility without modifying core code. Config entries can override/patch skill metadata, tool allowlists, and descriptions.
+
+### Location
+
+`src/features/opencode-skill-loader/` (loader.ts, merger.ts, types.ts)
+
+### Structure
+
+```typescript
+// Merge priority (lowest → highest)
+const SCOPE_PRIORITY = [
+  "builtin",          // Built-in skills shipped with oh-my-opencode
+  "config",           // Global config overrides
+  "user",             // User-level skills (~/.config/)
+  "opencode",         // OpenCode project skills (.opencode/skills/)
+  "project",          // Claude project skills (.claude/skills/)
+  "opencode-project", // OpenCode project-specific overrides
+]
+
+// Sources scanned for skill files
+const SKILL_SOURCES = [
+  ".opencode/skills/",   // OpenCode project directory
+  ".claude/skills/",     // Claude project directory
+  "~/.config/opencode/", // OpenCode global config
+  "~/.claude/",          // Claude user config
+]
+
+// Each skill resolves to: SKILL.md, {dirname}.md, or top-level .md
+// Content wrapped in XML template:
+const template = `<skill-instruction>
+Base directory for this skill: ${resolvedPath}/
+${body.trim()}
+</skill-instruction>
+
+<user-request>
+$ARGUMENTS
+</user-request>`
+```
+
+### Key Types
+
+| Type | Purpose |
+|------|---------|
+| `SkillScope` | Source priority level (builtin, config, user, etc.) |
+| `SkillMetadata` | Parsed frontmatter (name, description, mcp, model) |
+| `LoadedSkill` | Fully resolved skill with content and metadata |
+| `MergeSkillsOptions` | Enable/disable filters, config overrides |
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Extensibility** | Users add skills without modifying core |
+| **Override control** | Project beats user beats builtin |
+| **Single resolution** | One merged skill map, no ambiguity |
+| **Backward compat** | Claude `.claude/skills/` format supported alongside native |
+
+### Anti-Pattern
+
+```typescript
+// BAD: Hardcoded skills, no override mechanism
+const skills = [gitMaster, playwright, frontendUiUx]  // Can't extend or override
+
+// GOOD: Layered loading with merge priority
+const skills = mergeSkills({
+  builtin: discoverBuiltinSkills(),
+  config: loadConfigOverrides(),
+  user: discoverUserSkills(),
+  project: discoverProjectSkills(),
+})
+```
+
+---
+
+## Pattern 9: Skill-Embedded MCP
+
+### Description
+
+Skills can declare MCP (Model Context Protocol) servers via YAML frontmatter `mcp:` field or a `mcp.json` file in the skill directory. The `SkillMcpManager` lazily creates MCP clients per session/skill/server with connection pooling and idle reaping.
+
+### Location
+
+`src/features/skill-mcp-manager/` (manager.ts, types.ts, env-cleaner.ts)
+
+### Structure
+
+```yaml
+# In SKILL.md frontmatter
+---
+name: my-skill
+description: Skill with embedded MCP server
+mcp:
+  my-server:
+    command: npx
+    args: ["@package/mcp-server"]
+    env:
+      API_KEY: "${API_KEY}"
+---
+```
+
+```typescript
+// Or via mcp.json in skill directory
+// skill-name/mcp.json
+{
+  "mcpServers": {
+    "my-server": {
+      "command": "npx",
+      "args": ["@package/mcp-server"]
+    }
+  }
+}
+
+// SkillMcpManager lifecycle
+class SkillMcpManager {
+  // Lazy creation with cache key: `${sessionId}:${skillName}:${serverName}`
+  async getOrCreateClient(key: string): Promise<McpClient> {
+    if (this.cache.has(key)) return this.cache.get(key)
+    
+    // Pending-connection guard prevents races
+    if (this.pending.has(key)) return this.pending.get(key)
+    
+    const client = this.createClient(config)
+    this.cache.set(key, client)
+    return client
+  }
+  
+  // Idle reaping (5 min)
+  private reapIdleClients() { /* cleanup unused connections */ }
+  
+  // Auto-reconnect on transient errors
+  private handleDisconnect(key: string) { /* reconnect logic */ }
+}
+```
+
+### Key Types
+
+| Type | Purpose |
+|------|---------|
+| `SkillMcpConfig` | MCP server declaration from frontmatter |
+| `SkillMcpClientInfo` | Active client with metadata |
+| `SkillMcpServerContext` | Server connection context |
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **On-demand** | No upfront cost; clients created when skill is used |
+| **Shared cache** | Avoid duplicate connections across invocations |
+| **Bounded cleanup** | Idle reaping (5 min) prevents connection leaks |
+| **Resilience** | Auto-reconnect on transient "not connected" errors |
+
+### Anti-Pattern
+
+```typescript
+// BAD: Eager creation, no reuse
+function loadSkill(skill) {
+  const client = new McpClient(skill.mcp)  // Created every time
+  await client.connect()                    // No cache, no cleanup
+}
+
+// GOOD: Lazy pool with reaping
+const client = await mcpManager.getOrCreateClient(cacheKey)
+// Reused across calls, auto-cleaned when idle
+```
+
+---
+
+## Pattern 10: Boulder State Persistence
+
+### Description
+
+Plan execution state persists in `.sisyphus/boulder.json`, enabling crash recovery and cross-session continuity. Progress is computed on-demand by counting markdown checkboxes in the plan file.
+
+### Location
+
+`src/features/boulder-state/` (storage.ts, types.ts, constants.ts)
+
+### Structure
+
+```typescript
+// .sisyphus/boulder.json
+interface BoulderState {
+  activePlanPath: string      // e.g., ".sisyphus/plans/auth-feature.md"
+  startTime: string           // ISO timestamp
+  sessionIds: string[]        // All sessions that worked on this plan
+  planName: string            // Human-readable plan name
+}
+
+// Progress computed from plan file (not stored)
+interface PlanProgress {
+  total: number               // Total checkboxes in plan
+  completed: number           // Checked checkboxes [x]
+  percentage: number          // Derived: completed/total * 100
+}
+
+// Helpers
+function readBoulderState(): BoulderState | null
+function writeBoulderState(state: BoulderState): void
+function clearBoulderState(): void
+function appendSessionId(sessionId: string): void
+function findPlanFiles(): string[]  // Scans .sisyphus/plans/
+```
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Crash recovery** | State survives process restarts |
+| **Simplicity** | JSON file, no database needed |
+| **Computed views** | Progress derived on-demand from checkbox counts |
+| **Multi-session** | Session IDs track which sessions contributed |
+
+### Anti-Pattern
+
+```typescript
+// BAD: In-memory only state
+let currentPlan = null  // Lost on crash
+
+// GOOD: File-backed persistence
+writeBoulderState({ activePlanPath, startTime, sessionIds, planName })
+// Survives crashes, context window limits, session switches
+```
+
+---
+
+## Pattern 11: Metadata-Driven Prompt Assembly
+
+### Description
+
+System prompts are dynamically generated from structured metadata objects rather than static strings. Each agent declares its cost, triggers, use/avoid scenarios via `AgentPromptMetadata`, which feeds into auto-generated prompt sections. This builds upon Pattern 5 (Dynamic Prompt Generation) with a concrete, typed implementation.
+
+### Location
+
+`src/agents/dynamic-agent-prompt-builder.ts`, `src/agents/sisyphus.ts`, `src/agents/atlas.ts`
+
+### Structure
+
+```typescript
+// Each agent declares structured metadata
+interface AgentPromptMetadata {
+  name: string
+  cost: "FREE" | "CHEAP" | "MODERATE" | "EXPENSIVE"
+  triggers: DelegationTrigger[]
+  useWhen: string[]
+  avoidWhen: string[]
+}
+
+// Triggers map signals to appropriate agents
+interface DelegationTrigger {
+  signal: string        // e.g., "External library mentioned"
+  action: string        // e.g., "fire librarian background"
+}
+
+// Builder generates markdown fragments from metadata
+function buildDynamicPrompt(ctx: {
+  agents: AgentPromptMetadata[]
+  tools: AvailableTool[]
+  skills: AvailableSkill[]
+  categories: AvailableCategory[]
+}): string {
+  return `
+${buildToolSelectionTable(ctx.tools)}
+${buildDelegationMatrix(ctx.agents)}
+${buildKeyTriggers(ctx.agents)}
+${buildCategoryTable(ctx.categories)}
+${buildSkillTable(ctx.skills)}
+${buildOracleSection(ctx.agents)}
+  `
+}
+
+// Tool names categorized for prompt economy
+// lsp_* → "LSP tools", ast_grep_* → "AST-grep", etc.
+```
+
+### Relationship to Pattern 5
+
+Pattern 5 described the *concept* of dynamic prompt generation. Pattern 11 shows the *implementation*: structured metadata objects that feed typed builder functions, producing markdown fragments that compose into complete system prompts.
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Accuracy** | Prompt always matches actual available capabilities |
+| **Extensibility** | Add agents/skills without editing prompt templates |
+| **Deployment flexibility** | Different deployments produce different prompts |
+| **Single source of truth** | Agent metadata drives both runtime behavior and prompt content |
+| **Prompt economy** | Tool categorization compresses content for token efficiency |
+
+---
+
+## Pattern 12: State-Driven Orchestration (Tmux Subagents)
+
+### Description
+
+Tmux-based parallel agent orchestration using a "state-first" flow: query external state → decide with pure functions → execute actions → update cache only after success. This separates concerns between state observation, decision logic, and effectful execution.
+
+### Location
+
+`src/features/tmux-subagent/` (manager.ts, decision-engine.ts, action-executor.ts, pane-state-querier.ts)
+
+### Structure
+
+```typescript
+// State-first flow: Query → Decide → Execute → Update
+
+// 1. QUERY: Get real tmux state
+const panes: TmuxPaneInfo[] = await paneStateQuerier.queryPanes()
+
+// 2. DECIDE: Pure function, no side effects
+const decision: SpawnDecision = decisionEngine.decide({
+  currentPanes: panes,
+  requestedSession: newSession,
+  capacity: capacityConfig,
+})
+// Decision types: split existing pane, evict oldest, replace idle, reject
+
+// 3. EXECUTE: Perform tmux operations
+const result = await actionExecutor.execute(decision.action)
+
+// 4. UPDATE: Only after successful execution
+if (result.success) {
+  sessionCache.update(result.paneId, newSession)
+}
+
+// Key types
+interface TrackedSession { sessionId: string; paneId: string; startTime: number }
+interface WindowState { panes: TmuxPaneInfo[]; capacity: CapacityConfig }
+interface SpawnDecision { action: PaneAction; reason: string }
+```
+
+### Decision Engine Logic
+
+| Scenario | Decision |
+|----------|----------|
+| Available capacity | Split existing pane |
+| At capacity, idle panes exist | Evict oldest idle pane |
+| At capacity, no idle panes | Replace oldest pane |
+| Session already tracked | Reuse existing pane |
+
+### Why This Pattern
+
+| Benefit | Explanation |
+|---------|-------------|
+| **Predictability** | Pure decision functions are easily testable |
+| **Resilience** | Cache only updated after tmux confirms success |
+| **Scalability** | Grid capacity computed dynamically |
+| **Observability** | Each step (query, decide, execute) is independently auditable |
+
+### Anti-Pattern
+
+```typescript
+// BAD: Optimistic state mutation
+sessionCache.add(newSession)      // Updated before tmux confirms
+await tmux.splitPane()            // What if this fails? Cache is wrong
+
+// GOOD: State-first flow
+const decision = decide(queryState())
+const result = await execute(decision)
+if (result.success) updateCache()  // Only on confirmed success
+```
+
+---
+
 ## Naming Conventions
 
 | Component | Convention | Example |
@@ -522,6 +890,11 @@ delegate_task(
 | Background Tasks | "Fire explore/librarian liberally, collect results later" |
 | Phase-Based Workflow | "Clear phases prevent cognitive drift" |
 | Category + Skill | "Right model + right knowledge = optimal results" |
+| Multi-Source Skill Loading | "Layered config with explicit priority — project beats user beats builtin" |
+| Skill-Embedded MCP | "Lazy resource pool with idle reaping — on-demand, cached, auto-cleaned" |
+| Boulder State Persistence | "File-backed state survives crashes — simple JSON, computed views" |
+| Metadata-Driven Prompt Assembly | "Prompts built from structured metadata, not static strings" |
+| State-Driven Orchestration | "Query → Decide → Execute → Update — pure decisions, confirmed mutations" |
 
 ---
 
