@@ -92,6 +92,14 @@ Look for statements that reveal beliefs:
 | **Standard** | 4-6 hours | README + 00-03 documents |
 | **Deep** | 1-2 days | Full 00-06 + PRACTICAL-GUIDE |
 
+## Document Metadata Rules
+
+- **README.md only**: `**Analyzed:** [date]` + `**Repository:** [repo] (version)` + `**Depth Level:**`
+- **Sub-documents** (01-architecture.md, etc.): `**Document:**` + `**Part of:**` + `**Source:**`
+- **No `Updated:` field anywhere.** No `Previously:` notes. No changelog sections.
+- When re-analyzing a newer version, overwrite in-place with the new version/date.
+- Version history belongs in git, not in document metadata.
+
 ## Key Principle
 
 **Extract the "WHY" before the "WHAT".**
