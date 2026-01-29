@@ -74,7 +74,7 @@ Create reusable artifacts from research:
 | # | Topic | Status | Artifacts |
 |---|-------|--------|-----------|
 | 00 | Meta (Frontmatter) | Done | Skill: `.claude/skills/doc-frontmatter/` |
-| 01 | Structure Organizer | Done | Skill: `.claude/skills/meta-structure-organizer/` |
+| 01 | Structure Organizer | Done | Skill: `.claude/skills/meta-llm-type/` |
 | 02 | Naming Convention | Done | Reference: `docs/02-naming-convention/` |
 
 ## SKILL PATTERNS
@@ -172,4 +172,4 @@ When researching a new topic:
 ## SEE ALSO
 
 - Example research: `docs/01-structure-organizer/`
-- Example skill: `.claude/skills/meta-structure-organizer/`
+- Example skill: `.claude/skills/meta-llm-type/`

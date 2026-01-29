@@ -195,7 +195,7 @@ Access Layer:     Command (선택적 UI + 보안 래퍼)
 
 | 산출물 | 위치 | 용도 |
 |--------|------|------|
-| **Structure Organizer Skill** | `.claude/skills/meta-structure-organizer/` | 컴포넌트 유형 결정 도움 |
+| **LLM Type Skill** | `.claude/skills/meta-llm-type/` | 컴포넌트 유형 결정 도움 |
 | **학습 코스** | 현재 폴더 | 교육 콘텐츠 |
 | **메타 프롬프트** | `../meta-prompt.md` | 재사용 가능한 프롬프트 템플릿 |
 

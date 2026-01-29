@@ -45,7 +45,7 @@ flowchart LR
 |------|--------|
 | 리서치 | [`docs/01-structure-organizer/`](./docs/01-structure-organizer/) |
 | 멀티모델 분석 | Claude, GPT-4, Gemini 관점 비교 |
-| 추출 아티팩트 | [`.claude/skills/meta-structure-organizer/`](./.claude/skills/meta-structure-organizer/) |
+| 추출 아티팩트 | [`.claude/skills/meta-llm-type/`](./.claude/skills/meta-llm-type/) |
 
 ## 디렉토리 구조
 
@@ -68,7 +68,7 @@ ai-lab/
 
 | # | 주제 | 상태 | 아티팩트 |
 |---|------|------|----------|
-| 01 | [Structure Organizer](./docs/01-structure-organizer/) | 완료 | [Skill](./.claude/skills/meta-structure-organizer/) |
+| 01 | [Structure Organizer](./docs/01-structure-organizer/) | 완료 | [Skill](./.claude/skills/meta-llm-type/) |
 | 02 | [Naming Convention](./docs/02-naming-convention/) | 완료 | 참조 문서 |
 
 ## 새 리서치 추가

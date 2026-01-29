@@ -5,7 +5,7 @@ type: index
 tags: [Architecture, AI, BestPractice]
 order: 1
 related: [./README.ko.md]
-used_by: [/.claude/skills/meta-structure-organizer/SKILL.md, /.claude/commands/organize-llm-structure.md]
+used_by: [/.claude/skills/meta-llm-type/SKILL.md, /.claude/commands/diagnose-llm-type.md]
 ---
 
 # Component Architect

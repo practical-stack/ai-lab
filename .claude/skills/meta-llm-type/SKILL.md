@@ -1,15 +1,15 @@
 ---
-name: meta-structure-organizer
+name: meta-llm-type
 description: |
-  Organize features into the right structure: Command, Skill, or Agent.
+  Diagnose features into the right LLM component type: Skill, Agent, or Command wrapper.
   
   USE WHEN: 
   - "should this be a skill?"
   - "command or agent?"
-  - "how to structure this feature"
   - "what type should this be"
   - "skill vs command"
-  - structure/architecture decisions
+  - "diagnose this feature"
+  - structure/architecture decisions for LLM components
   
   DO NOT USE WHEN:
   - Actually implementing (use the generated spec instead)

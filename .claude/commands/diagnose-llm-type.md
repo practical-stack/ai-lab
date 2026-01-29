@@ -1,12 +1,12 @@
 ---
-description: Organize a feature into the right LLM structure (Command, Skill, or Agent)
+description: Diagnose LLM component type (Skill/Agent/Command) for a feature → create or update
 allowed-tools: Read, Write, Glob
 argument-hint: <feature-description>
 ---
 
-# LLM Structure Organizer
+# Diagnose LLM Type
 
-Analyze a feature request and organize it into the appropriate structure type (Command, Skill, or Agent).
+Diagnose what LLM component type (Skill, Agent, or Command) a feature should be, then create or update it.
 
 ## Feature Request
 
@@ -18,14 +18,14 @@ This command orchestrates the full structure creation pipeline:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  /create-llm-structure (COMMAND - Orchestrator)             │
+│  /diagnose-llm-type (COMMAND - Orchestrator)                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  Prerequisite: Feature Request                              │
 │  📚 meta-session-wrapper skill (if extracting from session) │
 │                                                             │
 │  Phase 1: DIAGNOSE                                          │
-│  📚 meta-structure-organizer skill                          │
+│  📚 meta-llm-type skill                                     │
 │  Input: Feature Request → Output: Type + Spec               │
 │                                                             │
 │  Phase 2: CREATE                                            │
@@ -47,9 +47,9 @@ Skip if you already have a clear feature request.
 
 ### Phase 1: DIAGNOSE
 
-1. Read @.claude/skills/meta-structure-organizer/SKILL.md
-2. **Analyze** using @.claude/skills/meta-structure-organizer/workflows/analyze.md
-3. **Generate spec** using @.claude/skills/meta-structure-organizer/workflows/generate-spec.md
+1. Read @.claude/skills/meta-llm-type/SKILL.md
+2. **Analyze** using @.claude/skills/meta-llm-type/workflows/analyze.md
+3. **Generate spec** using @.claude/skills/meta-llm-type/workflows/generate-spec.md
 
 ### Phase 2: CREATE
 

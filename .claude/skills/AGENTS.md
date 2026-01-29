@@ -16,7 +16,7 @@ Extracted skills from ai-lab research. Each skill follows the standard structure
 | [meta-prompt-engineer](meta-prompt-engineer/) | "write a prompt", "create prompt", "meta-prompt" | Generate high-quality prompts using proven techniques |
 | [meta-session-wrapper](meta-session-wrapper/) | "wrap this session", "extract workflow" | Extract reusable patterns from completed sessions |
 | [meta-skill](meta-skill/) | "create a skill", "validate skill" | Guide for creating and validating AI skills |
-| [meta-structure-organizer](meta-structure-organizer/) | "should this be a skill?", "command or agent?" | Organize features into Command/Skill/Agent |
+| [meta-llm-type](meta-llm-type/) | "should this be a skill?", "diagnose this feature" | Diagnose features into Skill/Agent/Command type |
 
 ## STRUCTURE PATTERN
 

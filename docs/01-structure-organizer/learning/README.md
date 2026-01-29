@@ -190,7 +190,7 @@ The research produced practical artifacts:
 
 | Artifact | Location | Purpose |
 |----------|----------|---------|
-| **Structure Organizer Skill** | `.claude/skills/meta-structure-organizer/` | Helps decide component type |
+| **LLM Type Skill** | `.claude/skills/meta-llm-type/` | Helps decide component type |
 | **Learning Course** | This folder | Educational content |
 | **Meta-prompt** | `../meta-prompt.md` | Reusable prompt template |
 

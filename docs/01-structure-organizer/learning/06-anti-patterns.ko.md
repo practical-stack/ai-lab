@@ -618,4 +618,4 @@ quarterly:
 - [리서치 프롬프트](../research/00-research-prompt.ko.md) - 원본 리서치 메타 프롬프트
 - [Claude 리서치](../research/01-claude.ko.md) - Claude의 리서치 응답
 - [GPT 리서치](../research/02-gpt/) - GPT의 종합 리서치 응답 (6부작)
-- [추출된 Skill](../../../.claude/skills/meta-structure-organizer/) - 컴포넌트 결정을 위한 실용적 skill
+- [추출된 Skill](../../../.claude/skills/meta-llm-type/) - 컴포넌트 결정을 위한 실용적 skill

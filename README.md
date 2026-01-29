@@ -45,7 +45,7 @@ Recent research on "when to use Command vs Skill vs Agent":
 |-------|--------|
 | Research | [`docs/01-structure-organizer/`](./docs/01-structure-organizer/) |
 | Multi-model analysis | Claude, GPT-4, Gemini perspectives |
-| Extracted artifact | [`.claude/skills/meta-structure-organizer/`](./.claude/skills/meta-structure-organizer/) |
+| Extracted artifact | [`.claude/skills/meta-llm-type/`](./.claude/skills/meta-llm-type/) |
 
 ## Directory Structure
 
@@ -68,7 +68,7 @@ ai-lab/
 
 | # | Topic | Status | Artifact |
 |---|-------|--------|----------|
-| 01 | [Structure Organizer](./docs/01-structure-organizer/) | Done | [Skill](./.claude/skills/meta-structure-organizer/) |
+| 01 | [Structure Organizer](./docs/01-structure-organizer/) | Done | [Skill](./.claude/skills/meta-llm-type/) |
 | 02 | [Naming Convention](./docs/02-naming-convention/) | Done | Reference doc |
 
 ## Adding New Research

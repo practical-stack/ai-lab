@@ -134,7 +134,7 @@ Before (unnecessary command wrapper):
   /organize-skill              ← Just calls the skill with no tool restrictions
   
 After (direct skill invocation):
-  @meta-structure-organizer    ← Skill invoked directly, no command needed
+  @meta-llm-type              ← Skill invoked directly, no command needed
 
 Before (too many similar commands):
   /build-api
@@ -618,4 +618,4 @@ Congratulations! You've completed the AI Agent Architecture course.
 - [Research Prompt](../research/00-research-prompt.md) - Original meta-prompt for research
 - [Claude Research](../research/01-claude.md) - Claude's research response
 - [GPT Research](../research/02-gpt/) - GPT's comprehensive research response (6 parts)
-- [Extracted Skill](../../../.claude/skills/meta-structure-organizer/) - Practical skill for component decisions
+- [Extracted Skill](../../../.claude/skills/meta-llm-type/) - Practical skill for component decisions
