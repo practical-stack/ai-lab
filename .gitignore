@@ -30,6 +30,7 @@ Thumbs.db
 
 # Agent/Tool local state
 .sisyphus/
+.omc/
 
 # Logs
 *.log
