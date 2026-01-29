@@ -1,6 +1,6 @@
 ---
 title: "Component Architect"
-description: "Diagnose whether a feature request should be implemented as Command, Skill, or Agent for AI coding assistants."
+description: "Determine the core type (Skill or Agent) and whether a Command wrapper is needed for AI coding assistant features."
 type: index
 tags: [Architecture, AI, BestPractice]
 order: 1
@@ -10,19 +10,30 @@ used_by: [/.claude/skills/meta-structure-organizer/SKILL.md, /.claude/commands/o
 
 # Component Architect
 
-> Diagnose whether a feature request should be implemented as **Command**, **Skill**, or **Agent**
+> Determine the core type (Skill or Agent) and whether a Command wrapper is needed
 
 This tool provides a systematic approach to component type selection for AI coding assistants (Claude Code, OpenCode, Cursor).
 
 ## Quick Reference
 
+### Core Types (Knowledge Layer)
+
 | Component | Trigger | Reasoning | Execution | Use When |
 |-----------|---------|-----------|-----------|----------|
-| **Command** | Human `/command` | None | Fixed procedure | Explicit user trigger needed |
-| **Skill** | Auto-load on keywords | None | No execution (knowledge) | Domain expertise to share |
+| **Skill** | Auto-load on keywords / direct `@path` | None | No execution (knowledge) | Domain expertise to share |
 | **Agent** | Goal assigned | LLM decides | Dynamic, iterative | Multi-step planning required |
 
+### Optional Wrapper (Access Layer)
+
+| Component | Trigger | Purpose | Use When |
+|-----------|---------|---------|----------|
+| **Command** | Human `/command` | UI entry point + constraints over Skill/Agent | `allowed-tools` restriction, dangerous ops, structured `$ARGUMENTS`, frequent shortcut |
+
+> **Key insight**: Command is NOT a parallel type to Skill/Agent. It is an **access pattern** — a UI + security wrapper placed over Skills or Agents when human entry point and platform constraints are needed.
+
 ## Decision Tree
+
+### Phase 1: Determine Core Type
 
 ```
 [Feature Request]
@@ -44,14 +55,25 @@ This tool provides a systematic approach to component type selection for AI codi
        ├── YES ──▶ 📚 SKILL
        │
        ▼ NO
+       Embed in existing component
+```
+
+### Phase 2: Need a Command Wrapper?
+
+```
 ┌─────────────────────────────────────┐
-│ Must human explicitly trigger it?   │
+│ Does the Skill/Agent need:          │
+│                                     │
+│ • allowed-tools restriction?        │
+│ • Dangerous/irreversible ops guard? │
+│ • Structured $ARGUMENTS?            │
+│ • Frequent /shortcut in menu?       │
 └─────────────────────────────────────┘
        │
-       ├── YES ──▶ ⚡ COMMAND
+       ├── ANY YES ──▶ ⚡ Add COMMAND wrapper
        │
-       ▼ NO
-       Embed in existing component
+       ▼ ALL NO
+       Use Skill/Agent directly (no Command needed)
 ```
 
 ## Contents

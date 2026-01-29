@@ -97,11 +97,16 @@ After:
 - `/create-class`, `/create-interface`, `/create-enum` (separate commands)
 - Users can't remember all commands
 - Commands overlap with what agents can auto-handle
+- Commands that are just thin wrappers around skills with no tool restrictions
 
 **Prevention:**
 
 ```yaml
 guardrails:
+  - name: "Command Justification"
+    action: "Before creating a command, ask: Does this need allowed-tools? 
+             If not, just use the skill directly."
+    
   - name: "Command Limit"
     action: "Max 10-15 commands per project"
     
@@ -111,25 +116,39 @@ guardrails:
   - name: "Auto vs Manual"
     action: "If agent can handle automatically, don't make command"
     
+  - name: "Wrapper Test"
+    action: "If removing the command and using @skill directly works 
+             identically, the command is unnecessary"
+    
 review_checklist:
-  - "Is this command frequently used?"
+  - "Does this command use allowed-tools to restrict tool access?"
+  - "Is this a dangerous/irreversible operation?"
+  - "Does it need structured $ARGUMENTS?"
   - "Can it be combined with existing command?"
-  - "Could the agent handle this automatically?"
+  - "Could the skill be invoked directly via @path instead?"
 ```
 
 **Example Fix:**
 ```
-Before:
+Before (unnecessary command wrapper):
+  /organize-skill              ← Just calls the skill with no tool restrictions
+  
+After (direct skill invocation):
+  @meta-structure-organizer    ← Skill invoked directly, no command needed
+
+Before (too many similar commands):
   /build-api
   /build-ui
   /build-worker
   
-After:
+After (consolidated with parameters):
   /build [component]
   # /build api
   # /build ui
   # /build worker
 ```
+
+> **Rule of thumb**: If a Command doesn't use `allowed-tools`, doesn't guard dangerous ops, and doesn't need `$ARGUMENTS` — it's probably an unnecessary wrapper. Just use the Skill directly.
 
 ---
 
@@ -578,9 +597,9 @@ Congratulations! You've completed the AI Agent Architecture course.
 
 | Module | Key Concepts |
 |--------|--------------|
-| 1. Fundamentals | Command, Skill, Agent definitions and differences |
+| 1. Fundamentals | Two-layer architecture: Skill & Agent (core) + Command (optional wrapper) |
 | 2. Relationships | Hierarchy, contracts, and layer interactions |
-| 3. Decision Framework | When to build what, decision tree, checklist |
+| 3. Decision Framework | Two-phase decision: core type first, then Command wrapper if needed |
 | 4. Templates | Ready-to-use specification formats |
 | 5. Examples | Real-world implementations |
 | 6. Anti-patterns | Common mistakes and how to avoid them |

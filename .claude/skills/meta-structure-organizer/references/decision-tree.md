@@ -1,6 +1,8 @@
 # Decision Tree
 
-Primary decision logic for component type selection.
+Primary decision logic for component type selection using a 2-phase approach.
+
+## Phase 1: Determine Core Type (Skill vs Agent)
 
 ```
 [Feature Request]
@@ -39,25 +41,38 @@ Primary decision logic for component type selection.
        │
        ▼ NO
 ┌─────────────────────────────────────┐
-│ Q3: Must human explicitly trigger   │
-│ this action?                        │
+│ No separate component needed.       │
+│ Embed in existing Agent or Skill.   │
+└─────────────────────────────────────┘
+```
+
+## Phase 2: Determine if Command Wrapper is Needed
+
+After identifying the core type (Skill or Agent), check if a Command wrapper is justified:
+
+```
+[Core Type Identified: Skill or Agent]
+       │
+       ▼
+┌─────────────────────────────────────┐
+│ Does it need platform-level         │
+│ constraints or explicit human       │
+│ entry point?                        │
 │                                     │
 │ Examples:                           │
-│ • Deployment to production          │
+│ • Tool sandboxing (allowed-tools)   │
 │ • Dangerous/irreversible actions    │
-│ • Specific timing required          │
-│ • Authorization needed              │
+│ • Structured $ARGUMENTS validation  │
+│ • Frequent human shortcut           │
 └─────────────────────────────────────┘
        │
-       ├── YES ──▶ ⚡ COMMAND
-       │          Human-triggered workflow.
-       │          Explicit entry point.
+       ├── YES ──▶ ⚡ COMMAND (wrapper)
+       │          Add Command layer over Skill/Agent.
+       │          Provides UI entry point + constraints.
        │
        ▼ NO
-┌─────────────────────────────────────┐
-│ No separate component needed.       │
-│ Embed in existing Agent or Command. │
-└─────────────────────────────────────┘
+       Use Skill or Agent directly.
+       No Command wrapper needed.
 ```
 
 ## Decision Shortcuts
@@ -70,6 +85,7 @@ Primary decision logic for component type selection.
 | "Best practices for X" | 📚 SKILL |
 | "How to do X properly" | 📚 SKILL |
 | "Guidelines for X" | 📚 SKILL |
-| "User must approve/trigger" | ⚡ COMMAND |
-| "Run only when explicitly asked" | ⚡ COMMAND |
-| "Dangerous side effects" | ⚡ COMMAND |
+| "Needs tool sandboxing (allowed-tools)" | ⚡ COMMAND (wrapper) |
+| "Dangerous/irreversible action" | ⚡ COMMAND (wrapper) |
+| "Structured arguments with validation" | ⚡ COMMAND (wrapper) |
+| "Frequent human shortcut" | ⚡ COMMAND (wrapper) |

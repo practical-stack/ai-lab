@@ -1,6 +1,6 @@
 ---
 title: "Module 3: Decision Framework"
-description: "Practical guide with decision trees and checklists to determine when to build a Command, Skill, or Agent for any feature request"
+description: "Practical guide with a two-phase decision tree to determine the core type (Skill or Agent) and whether a Command wrapper is needed"
 type: tutorial
 tags: [AI, Architecture, BestPractice]
 order: 3
@@ -10,20 +10,21 @@ related: [./03-decision-framework.ko.md]
 
 # Module 3: Decision Framework
 
-> When to build a Command, Skill, or Agent - A Practical Guide
+> Determine the core type (Skill or Agent) and whether a Command wrapper is needed
 
 ## Learning Objectives
 
 By the end of this module, you will:
-- Apply a decision tree to classify any feature request
+- Apply a two-phase decision tree to classify any feature request
+- Determine the core type (Skill or Agent) first, then decide if a Command wrapper is justified
 - Use checklists to validate your component choice
 - Understand the trade-offs between different approaches
 
 ---
 
-## 3.1 The Core Decision Tree
+## 3.1 The Two-Phase Decision Tree
 
-### Visual Flowchart
+### Phase 1: Determine Core Type
 
 ```
                     ┌─────────────────────────┐
@@ -40,35 +41,49 @@ By the end of this module, you will:
               │                           │
               ▼ YES                       ▼ NO
       ┌───────────────┐        ┌────────────────────────┐
-      │    AGENT      │        │ Will this be reused    │
-      │               │        │ in other workflows?    │
+      │  🤖 AGENT     │        │ Is it domain knowledge │
+      │               │        │ or reusable expertise? │
       │ Multi-step    │        └───────────┬────────────┘
       │ reasoning     │                    │
       │ required      │      ┌─────────────┴─────────────┐
-      └───────────────┘      │                           │
-                             ▼ YES                       ▼ NO
-                 ┌─────────────────────────┐   ┌─────────────────────┐
-                 │ Should agent auto-load  │   │ Does it need human  │
-                 │ this when relevant?     │   │ explicit trigger?   │
-                 └───────────┬─────────────┘   └───────────┬─────────┘
-                             │                             │
-               ┌─────────────┴─────────────┐   ┌───────────┴───────────┐
-               │                           │   │                       │
-               ▼ YES                       │   ▼ YES              NO ▼
-       ┌───────────────┐                   │   ┌───────────────┐  ┌───────────────┐
-       │    SKILL      │                   │   │   COMMAND     │  │ Embed in      │
-       │               │                   │   │               │  │ existing      │
-       │ Auto-loaded   │                   │   │ User-triggered│  │ component     │
-       │ knowledge     │                   │   │ procedure     │  └───────────────┘
-       └───────────────┘                   │   └───────────────┘
-                                           │
-                                    NO ▼   │
-                               ┌───────────────┐
-                               │   COMMAND     │
-                               │               │
-                               │ Reusable but  │
-                               │ explicit call │
-                               └───────────────┘
+      └───────┬───────┘      │                           │
+              │              ▼ YES                       ▼ NO
+              │      ┌───────────────┐          ┌───────────────┐
+              │      │  📚 SKILL     │          │ Embed in      │
+              │      │               │          │ existing      │
+              │      │ Auto-loaded   │          │ component     │
+              │      │ knowledge     │          └───────────────┘
+              │      └───────┬───────┘
+              │              │
+              ▼              ▼
+        ┌─────────────────────────┐
+        │   Go to Phase 2         │
+        └─────────────────────────┘
+```
+
+### Phase 2: Need a Command Wrapper?
+
+```
+        ┌──────────────────────────────────┐
+        │ Does the Skill/Agent need:       │
+        │                                  │
+        │ • allowed-tools restriction?     │
+        │ • Dangerous/irreversible ops     │
+        │   requiring explicit trigger?    │
+        │ • Structured $ARGUMENTS?         │
+        │ • Frequent /shortcut in menu?    │
+        └───────────┬──────────────────────┘
+                    │
+      ┌─────────────┴─────────────┐
+      │                           │
+      ▼ ANY YES                   ▼ ALL NO
+┌───────────────┐        ┌───────────────────┐
+│ ⚡ Add COMMAND │        │ Use Skill/Agent   │
+│   wrapper     │        │ directly          │
+│               │        │ (no Command       │
+│ UI + platform │        │  needed)          │
+│ constraints   │        └───────────────────┘
+└───────────────┘
 ```
 
 ---
@@ -115,18 +130,22 @@ By the end of this module, you will:
 | "A complex deployment procedure" | NO | **Command** |
 | "Logging standards when adding logs" | YES | **Skill** |
 
-### Question 4: Human Trigger Required?
+### Question 4: Platform Constraints Required? (Phase 2)
 
-**Ask yourself:**
-- Is this potentially dangerous (delete, deploy, pay)?
-- Must the user consciously decide to run it?
-- Is there authorization or approval needed?
+After determining the core type (Skill or Agent), ask whether a **Command wrapper** is justified:
 
-| Scenario | Answer | Result |
-|----------|--------|--------|
-| "Deploy to production" | YES | **Command** |
-| "Generate API docs" | Maybe | Command or embed |
-| "Format code on save" | NO | Embed in existing |
+**Sub-questions:**
+- Does it need `allowed-tools` restriction (tool sandboxing)?
+- Is this a dangerous/irreversible operation requiring explicit human trigger?
+- Does it need structured `$ARGUMENTS` with validation?
+- Should it appear as a `/shortcut` in the command menu for discoverability?
+
+| Scenario | Constraint Needed? | Result |
+|----------|-------------------|--------|
+| "Deploy to production" | YES (dangerous op, `allowed-tools`) | **Skill + Command wrapper** |
+| "Generate API docs" | NO (agent can handle) | **Skill only** (no Command) |
+| "Format code on save" | NO (auto-loaded) | **Skill only** (no Command) |
+| "Delete old test fixtures" | YES (destructive, needs confirmation) | **Skill + Command wrapper** |
 
 ---
 
@@ -178,11 +197,13 @@ For each feature, go through this checklist:
 - Knowledge, not execution
 - Reusable across workflows
 
-### Use a COMMAND when:
-- User must explicitly trigger
-- Authorization required
-- Clear entry point to workflow
-- UI shortcut for complex operations
+### Add a COMMAND wrapper when:
+- Only when platform constraints needed (`allowed-tools`, dangerous ops, structured `$ARGUMENTS`)
+- User must explicitly trigger a dangerous/irreversible operation
+- Tool sandboxing via `allowed-tools` is required
+- Structured `$ARGUMENTS` with validation needed
+- Frequent `/` shortcut for discoverability
+- **NOT needed** when Skill/Agent can be directly invoked without restrictions
 
 ### Use an AGENT when:
 - Dynamic tool selection needed
@@ -323,14 +344,16 @@ Uses tools: `file_read`, `test_runner`, `code_search`, `file_edit`
 
 ## 3.7 Decision Matrix Summary
 
-| Feature Type | Component | Key Indicator |
-|--------------|-----------|---------------|
-| Domain expertise | Skill | "Knowledge about X" |
-| Explicit user action | Command | "When user wants to X" |
-| Automated reasoning task | Agent | "Figure out how to X" |
-| Single operation | Tool | "Just do X" |
-| Always-applied rules | Rules file | "Always follow X" |
-| Reusable procedure | Skill workflow | "Steps to do X" |
+| Feature Type | Core Type | Command Wrapper? | Key Indicator |
+|--------------|-----------|-------------------|---------------|
+| Domain expertise | Skill | No | "Knowledge about X" |
+| Automated reasoning task | Agent | No | "Figure out how to X" |
+| Dangerous user action | Skill/Agent | **Yes** | "Destructive/irreversible op needing explicit trigger" |
+| Tool-restricted operation | Skill/Agent | **Yes** | "Needs `allowed-tools` sandboxing" |
+| Parameterized shortcut | Skill/Agent | **Yes** | "Needs structured `$ARGUMENTS`" |
+| Single operation | Tool | No | "Just do X" |
+| Always-applied rules | Rules file | No | "Always follow X" |
+| Reusable procedure | Skill workflow | No | "Steps to do X" |
 
 ---
 
@@ -346,4 +369,4 @@ Uses tools: `file_read`, `test_runner`, `code_search`, `file_edit`
 
 ## Next Module
 
-[Module 4: Practical Design Templates](./04-templates.md) - Learn to write specification documents for Commands, Skills, and Agents.
+[Module 4: Practical Design Templates](./04-templates.md) - Learn to write specification documents for Skills, Agents, and Command wrappers.

@@ -13,9 +13,10 @@ Based on the diagnosis, generate the appropriate spec template(s).
 
 Refer to [combination-patterns.md](../references/combination-patterns.md) and generate templates in order:
 
-1. **Command** (if user trigger needed)
-2. **Agent** (if multi-step planning needed)
-3. **Skills** (for each domain expertise needed)
+1. **Core types first:**
+   - **Skills** (for each domain expertise needed)
+   - **Agent** (if multi-step planning needed)
+2. **Command wrapper** (only if platform constraints justified — see [criteria.md](../references/criteria.md))
 
 ## Step 2: Select Template(s)
 

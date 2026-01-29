@@ -22,11 +22,20 @@ Organize features into the right structure: **Command**, **Skill**, or **Agent**
 
 ## Quick Reference
 
+### Core Types (Knowledge Layer)
+
 | Component | Trigger | Reasoning | Execution | Use When |
 |-----------|---------|-----------|-----------|----------|
-| **Command** | Human `/command` | None | Fixed procedure | Explicit user trigger needed |
-| **Skill** | Auto-load on keywords | None | No execution (knowledge) | Domain expertise to share |
+| **Skill** | Auto-load on keywords / direct `@path` | None | No execution (knowledge) | Domain expertise to share |
 | **Agent** | Goal assigned | LLM decides | Dynamic, iterative | Multi-step planning required |
+
+### Optional Wrapper (Access Layer)
+
+| Component | Trigger | Purpose | Use When |
+|-----------|---------|---------|----------|
+| **Command** | Human `/command` | UI entry point + constraints over Skill/Agent | `allowed-tools` restriction, dangerous ops, structured `$ARGUMENTS`, frequent shortcut |
+
+> **Key insight**: Command is NOT a parallel type to Skill/Agent. It is an **access pattern** — a UI + security wrapper placed over Skills or Agents when human entry point and platform constraints are needed.
 
 ## Workflow Routing
 
@@ -45,25 +54,31 @@ Organize features into the right structure: **Command**, **Skill**, or **Agent**
 | [Combination Patterns](references/combination-patterns.md) | Multi-component architectures |
 | [Templates](references/templates/) | Spec templates for each type |
 
-## Combination Patterns
+## Architecture Model
 
-Most real features need **multiple component types**. Common patterns:
+```
+Knowledge Layer:  Skill (knowledge)  |  Agent (reasoning)
+Access Layer:     Command (optional UI + constraints wrapper)
+```
+
+### Common Patterns
 
 | Pattern | Structure | Use When |
 |---------|-----------|----------|
-| **Command + Agent** | Entry → Executor | User triggers complex work |
+| **Skill only** | Direct invocation via `@path` or keywords | Most cases — knowledge is self-sufficient |
 | **Agent + Skills** | Executor + Knowledge | Agent needs domain expertise |
-| **Command + Skills** | Entry + Knowledge | Procedure needs domain knowledge |
-| **Full Stack** | Command → Agent → Skills → Tools | Complete feature |
+| **Command wrapping Skill** | Entry + Knowledge + Constraints | Tool restriction or frequent human shortcut needed |
+| **Command wrapping Agent** | Entry → Executor | User triggers dangerous/complex work |
+| **Full Stack** | Command → Agent → Skills → Tools | Critical ops needing all layers |
 
 See [combination-patterns.md](references/combination-patterns.md) for details.
 
 ## Output
 
 This skill outputs:
-1. **Diagnosis** - Component type (Command / Skill / Agent / Combination)
+1. **Diagnosis** - Core type (Skill / Agent) + whether Command wrapper is needed
 2. **Spec Template** - Filled template from `references/templates/`
-3. **Rationale** - Why this type, why not others
+3. **Rationale** - Why this type, why not others, and why Command wrapper is or isn't needed
 
 > **Note**: This skill diagnoses *what* type to use. Implementation is handled by the calling Command.
 

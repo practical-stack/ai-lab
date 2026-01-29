@@ -1,6 +1,6 @@
 ---
 title: "Component Architect"
-description: "AI 코딩 어시스턴트를 위한 기능 요청의 Command, Skill, Agent 타입 진단 도구."
+description: "기능 요청의 핵심 타입(Skill 또는 Agent)을 결정하고 Command 래퍼가 필요한지 판단하는 도구."
 type: index
 tags: [Architecture, AI, BestPractice]
 order: 1
@@ -10,22 +10,34 @@ used_by: [/.claude/skills/meta-structure-organizer/SKILL.md, /.claude/commands/o
 
 # Component Architect
 
-> 기능 요청을 **Command**, **Skill**, **Agent** 중 어느 것으로 구현해야 하는지 진단
+> 기능 요청의 핵심 타입(Skill 또는 Agent)을 결정하고 Command 래퍼가 필요한지 판단
 
 AI 코딩 어시스턴트(Claude Code, OpenCode, Cursor)를 위한 체계적인 컴포넌트 타입 선택 도구입니다.
 
 ## 빠른 참조
 
+### 핵심 타입 (Knowledge Layer)
+
 | 컴포넌트 | 트리거 | 추론 | 실행 | 사용 시점 |
 |----------|--------|------|------|-----------|
-| **Command** | 사람이 `/command` | 없음 | 고정 절차 | 명시적 사용자 트리거 필요 |
-| **Skill** | 키워드에 자동 로드 | 없음 | 실행 없음 (지식) | 공유할 도메인 전문성 |
+| **Skill** | 키워드에 자동 로드 / `@path` 직접 호출 | 없음 | 실행 없음 (지식) | 공유할 도메인 전문성 |
 | **Agent** | 목표 할당 | LLM 판단 | 동적, 반복 | 다단계 계획 필요 |
+
+### 선택적 래퍼 (Access Layer)
+
+| 컴포넌트 | 트리거 | 목적 | 사용 시점 |
+|----------|--------|------|-----------|
+| **Command** | 사람이 `/command` | Skill/Agent 위의 UI + 보안 래퍼 | `allowed-tools` 제한, 위험한 작업, 구조화된 `$ARGUMENTS`, `/` 단축키 필요 |
+
+> **핵심 인사이트**: Command는 Skill/Agent와 병렬적인 타입이 아닙니다. **접근 패턴(access pattern)** — 플랫폼 제약조건과 사용자 진입점이 필요할 때 Skill이나 Agent 위에 씌우는 래퍼입니다.
 
 ## 의사결정 트리
 
 ```
 [기능 요청]
+       │
+       ▼
+━━━ 1단계: 핵심 타입 결정 ━━━━━━━━━━━
        │
        ▼
 ┌─────────────────────────────────────┐
@@ -44,14 +56,24 @@ AI 코딩 어시스턴트(Claude Code, OpenCode, Cursor)를 위한 체계적인 
        ├── 예 ──▶ 📚 SKILL
        │
        ▼ 아니오
+       기존 컴포넌트에 내장
+       │
+       ▼
+━━━ 2단계: Command 래퍼 필요? ━━━━━━━
+       │
+       ▼
 ┌─────────────────────────────────────┐
-│ 사람이 명시적으로 트리거해야 하는가?│
+│ 다음 중 해당되는 것이 있는가?       │
+│ • allowed-tools 제한 필요?          │
+│ • 위험한/되돌릴 수 없는 작업?       │
+│ • 구조화된 $ARGUMENTS 검증?         │
+│ • / 메뉴 단축키 필요?              │
 └─────────────────────────────────────┘
        │
-       ├── 예 ──▶ ⚡ COMMAND
+       ├── 예 ──▶ ⚡ COMMAND 래퍼 추가
        │
        ▼ 아니오
-       기존 컴포넌트에 내장
+       Skill/Agent를 직접 사용
 ```
 
 ## 콘텐츠

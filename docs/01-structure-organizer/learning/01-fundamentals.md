@@ -9,55 +9,71 @@ related: [./01-fundamentals.ko.md]
 
 # Module 1: AI Agent Architecture Fundamentals
 
-> Understanding Command, Skill, and Agent - The Three Pillars of AI Coding Assistants
+> Understanding the Two-Layer Architecture: Core Types (Skill & Agent) + Optional Command Wrapper
 
 ## Learning Objectives
 
 By the end of this module, you will:
-- Understand the core differences between Command, Skill, and Agent
-- Know when to use each component type
+- Understand the two-layer architecture model (Knowledge Layer + Access Layer)
+- Know the core differences between Skill and Agent
+- Understand when a Command wrapper is needed (and when it's not)
 - Be able to explain the role of each in an AI coding assistant system
 
 ---
 
-## 1.1 The Big Picture: Why Three Components?
+## 1.1 Architecture Model: Two Layers
 
-AI coding assistants like Claude Code, Cursor, and OpenCode organize their capabilities into distinct abstraction layers. Think of it like a company:
+AI coding assistants like Claude Code, Cursor, and OpenCode organize their capabilities into two distinct layers:
+
+### Knowledge Layer (Core Types)
 
 | Component | Analogy | Role |
 |-----------|---------|------|
-| **Agent** | Employee | The "who" - intelligent worker with reasoning capability |
 | **Skill** | Training/Knowledge | The "how" - domain expertise and procedures |
-| **Command** | Task Assignment | The "what" - specific instructions to execute |
+| **Agent** | Employee | The "who" - intelligent worker with reasoning capability |
+
+### Access Layer (Optional Wrapper)
+
+| Component | Analogy | Role |
+|-----------|---------|------|
+| **Command** | Work Order with Restrictions | UI entry point + platform constraints over Skill/Agent |
+
+> **Key insight**: Command is NOT a parallel type to Skill/Agent. It is an **access pattern** — a UI + security wrapper placed over Skills or Agents when human entry point and platform constraints are needed.
 
 ```
-User Request
-     │
-     ▼
-┌─────────────────┐
-│     Agent       │  ← "Who performs the work"
-│  (Reasoning)    │
-└────────┬────────┘
-         │ loads
-         ▼
-┌─────────────────┐
-│     Skills      │  ← "How to do it"
-│  (Knowledge)    │
-└────────┬────────┘
-         │ uses
-         ▼
-┌─────────────────┐
-│     Tools       │  ← Actual execution (APIs, CLI, etc.)
-└─────────────────┘
+┌─────────────────────────────────────────┐
+│  Access Layer (optional)                │
+│  ┌───────────────────────────────────┐  │
+│  │ Command (UI + constraints)       │  │
+│  │ • allowed-tools restriction      │  │
+│  │ • $ARGUMENTS validation          │  │
+│  │ • /shortcut in menu              │  │
+│  └──────────────┬────────────────────┘  │
+│                 │ wraps                  │
+├─────────────────┼───────────────────────┤
+│  Knowledge Layer│(core types)           │
+│                 ▼                       │
+│  ┌─────────────────┐                   │
+│  │   Agent / Skill │                   │
+│  │  (Reasoning /   │                   │
+│  │   Knowledge)    │                   │
+│  └────────┬────────┘                   │
+│           │ uses                        │
+│  ┌─────────────────┐                   │
+│  │     Tools       │                   │
+│  └─────────────────┘                   │
+└─────────────────────────────────────────┘
 ```
 
 ---
 
-## 1.2 Command: "What to Do"
+## 1.2 Command: Optional Access Layer Wrapper
 
 ### Definition
 
-A **Command** is a human-triggered action that initiates specific workflows. It's like a button that says "do this specific thing."
+A **Command** is an optional wrapper that provides a human-triggered entry point with platform constraints over a Skill or Agent. It's like a controlled button that says "do this specific thing with these restrictions."
+
+> **Important**: Commands are NOT always needed. If a Skill can be directly invoked via `@path` or auto-loaded on keywords, and no tool restrictions are required, skip the Command.
 
 ### Key Characteristics
 
@@ -67,6 +83,7 @@ A **Command** is a human-triggered action that initiates specific workflows. It'
 | **Behavior** | Deterministic - follows a fixed procedure |
 | **Format** | Markdown file with optional YAML frontmatter |
 | **Location** | `.claude/commands/` or similar directory |
+| **Purpose** | UI entry point + platform constraints (`allowed-tools`, `$ARGUMENTS`) |
 
 ### Example Command
 
@@ -82,12 +99,19 @@ Current git status: !`git status`
 Follow the coding standards in @CONVENTIONS.md
 ```
 
-### When to Use Commands
+### When Commands ARE Needed
 
-- User must explicitly trigger the action
-- The workflow is predictable and repeatable
-- Authorization is required before execution
-- You want a "UI shortcut" for complex operations
+- `allowed-tools` restriction is required (tool sandboxing)
+- Dangerous/irreversible operations need explicit human trigger
+- Structured `$ARGUMENTS` with validation
+- Frequent human shortcut (discoverability in `/` menu)
+
+### When Commands Are NOT Needed
+
+- The Skill can be directly invoked via `@path` or auto-loaded
+- No tool restriction is required
+- The agent can handle the task automatically
+- Adding a Command would just be a thin pass-through with no constraints
 
 ### Quick Quiz
 
@@ -96,7 +120,7 @@ Follow the coding standards in @CONVENTIONS.md
 <details>
 <summary>Answer</summary>
 
-**No.** Commands require explicit user invocation. Auto-formatting on save should be a **Skill** that the agent applies automatically when detecting file changes.
+**No.** Commands require explicit user invocation. Auto-formatting on save should be a **Skill** that the agent applies automatically when detecting file changes. No Command wrapper is needed since there are no tool restrictions or dangerous ops involved.
 </details>
 
 ---
@@ -229,29 +253,41 @@ autonomy:
 
 ---
 
-## 1.5 Comparing the Three Components
+## 1.5 Comparing Components
 
-### Summary Table
+### Core Types (Knowledge Layer)
 
-| Aspect | Command | Skill | Agent |
-|--------|---------|-------|-------|
-| **Role** | "What to do" | "How to do it" | "Who does it" |
-| **Trigger** | Human explicit | Auto/keyword | Goal assignment |
-| **Reasoning** | None | None | Yes (LLM) |
-| **Execution** | Fixed procedure | No execution | Dynamic |
-| **State** | None | Stateless | Has context |
-| **Reusability** | Medium | High | Low |
+| Aspect | Skill | Agent |
+|--------|-------|-------|
+| **Role** | "How to do it" | "Who does it" |
+| **Trigger** | Auto/keyword / `@path` | Goal assignment |
+| **Reasoning** | None | Yes (LLM) |
+| **Execution** | No execution (knowledge) | Dynamic |
+| **State** | Stateless | Has context |
+| **Reusability** | High | Low |
+
+### Optional Wrapper (Access Layer)
+
+| Aspect | Command |
+|--------|---------|
+| **Role** | UI entry point + constraints |
+| **Trigger** | Human explicit (`/command`) |
+| **Purpose** | `allowed-tools`, dangerous ops, `$ARGUMENTS`, `/` shortcut |
+| **Wraps** | Skill or Agent |
 
 ### The Key Distinction
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                                                         │
-│  Command = "What" (instruction, script, fixed order)    │
+│  Knowledge Layer (core types):                          │
 │                                                         │
 │  Skill = "How" (knowledge, expertise, no execution)     │
-│                                                         │
 │  Agent = "Who" (reasoning, planning, dynamic choices)   │
+│                                                         │
+│  Access Layer (optional wrapper):                       │
+│                                                         │
+│  Command = UI + constraints wrapper over Skill/Agent    │
+│  (Only when allowed-tools, dangerous ops, $ARGS needed) │
 │                                                         │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -330,14 +366,14 @@ Write down:
 
 ## Key Takeaways
 
-1. **Commands** are explicit user-triggered actions - "do this now"
-2. **Skills** are domain knowledge - "here's how to do it"
-3. **Agents** are intelligent workers - "figure it out and do it"
-4. Most features need a combination of these components
-5. The right choice depends on: trigger method, reasoning needs, and reusability
+1. **Skills** are domain knowledge (core type) - "here's how to do it"
+2. **Agents** are intelligent workers (core type) - "figure it out and do it"
+3. **Commands** are optional wrappers (access layer) - only when `allowed-tools`, dangerous ops, `$ARGUMENTS`, or `/` shortcut needed
+4. Most features are best served by a Skill or Agent without a Command wrapper
+5. The right choice depends on: reasoning needs, reusability, and whether platform constraints are needed
 
 ---
 
 ## Next Module
 
-[Module 2: Component Relationships & Contracts](./02-relationships.md) - Learn how Commands, Skills, and Agents work together in a hierarchical system.
+[Module 2: Component Relationships & Contracts](./02-relationships.md) - Learn how Skills, Agents, and Command wrappers work together in a layered system.

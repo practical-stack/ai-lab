@@ -91,17 +91,28 @@ guardrails:
 
 ---
 
-### 2. Command 남용
+### 2. Command 남용 (불필요한 래퍼)
 
 **증상:**
 - `/create-class`, `/create-interface`, `/create-enum` (별도 커맨드)
 - 사용자가 모든 커맨드를 기억 못 함
 - 에이전트가 자동 처리할 수 있는 것과 커맨드 중복
+- **도구 제한 없이 단순히 Skill을 감싸기만 하는 Command**
+- Command가 `allowed-tools`, 위험한 작업, `$ARGUMENTS` 검증, `/` 단축키 중 어느 것도 활용하지 않음
 
 **방지책:**
 
 ```yaml
 guardrails:
+  - name: "Command 정당화 검증"
+    action: |
+      Command 생성 전에 확인:
+      - allowed-tools 제한이 필요한가? 아니라면 Skill을 직접 사용
+      - 위험한/되돌릴 수 없는 작업인가?
+      - 구조화된 $ARGUMENTS가 필요한가?
+      - / 단축키가 필요한가?
+      위의 어느 것도 해당되지 않으면 Command 래퍼를 만들지 않음
+    
   - name: "Command 제한"
     action: "프로젝트당 최대 10-15개 커맨드"
     
@@ -112,9 +123,23 @@ guardrails:
     action: "에이전트가 자동 처리 가능하면 커맨드 만들지 않음"
     
 review_checklist:
-  - "이 커맨드가 자주 사용되나요?"
+  - "이 Command에 allowed-tools 제한이 있나요?"
+  - "위험한 작업이라서 명시적 트리거가 필요한가요?"
+  - "Skill을 @path로 직접 호출하면 안 되나요?"
   - "기존 커맨드와 통합 가능한가요?"
-  - "에이전트가 자동으로 처리할 수 있나요?"
+```
+
+**불필요한 Command 래퍼 예시:**
+```
+나쁨 (불필요한 래퍼):
+  /apply-coding-style  ← Skill을 감싸기만 함, 도구 제한 없음
+  # → coding-style Skill을 @path로 직접 사용하면 됨
+
+좋음 (정당한 래퍼):
+  /deploy [env]        ← allowed-tools 제한 + 위험한 작업
+  ---
+  allowed-tools: Bash(git:*), Bash(npm:*)
+  ---
 ```
 
 **수정 예시:**

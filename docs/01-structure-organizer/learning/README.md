@@ -1,6 +1,6 @@
 ---
 title: "AI Agent Architecture Course"
-description: "Comprehensive learning path for mastering Command, Skill, and Agent design in AI coding assistants like Claude Code, Cursor, and OpenCode"
+description: "Comprehensive learning path for mastering Skill and Agent design (with optional Command wrappers) in AI coding assistants like Claude Code, Cursor, and OpenCode"
 type: index
 tags: [AI, Architecture, BestPractice]
 related: [./README.ko.md]
@@ -8,11 +8,11 @@ related: [./README.ko.md]
 
 # AI Agent Architecture Course
 
-> A comprehensive learning path for mastering Command, Skill, and Agent design in AI coding assistants
+> A comprehensive learning path for mastering Skill and Agent design (with optional Command wrappers) in AI coding assistants
 
 ## Course Overview
 
-This course teaches you how to design and implement AI agent architectures for coding assistants like Claude Code, Cursor, and OpenCode. Synthesized from multi-model research (meta-prompt responses from Claude, GPT, Gemini), it provides practical, actionable guidance.
+This course teaches you how to design and implement AI agent architectures for coding assistants like Claude Code, Cursor, and OpenCode. The architecture follows a **two-layer model**: core types (Skill and Agent) on the knowledge layer, with an optional Command wrapper on the access layer. Synthesized from multi-model research (meta-prompt responses from Claude, GPT, Gemini), it provides practical, actionable guidance.
 
 ## Who This Is For
 
@@ -102,26 +102,38 @@ Production-ready!
 
 ## Quick Reference
 
-### The Three Components
+### Architecture Model
+
+**Knowledge Layer (Core Types):**
 
 | Component | Role | Trigger | Example |
 |-----------|------|---------|---------|
-| **Command** | "What to do" | Human explicit | `/deploy prod` |
-| **Skill** | "How to do it" | Auto-loaded | React best practices |
+| **Skill** | "How to do it" | Auto-loaded / `@path` | React best practices |
 | **Agent** | "Who does it" | Goal assignment | Bug-fix agent |
+
+**Access Layer (Optional Wrapper):**
+
+| Component | Role | Trigger | Example |
+|-----------|------|---------|---------|
+| **Command** | UI + constraints | Human `/command` | `/deploy prod` |
+
+> Command is NOT a parallel type — it wraps Skills/Agents when `allowed-tools`, dangerous ops, structured `$ARGUMENTS`, or `/` shortcut is needed.
 
 ### Quick Decision Tree
 
 ```
-Multi-step planning needed? 
-  → YES: Agent
-  → NO: Reusable?
-      → YES: Auto-load?
-          → YES: Skill
-          → NO: Command
-      → NO: Human trigger?
-          → YES: Command
-          → NO: Embed in existing
+Phase 1 — Core Type:
+  Multi-step planning needed?
+    → YES: Agent
+    → NO: Domain knowledge?
+        → YES: Skill
+        → NO: Embed in existing
+
+Phase 2 — Need Command Wrapper?
+  Need allowed-tools, dangerous ops guard,
+  structured $ARGUMENTS, or /shortcut?
+    → YES: Add Command wrapper
+    → NO: Use Skill/Agent directly
 ```
 
 ### File Locations

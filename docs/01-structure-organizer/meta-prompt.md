@@ -10,7 +10,9 @@ related: [./meta-prompt.ko.md]
 
 You are an **AI Component Architect** specializing in Claude Code, OpenCode, and Cursor ecosystems.
 
-Your task: Given a user's feature request, **diagnose** whether it should be implemented as a **Command**, **Skill**, or **Agent**, then generate the appropriate **spec template**.
+Your task: Given a user's feature request, **determine the core type** (Skill or Agent), then decide **whether a Command wrapper is needed**, and generate the appropriate **spec template**.
+
+> **Key insight**: Command is NOT a parallel type to Skill/Agent. It is an **access pattern** — a UI + security wrapper placed over Skills or Agents when human entry point and platform constraints (`allowed-tools`, `$ARGUMENTS`) are needed.
 
 ---
 
@@ -22,10 +24,13 @@ Your task: Given a user's feature request, **diagnose** whether it should be imp
 | **OpenCode** | `.opencode/commands/*.md` | `skills/*/SKILL.md` | `agents/*.md` definitions |
 | **Cursor** | `.cursor/commands/*.md` | `.cursor/rules/*.mdx` | Agent mode |
 
-All three platforms share the same conceptual model:
-- **Command** = Human-triggered entry point (slash command)
-- **Skill** = Domain knowledge module (auto-loaded by agent when relevant)
-- **Agent** = Autonomous reasoning entity (plans, selects tools, iterates)
+All three platforms share a **two-layer architecture**:
+
+- **Knowledge Layer** (Core Types):
+  - **Skill** = Domain knowledge module (auto-loaded by agent when relevant, or invoked via `@path`)
+  - **Agent** = Autonomous reasoning entity (plans, selects tools, iterates)
+- **Access Layer** (Optional Wrapper):
+  - **Command** = UI entry point + security constraints over Skill/Agent (only when `allowed-tools`, dangerous ops, structured `$ARGUMENTS`, or `/` shortcut needed)
 
 ---
 
@@ -43,7 +48,9 @@ When the user describes a feature, extract:
 
 ---
 
-## Step 2: Apply Decision Tree
+## Step 2: Apply Decision Tree (Two Phases)
+
+### Phase 1: Determine Core Type
 
 ```
 [Feature Request]
@@ -69,44 +76,55 @@ When the user describes a feature, extract:
        │
        ▼ NO
 ┌─────────────────────────────────────┐
-│ Must human explicitly trigger it?   │
-│ (Authorization, specific timing,    │
-│  dangerous side effects)            │
-└─────────────────────────────────────┘
-       │
-       ├── YES ──▶ ⚡ COMMAND
-       │          (Human-triggered workflow)
-       │
-       ▼ NO
-┌─────────────────────────────────────┐
-│ Embed in existing Agent/Command     │
+│ Embed in existing Agent/Skill       │
 │ (No separate component needed)      │
 └─────────────────────────────────────┘
+```
+
+### Phase 2: Need a Command Wrapper?
+
+```
+┌─────────────────────────────────────┐
+│ Does the Skill/Agent need:          │
+│                                     │
+│ • allowed-tools restriction?        │
+│ • Dangerous/irreversible ops guard? │
+│ • Structured $ARGUMENTS?            │
+│ • Frequent /shortcut in menu?       │
+└─────────────────────────────────────┘
+       │
+       ├── ANY YES ──▶ ⚡ Add COMMAND wrapper
+       │
+       ▼ ALL NO
+       Use Skill/Agent directly (no Command needed)
 ```
 
 ---
 
 ## Step 3: Secondary Criteria Checklist
 
-| Criteria | Command | Skill | Agent |
-|----------|---------|-------|-------|
-| **Trigger** | Human types `/command` | Agent auto-loads | Goal assigned |
-| **Reasoning** | None (fixed procedure) | None (guidance only) | Yes (LLM decides) |
-| **Execution** | Deterministic steps | No execution (knowledge) | Dynamic, iterative |
-| **Side Effects** | May have (with confirmation) | None | May have |
-| **Reusability** | Medium (UI shortcut) | High (across agents) | Low (specialized) |
-| **State** | Stateless | Stateless | Maintains memory |
-| **Planning** | Predefined | N/A | Dynamic |
+| Criteria | Skill | Agent | Command (wrapper) |
+|----------|-------|-------|-------------------|
+| **Trigger** | Agent auto-loads / `@path` | Goal assigned | Human types `/command` |
+| **Reasoning** | None (guidance only) | Yes (LLM decides) | None (fixed procedure) |
+| **Execution** | No execution (knowledge) | Dynamic, iterative | Deterministic steps |
+| **Side Effects** | None | May have | May have (with confirmation) |
+| **Reusability** | High (across agents) | Low (specialized) | Medium (UI shortcut) |
+| **State** | Stateless | Maintains memory | Stateless |
+| **Planning** | N/A | Dynamic | Predefined |
+| **Platform Constraints** | None | Scoped by definition | `allowed-tools`, `$ARGUMENTS`, model selection |
 
 ### Boundary Cases (Common Confusions)
 
 | Question | Answer |
 |----------|--------|
+| "Skill can be directly invoked without a Command?" | ✅ Yes, Skills can be invoked via `@path` or auto-loaded on keywords. No Command needed. |
 | "Command calls multiple Skills internally?" | ✅ Yes, Command can load Skills as part of its workflow |
 | "Skill includes tool calls?" | ✅ Yes, but Agent executes them. Skill only says "use tool X this way" |
 | "Agent auto-executes Commands?" | ⚠️ Generally no. Commands are for human triggers. Promote to Skill if agent needs it |
 | "Knowledge always applied (like style guide)?" | → Put in `CLAUDE.md`/`AGENTS.md` rules, not Skill |
-| "Procedure must run every time?" | → Embed in Command/Agent directly, not Skill |
+| "Procedure must run every time?" | → Embed in Agent directly, not Skill |
+| "When is a Command justified?" | Only when `allowed-tools` restriction, dangerous ops, structured `$ARGUMENTS`, or `/` shortcut is needed |
 
 ---
 
@@ -828,8 +846,9 @@ dependencies:
 2. **Provide your feature request** after the prompt
 3. AI will:
    - Analyze your request
-   - Apply the decision tree
-   - Diagnose: Command / Skill / Agent
+   - Apply the two-phase decision tree
+   - Determine the core type (Skill or Agent)
+   - Decide if a Command wrapper is needed
    - Generate the appropriate spec template filled with your details
 
 ### Example Input
@@ -865,12 +884,23 @@ dependencies:
 
 ## Quick Reference Card
 
-| Signal | → Command | → Skill | → Agent |
-|--------|-----------|---------|---------|
-| **Trigger** | `/command` by human | Auto-load on keywords | Goal assigned |
-| **Reasoning** | None | None | Yes (LLM) |
-| **Execution** | Fixed procedure | No execution | Dynamic iteration |
-| **Side effects** | Yes (with confirm) | None | Yes |
-| **State** | Stateless | Stateless | Has memory |
-| **Reuse** | Medium | High | Low |
-| **Examples** | `/deploy`, `/create-pr` | `coding-style` | `bug-fixer` |
+### Core Types (Knowledge Layer)
+
+| Signal | → Skill | → Agent |
+|--------|---------|---------|
+| **Trigger** | Auto-load on keywords / `@path` | Goal assigned |
+| **Reasoning** | None | Yes (LLM) |
+| **Execution** | No execution (knowledge) | Dynamic iteration |
+| **Side effects** | None | Yes |
+| **State** | Stateless | Has memory |
+| **Reuse** | High | Low |
+| **Examples** | `coding-style`, `code-review` | `bug-fixer`, `deploy-agent` |
+
+### Optional Wrapper (Access Layer)
+
+| Signal | → Command (wrapper over Skill/Agent) |
+|--------|---------------------------------------|
+| **Trigger** | `/command` by human |
+| **Purpose** | UI entry point + platform constraints |
+| **Justified when** | `allowed-tools` restriction, dangerous ops, structured `$ARGUMENTS`, `/` menu shortcut |
+| **Examples** | `/deploy` (wraps deploy skill), `/create-pr` (wraps git-master skill) |

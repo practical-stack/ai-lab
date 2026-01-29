@@ -2,6 +2,17 @@
 
 Most real-world features require **multiple component types** working together. This reference defines common combination patterns and when to use them.
 
+## Architecture Model
+
+```
+Knowledge Layer:  Skill (knowledge)  |  Agent (reasoning)
+Access Layer:     Command (optional UI + constraints wrapper)
+```
+
+**Key insight:** Command is NOT a parallel type to Skill/Agent. It is an **access pattern** — a UI + security wrapper placed over Skills or Agents when human entry point and platform constraints (allowed-tools, model, $ARGUMENTS) are needed.
+
+---
+
 ## Pattern Overview
 
 | Pattern | Structure | Complexity | Use When |
@@ -75,33 +86,37 @@ bug-fix-agent loads:
 
 ---
 
-## Pattern 3: Command + Skills
+## Pattern 3: Command + Skills (Command as Wrapper)
 
 **Structure:**
 ```
-⚡ COMMAND: /feature-name (Entry Point)
-    ↓
+⚡ COMMAND: /feature-name (Entry Point + Constraints)
+     ↓
 📚 SKILL: domain-skill (Knowledge)
 ```
 
 **When to Use:**
-- Fixed procedure with domain knowledge
-- No dynamic planning needed
-- Knowledge is reusable
+- Skill needs platform-level constraints
+- Tool sandboxing required (`allowed-tools`)
+- Dangerous/irreversible operation
+- Structured `$ARGUMENTS` validation needed
+- Frequent human shortcut
 
 **Example:**
 ```
-/lint-code loads: linting-rules skill
-/format loads: formatting-standards skill
+/deploy (with allowed-tools: Bash(docker:*)) loads: deploy-skill
+/lint-code (with structured args) loads: linting-rules skill
 ```
 
 **Decision Criteria:**
 | Aspect | Check |
 |--------|-------|
-| Human trigger required? | ✅ Yes |
-| Fixed procedure? | ✅ Yes |
-| Domain knowledge needed? | ✅ Yes |
-| No dynamic branching? | ✅ Yes |
+| Skill exists? | ✅ Yes |
+| Needs platform constraints? | ✅ Yes |
+| Tool restriction needed? | ✅ Yes (or dangerous ops, or structured args) |
+| No Command wrapper needed? | ❌ No - add wrapper |
+
+**Anti-pattern:** Command wrapping a Skill without adding ANY platform constraints. If no constraints are needed, use the Skill directly.
 
 ---
 
@@ -150,27 +165,37 @@ bug-fix-agent loads:
        │
        ▼
 ┌─────────────────────────────────────┐
-│ Does it need domain knowledge?      │
-└─────────────────────────────────────┘
-       │
-       ├── NO ──▶ Single component (Command/Agent)
-       │
-       ▼ YES
-┌─────────────────────────────────────┐
+│ PHASE 1: Determine Core Type        │
 │ Does it need multi-step planning?   │
 └─────────────────────────────────────┘
        │
-       ├── NO ──▶ Command + Skills
+       ├── YES ──▶ 🤖 AGENT (core type)
        │
-       ▼ YES
+       ▼ NO
 ┌─────────────────────────────────────┐
-│ Does user need to trigger it?       │
+│ Does it need domain knowledge?      │
 └─────────────────────────────────────┘
        │
-       ├── NO ──▶ Agent + Skills
+       ├── YES ──▶ 📚 SKILL (core type)
        │
-       ▼ YES
-       Full Stack (Command → Agent → Skills)
+       ▼ NO
+       Embed in existing component
+       
+       ═══════════════════════════════════════
+       
+┌─────────────────────────────────────┐
+│ PHASE 2: Determine if Command       │
+│ Wrapper is Needed                   │
+│ Does it need platform constraints?  │
+│ (allowed-tools, dangerous ops,      │
+│  structured args, frequent shortcut)│
+└─────────────────────────────────────┘
+       │
+       ├── YES ──▶ ⚡ COMMAND (wrapper)
+       │          Add Command layer over Skill/Agent
+       │
+       ▼ NO
+       Use Skill or Agent directly
 ```
 
 ---
@@ -205,9 +230,9 @@ bug-fix-agent loads:
 📚 SKILL: domain-knowledge (inform only)
 ```
 
-### Anti-Pattern 2: Command Contains Logic
+### Anti-Pattern 2: Command Contains Logic (or wraps without constraints)
 
-❌ **Wrong:**
+❌ **Wrong - Command with embedded logic:**
 ```
 ⚡ COMMAND: /deploy
   - if staging then...
@@ -218,8 +243,23 @@ bug-fix-agent loads:
 ✅ **Correct:**
 ```
 ⚡ COMMAND: /deploy (entry only)
-    ↓
+     ↓
 🤖 AGENT: deploy-agent (handles all logic)
+```
+
+❌ **Wrong - Command wrapping Skill without constraints:**
+```
+⚡ COMMAND: /organize-skill
+     ↓
+📚 SKILL: meta-skill
+(No tool restriction, not dangerous, no structured args)
+→ This Command adds nothing. Use Skill directly.
+```
+
+✅ **Correct:**
+```
+📚 SKILL: meta-skill (invoked directly)
+(No Command wrapper needed - no platform constraints)
 ```
 
 ### Anti-Pattern 3: Agent Has Hardcoded Knowledge
@@ -237,44 +277,56 @@ bug-fix-agent loads:
 📚 SKILL: code-review-rules (extracted knowledge)
 ```
 
-### Anti-Pattern 4: Skill Orchestrates Other Skills
+### Anti-Pattern 4: Unintentional Skill Coupling
 
-Skills should provide **knowledge**, not **orchestration instructions**.
+> **Note**: The Claude Code platform officially supports Skill → Skill invocation via the `Skill` tool. The guidance below is a **project convention** for managing complexity, not a platform limitation.
 
-❌ **Wrong (Imperative - tells what to do):**
-```markdown
-## Next Steps
-Load skill: meta-skill-creator
-Use skill: doc-frontmatter
-Run /create-llm-structure
-```
+#### When Skill → Skill Invocation Is Appropriate
 
-✅ **Correct (Declarative - describes what exists):**
+Skills CAN invoke other skills when:
+- **Hierarchical composition**: A parent skill delegates a well-defined sub-task (e.g., `ralplan` → `plan`)
+- **Setup/teardown**: A skill invokes another for initialization (e.g., `omc-setup` → `hud`)
+- **Clear dependency direction**: The invocation graph is acyclic and intentional
+
+#### When to Prefer Declarative References
+
+For **knowledge-oriented skills** in this project, prefer declarative references over imperative invocations to avoid coupling:
+
 ```markdown
 ## Related Resources
 - Skill creation patterns: see `meta-skill-creator/references/`
 - Frontmatter schema: see `doc-frontmatter/references/schema.md`
 ```
 
+#### Anti-Pattern: Hidden Spaghetti Dependencies
+
+❌ **Wrong — skill calls multiple unrelated skills without clear purpose:**
+```markdown
+## Next Steps
+Load skill: meta-skill-creator
+Use skill: doc-frontmatter
+Use skill: llm-repo-analysis
+Run /create-llm-structure
+```
+
+✅ **Correct — intentional composition with clear dependency:**
+```markdown
+When invoked, delegate frontmatter generation to `doc-frontmatter`:
+Invoke Skill: doc-frontmatter
+```
+
 **Key Distinction:**
 
-| Type | Example | Allowed in Skill? |
-|------|---------|-------------------|
-| Imperative | "Load skill X", "Use X", "Run /command" | ❌ No |
-| Declarative | "See X for reference", "Schema defined in X" | ✅ Yes |
-
-**Detection Patterns (grep):**
-```
-/Load skill/i
-/Use skill/i
-/다음.*스킬.*사용/
-/Run \/\w+/
-```
+| Pattern | Example | Guidance |
+|---------|---------|----------|
+| Intentional composition | Parent skill → child skill (clear purpose) | ✅ Allowed |
+| Declarative reference | "See X for patterns" | ✅ Preferred for knowledge |
+| Spaghetti invocation | Skill calls 3+ unrelated skills | ⚠️ Reconsider — may need Command/Agent |
 
 **Why This Matters:**
-- Skills are **knowledge modules**, not orchestrators
-- Commands own the pipeline and decide which skills to use
-- Hidden orchestration in skills creates unclear dependencies
+- Excessive skill-to-skill coupling creates hidden dependency graphs
+- If a skill needs to orchestrate 3+ other skills, consider using a **Command** (deterministic pipeline) or **Agent** (dynamic reasoning)
+- Keep the invocation graph shallow and intentional
 
 ---
 

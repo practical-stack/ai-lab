@@ -15,11 +15,13 @@ When analyzing a feature request, extract and evaluate these aspects:
 | **Domain Knowledge** | Encodes "how to do X"? | Yes / No |
 | **Multiple Domains** | Needs expertise in 2+ areas? | Yes / No |
 
-## Step 2: Apply Decision Tree
+## Step 2: Apply Decision Tree (2-Phase)
 
 Load [decision-tree.md](../references/decision-tree.md) and follow the logic:
 
 ```
+━━━ Phase 1: Determine Core Type ━━━━━━━━━━━
+
 [Feature Request]
        │
        ▼
@@ -33,27 +35,47 @@ Q2: Domain knowledge agent should auto-load when relevant?
        ├── YES ──▶ 📚 SKILL
        │
        ▼ NO
-Q3: Must human explicitly trigger it?
-       │
-       ├── YES ──▶ ⚡ COMMAND
-       │
-       ▼ NO
        → Embed in existing component
+
+━━━ Phase 2: Command Wrapper Needed? ━━━━━━
+
+After determining core type, check:
+
+Q3: Does this need platform constraints?
+       │
+       ├── `allowed-tools` restriction? ──▶ ⚡ Add COMMAND wrapper
+       ├── Dangerous/irreversible action? ──▶ ⚡ Add COMMAND wrapper
+       ├── `$ARGUMENTS` validation?      ──▶ ⚡ Add COMMAND wrapper
+       ├── Frequent human shortcut?      ──▶ ⚡ Add COMMAND wrapper
+       │
+       ▼ NONE
+       → Use core type directly (no wrapper needed)
 ```
 
 ## Step 3: Validate Against Criteria
 
-Load [criteria.md](../references/criteria.md) and score:
+Load [criteria.md](../references/criteria.md) and score in two stages:
 
-| Criteria | Command | Skill | Agent | This Feature |
-|----------|---------|-------|-------|--------------|
-| Multi-step planning | No | No | Yes | ? |
-| Dynamic branching | No | No | Yes | ? |
-| LLM reasoning | No | No | Yes | ? |
-| Auto-load on context | No | Yes | No | ? |
-| Reusable knowledge | Maybe | Yes | No | ? |
-| Human must trigger | Yes | No | Maybe | ? |
-| Side effects | Yes | No | Maybe | ? |
+### 3a: Core Type Scoring
+
+| Criteria | Skill | Agent | This Feature |
+|----------|-------|-------|--------------|
+| Multi-step planning | No | Yes | ? |
+| Dynamic branching | No | Yes | ? |
+| LLM reasoning | No | Yes | ? |
+| Auto-load on context | Yes | No | ? |
+| Reusable knowledge | Yes | No | ? |
+| Stateless | Yes | No | ? |
+
+### 3b: Command Wrapper Scoring
+
+| Criteria | Justified? | This Feature |
+|----------|-----------|--------------|
+| `allowed-tools` restriction | ✅ Yes | ? |
+| Dangerous/irreversible action | ✅ Yes | ? |
+| `$ARGUMENTS` validation | ✅ Yes | ? |
+| Frequent human shortcut | ✅ Yes | ? |
+| No platform constraints needed | ❌ No wrapper | ? |
 
 ## Step 4: Check Boundary Cases
 
@@ -66,13 +88,19 @@ Load [boundary-cases.md](../references/boundary-cases.md) and verify:
 
 Load [combination-patterns.md](../references/combination-patterns.md) and check:
 
+### Core Type Combinations
+
 | Question | If Yes |
 |----------|--------|
-| Needs domain knowledge + multi-step planning + human trigger? | → Full Stack |
 | Needs domain knowledge + multi-step planning? | → Agent + Skills |
-| Needs domain knowledge + human trigger? | → Command + Skills |
-| Needs multi-step planning + human trigger? | → Command + Agent |
-| Single aspect only? | → Single component |
+| Single aspect only? | → Single core type |
+
+### Command Wrapper Decision
+
+| Question | If Yes |
+|----------|--------|
+| Core type(s) need platform constraints? | → Add Command wrapper |
+| Core type(s) work fine without constraints? | → No wrapper needed |
 
 **Most features need combinations.** Default to combination thinking, not single-type.
 
@@ -83,7 +111,8 @@ Load [combination-patterns.md](../references/combination-patterns.md) and check:
 ```markdown
 ## 진단 결과
 
-### Primary Component: [🤖 AGENT | 📚 SKILL | ⚡ COMMAND]
+### Core Type: [🤖 AGENT | 📚 SKILL]
+### Command Wrapper: [⚡ NEEDED — reason | ❌ NOT NEEDED]
 
 ### 분석
 - **핵심 기능:** [what it does]
@@ -98,10 +127,9 @@ Load [combination-patterns.md](../references/combination-patterns.md) and check:
 2. [Reason 2 based on criteria]
 3. [Reason 3 if applicable]
 
-### 왜 다른 타입이 아닌가?
-- **왜 Command 아님:** [if not Command]
-- **왜 Skill 아님:** [if not Skill]
-- **왜 Agent 아님:** [if not Agent]
+### 왜 이 타입인가?
+- **왜 Skill/Agent:** [reason for core type choice]
+- **Command 래퍼:** [why needed or not needed]
 ```
 
 ### Combination Output (when multiple components needed)

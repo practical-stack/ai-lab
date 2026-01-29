@@ -10,7 +10,8 @@
 
 - Command can load multiple Skills as part of its workflow
 - Example: `/release` command loads `Version.Skill` → `Changelog.Skill` → `Notification.Skill`
-- Command orchestrates the order; Skills provide the knowledge
+- Command orchestrates the order; Skills provide the domain knowledge
+- Note: Skills can also invoke other skills directly (platform-supported), but Commands are preferred for complex multi-skill pipelines
 
 ---
 
@@ -56,15 +57,18 @@
 
 **Question:** "Both Skill and Command can be reusable. When to use which?"
 
-**Answer:** **Depends on who decides when to use it**
+**Answer:** **Skill is the default. Command is only added as a wrapper when platform constraints are needed.**
 
-| Who Decides | Component |
-|-------------|-----------|
-| Agent decides automatically | 📚 SKILL |
-| Human decides explicitly | ⚡ COMMAND |
+| Scenario | Component | Reason |
+|----------|-----------|--------|
+| Reusable knowledge, auto-load on keywords | 📚 SKILL | Default choice |
+| Skill + needs tool sandboxing | ⚡ COMMAND (wrapper) | Add Command layer for `allowed-tools` |
+| Skill + dangerous operation | ⚡ COMMAND (wrapper) | Add Command layer for explicit trigger |
+| Skill + structured arguments | ⚡ COMMAND (wrapper) | Add Command layer for `$ARGUMENTS` validation |
+| Skill + frequent shortcut | ⚡ COMMAND (wrapper) | Add Command layer for discoverability |
 
-- Skill = Agent's brain extension
-- Command = User's shortcut button
+- Skill = Agent's brain extension (default)
+- Command = Optional UI + security wrapper (only when needed)
 
 ---
 
@@ -117,15 +121,19 @@
 
 **Question:** "Is having many similar Commands bad? e.g., `/build-api`, `/build-ui`"
 
-**Answer:** ✅ **Yes, consolidate them**
+**Answer:** ✅ **Yes, consolidate them. Most could be Skills directly invoked.**
 
 | Problem | Solution |
 |---------|----------|
-| `/build-api`, `/build-ui`, `/build-web` | One `/build <target>` + shared Build.Skill |
+| `/build-api`, `/build-ui`, `/build-web` | One `/build <target>` Command + shared Build.Skill |
+| Many similar Commands | Evaluate: do they really need Command wrapper? |
+
+**Key insight:** If a Command doesn't add platform constraints (`allowed-tools`, dangerous ops, structured args), it's probably just a Skill that should be invoked directly.
 
 - Keep Command list small and memorable
 - Delegate detailed logic to Skills
-- Commands = UI/UX convenience, not logic storage
+- Commands = UI/UX convenience + security wrapper, not logic storage
+- When in doubt: use Skill directly, add Command wrapper only if justified
 
 ---
 
@@ -184,12 +192,49 @@
 
 ---
 
+## Case 13: Command-as-Wrapper: When is a Command actually needed?
+
+**Question:** "I have a Skill. When should I wrap it in a Command?"
+
+**Answer:** **Only when platform-level features are required.**
+
+Command wrapper is justified ONLY for:
+
+| Constraint | Example | Justification |
+|-----------|---------|---------------|
+| **Tool Sandboxing** | `/deploy` needs `allowed-tools: Bash(docker:*)` | ✅ Restrict dangerous tools |
+| **Dangerous Operation** | `/delete-database` requires explicit trigger | ✅ Prevent accidental execution |
+| **Structured Arguments** | `/create-user` with validated `$ARGUMENTS` | ✅ Input validation at platform level |
+| **Frequent Shortcut** | `/lint` in `/` menu for discoverability | ✅ Common human entry point |
+
+**Anti-pattern examples:**
+
+❌ **Command wrapping a Skill without adding constraints:**
+```
+/organize-skill → just loads meta-skill directly
+(No tool restriction, not dangerous, no structured args, not frequent)
+→ Use Skill directly, no Command wrapper needed
+```
+
+✅ **Justified Command wrapper:**
+```
+/deploy → loads deploy-agent with allowed-tools: Bash(docker:*)
+(Dangerous operation + tool restriction)
+→ Command wrapper justified
+```
+
+**Decision rule:**
+- If the Command adds ZERO platform constraints → it's not a wrapper, it's just a Skill
+- If the Command adds ANY platform constraint → wrapper is justified
+
+---
+
 ## Quick Reference
 
 | Situation | Do This |
 |-----------|---------|
 | Agent needs it automatically | → Skill |
-| User must trigger explicitly | → Command |
+| Skill needs platform constraints | → Add Command wrapper |
 | Complex reasoning/planning | → Agent |
 | Always applies (style guide) | → Rules (CLAUDE.md) |
 | Must run every time | → Embed in workflow |
@@ -197,3 +242,4 @@
 | One agent doing everything | → Split to specialized agents |
 | Command or Agent unclear | → Check if needs code understanding (Case 11) |
 | Skill or Rule unclear | → Check application scope (Case 12) |
+| Command wrapper justified? | → Check Case 13 (platform constraints) |

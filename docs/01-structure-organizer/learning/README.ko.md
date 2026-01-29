@@ -1,6 +1,6 @@
 ---
 title: "AI 에이전트 아키텍처 코스"
-description: "Claude Code, Cursor, OpenCode 같은 AI 코딩 어시스턴트에서 Command, Skill, Agent 설계를 마스터하기 위한 종합 학습 과정"
+description: "Claude Code, Cursor, OpenCode 같은 AI 코딩 어시스턴트에서 Skill, Agent 설계 및 Command 래퍼 판단을 마스터하기 위한 종합 학습 과정"
 type: index
 tags: [AI, Architecture, BestPractice]
 related: [./README.md]
@@ -102,26 +102,43 @@ AI 에이전트 아키텍처가 처음이라면:
 
 ## 빠른 참조
 
-### 세 가지 컴포넌트
+### 아키텍처 모델
+
+```
+Knowledge Layer:  Skill (지식)  |  Agent (추론)
+Access Layer:     Command (선택적 UI + 보안 래퍼)
+```
+
+#### 핵심 타입 (Knowledge Layer)
 
 | 컴포넌트 | 역할 | 트리거 | 예시 |
 |----------|------|--------|------|
-| **Command** | "무엇을 할 것인가" | 사용자 명시적 호출 | `/deploy prod` |
-| **Skill** | "어떻게 할 것인가" | 자동 로드 | React 베스트 프랙티스 |
+| **Skill** | "어떻게 할 것인가" | 자동 로드 / `@path` 직접 호출 | React 베스트 프랙티스 |
 | **Agent** | "누가 수행하는가" | 목표 할당 | 버그 수정 에이전트 |
+
+#### 선택적 래퍼 (Access Layer)
+
+| 컴포넌트 | 역할 | 트리거 | 예시 |
+|----------|------|--------|------|
+| **Command** | Skill/Agent 위의 UI + 보안 래퍼 | 사용자 명시적 `/command` | `/deploy prod` |
+
+> **참고**: Command는 `allowed-tools` 제한, 위험한 작업, 구조화된 `$ARGUMENTS`, `/` 단축키가 필요할 때만 추가합니다.
 
 ### 빠른 결정 트리
 
 ```
-다단계 계획이 필요한가? 
-  → 예: Agent
-  → 아니오: 재사용 가능한가?
-      → 예: 자동 로드해야 하나?
-          → 예: Skill
-          → 아니오: Command
-      → 아니오: 사용자 트리거 필요?
-          → 예: Command
-          → 아니오: 기존 컴포넌트에 포함
+1단계: 핵심 타입 결정
+  다단계 계획이 필요한가?
+    → 예: Agent
+    → 아니오: 도메인 지식으로 자동 로드?
+        → 예: Skill
+        → 아니오: 기존 컴포넌트에 내장
+
+2단계: Command 래퍼 필요?
+  allowed-tools 제한 / 위험한 작업 / 
+  $ARGUMENTS 검증 / / 단축키 필요?
+    → 예: Command 래퍼 추가
+    → 아니오: Skill/Agent 직접 사용
 ```
 
 ### 파일 위치
