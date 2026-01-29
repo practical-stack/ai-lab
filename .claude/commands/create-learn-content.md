@@ -94,7 +94,7 @@ After completion, verify:
 
 ## Key Principle
 
-**This command owns the pipeline.** Skills provide knowledge only.
+**This command owns the pipeline.** Skills provide domain knowledge; this command coordinates the multi-phase workflow.
 
 ```
 ⚡ COMMAND: Orchestrates phases, decides progression

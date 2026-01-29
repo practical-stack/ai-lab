@@ -236,14 +236,14 @@ Does the command need specialized knowledge?
 ### 4.3 Verify Pipeline Ownership
 
 ```
-⚡ COMMAND: Makes decisions, orchestrates
+⚡ COMMAND: Makes decisions, orchestrates pipeline
     ↓
-📚 SKILL: Provides knowledge (never orchestrates)
+📚 SKILL: Provides domain knowledge (can invoke other skills for composition)
     ↓
 🔧 TOOL: Executes operations
 ```
 
-**Check:** Skills should never say "Load skill X" or "Run /command"
+**Check:** If a skill invokes 3+ other skills, consider moving orchestration to a Command or Agent
 
 **Output:** Command with skill integration
 

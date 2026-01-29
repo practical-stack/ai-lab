@@ -100,19 +100,25 @@ function validateSkill(skillPath: string): ValidationResult {
     errors.push(`${todoMatches.length} unresolved TODO item(s) found`);
   }
 
-  // Project-specific: Skill should not orchestrate other Skills/Commands
+  // Project convention: Flag excessive skill-to-skill coupling for review
+  // Note: Claude Code officially supports Skill → Skill invocation via the Skill tool.
+  // This check is an informational hint, not a hard rule.
   // See: meta-structure-organizer/references/combination-patterns.md#anti-pattern-4
   const orchestrationPatterns = [
     { pattern: /Load skill[:\s]/gi, desc: "Load skill" },
     { pattern: /Use skill[:\s]/gi, desc: "Use skill" },
+    { pattern: /Invoke Skill[:\s]/gi, desc: "Invoke Skill" },
     { pattern: /Run \/[a-z-]+/gi, desc: "Run /command" },
   ];
   
+  let orchestrationCount = 0;
   for (const { pattern, desc } of orchestrationPatterns) {
     const matches = content.match(pattern);
-    if (matches && matches.length > 0) {
-      warnings.push(`Orchestration leakage: "${desc}" (${matches.length}x) - Skills should provide knowledge, not orchestration`);
-    }
+    if (matches) orchestrationCount += matches.length;
+  }
+  // Only warn if 3+ invocations — may indicate spaghetti coupling
+  if (orchestrationCount >= 3) {
+    warnings.push(`Skill invokes ${orchestrationCount} other skills/commands — consider whether a Command or Agent should own this pipeline instead`);
   }
 
   const refsDir = join(skillPath, "references");

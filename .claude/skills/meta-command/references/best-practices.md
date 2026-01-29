@@ -152,7 +152,8 @@ Use `@` syntax to reference skills:
 - Provide domain knowledge
 - Define patterns and templates
 - Reference other resources (declaratively)
-- Never orchestrate or execute
+- Can invoke other skills for composition (platform-supported)
+- Avoid orchestrating 3+ unrelated skills (use Command/Agent instead)
 
 ### Anti-Pattern: Hardcoded Knowledge
 

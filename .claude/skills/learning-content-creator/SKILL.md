@@ -32,7 +32,7 @@ Research Materials → Learning Path (EN) → Translation (KO) → Frontmatter
 | Create learning content from research | [workflows/create-learning.md](workflows/create-learning.md) |
 | Translate EN to KO | [workflows/translate.md](workflows/translate.md) |
 
-> **Note**: Phase 4 (Frontmatter) uses the `doc-frontmatter` schema. The calling command handles skill orchestration.
+> **Note**: Phase 4 (Frontmatter) uses the `doc-frontmatter` schema. The calling command coordinates the multi-skill pipeline.
 
 ## Phase 1: ANALYZE Research
 

@@ -127,7 +127,7 @@ Add skill references for domain knowledge:
 2. Apply validation rules from skill
 ```
 
-**Key Principle**: Command orchestrates; Skill provides knowledge only.
+**Key Principle**: Command orchestrates the pipeline; Skills provide domain knowledge. Skills can also invoke other skills via the `Skill` tool when composition is intentional.
 
 ### Phase 5: TEST
 
@@ -265,7 +265,7 @@ For complex analysis, consult oracle agent:
 | Hardcoded domain knowledge | Not reusable | Extract to skill |
 | Missing output examples | Unclear expectations | Add Output section |
 | No safety section | Risk of damage | Add Safety for side effects |
-| Skill orchestration | Wrong pattern | Skills inform, commands orchestrate |
+| Excessive skill coupling | Review needed | If 3+ skills invoked, consider Command/Agent |
 
 ## Validation Checklist
 

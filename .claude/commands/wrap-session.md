@@ -133,7 +133,7 @@ Feature Request 생성 완료.
 
 ## Key Principle
 
-**This command owns the pipeline.** The skill provides knowledge only.
+**This command owns the pipeline.** The skill provides domain knowledge; this command coordinates the extraction workflow.
 
 ```
 ⚡ COMMAND: Orchestrates flow, asks user for next step

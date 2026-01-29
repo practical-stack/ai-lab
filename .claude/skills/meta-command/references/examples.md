@@ -213,7 +213,7 @@ Based on diagnosis:
 
 ## Key Principle
 
-Command owns the pipeline. Skills provide knowledge only.
+Command owns the pipeline. Skills provide domain knowledge; this command coordinates the workflow.
 ```
 
 ---

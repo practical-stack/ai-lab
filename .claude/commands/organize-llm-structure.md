@@ -101,7 +101,7 @@ Implement directly from the generated spec template.
 
 ## Key Principle
 
-**This command owns the pipeline.** Skills provide knowledge only - they never load or call other skills.
+**This command owns the pipeline.** Skills provide domain knowledge. While skills can invoke other skills (platform-supported), this command coordinates the multi-skill workflow.
 
 ```
 ⚡ COMMAND: Orchestrates flow, decides what to use when
