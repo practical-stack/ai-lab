@@ -8,24 +8,24 @@
 
 ## Anti-Pattern Catalog
 
-| # | Anti-Pattern | Severity | Prevention |
-|---|--------------|----------|------------|
-| 1 | Premature Completion | Critical | Evidence-gated verification with freshness window |
-| 2 | Speculation Without Evidence | Critical | Red flag detection + statistical evidence gates |
-| 3 | Recursive Delegation | Critical | Worker preamble + tool blocking |
-| 4 | Orchestrator Self-Implementation | High | Path-based write rules + prompt constraints |
-| 5 | Hedging Language | High | Metacognitive self-monitoring in prompts |
-| 6 | Rubber-Stamp Review | High | Critic calibration backstory |
-| 7 | Stale Evidence | High | 5-minute freshness window |
-| 8 | Role Drift | High | Capability fences (tool + prompt) |
-| 9 | Infinite Retry Loop | Medium | 3-failure circuit breaker |
-| 10 | AI Slop Output | Medium | Explicit aesthetic anti-patterns |
-| 11 | Token Waste | Medium | Tiered model routing |
-| 12 | Stale State Persistence | Medium | Delete-on-complete, not flag-on-complete |
-| 13 | Vague Delegation Prompts | High | 7-section structured delegation format |
-| 14 | Ask-User-About-Codebase | High | Explore-first, ask-preferences-only |
-| 15 | Convergent Design | Medium | Explicit aesthetic diversity requirements |
-| 16 | Context Bleed Between Sections | Medium | XML semantic containers as section boundaries |
+| #   | Anti-Pattern                     | Severity | Prevention                                        |
+| --- | -------------------------------- | -------- | ------------------------------------------------- |
+| 1   | Premature Completion             | Critical | Evidence-gated verification with freshness window |
+| 2   | Speculation Without Evidence     | Critical | Red flag detection + statistical evidence gates   |
+| 3   | Recursive Delegation             | Critical | Worker preamble + tool blocking                   |
+| 4   | Orchestrator Self-Implementation | High     | Path-based write rules + prompt constraints       |
+| 5   | Hedging Language                 | High     | Metacognitive self-monitoring in prompts          |
+| 6   | Rubber-Stamp Review              | High     | Critic calibration backstory                      |
+| 7   | Stale Evidence                   | High     | 5-minute freshness window                         |
+| 8   | Role Drift                       | High     | Capability fences (tool + prompt)                 |
+| 9   | Infinite Retry Loop              | Medium   | 3-failure circuit breaker                         |
+| 10  | AI Slop Output                   | Medium   | Explicit aesthetic anti-patterns                  |
+| 11  | Token Waste                      | Medium   | Tiered model routing                              |
+| 12  | Stale State Persistence          | Medium   | Delete-on-complete, not flag-on-complete          |
+| 13  | Vague Delegation Prompts         | High     | 7-section structured delegation format            |
+| 14  | Ask-User-About-Codebase          | High     | Explore-first, ask-preferences-only               |
+| 15  | Convergent Design                | Medium   | Explicit aesthetic diversity requirements         |
+| 16  | Context Bleed Between Sections   | Medium   | XML semantic containers as section boundaries     |
 
 ---
 
@@ -38,12 +38,14 @@
 **Severity:** Critical -- This is the most damaging anti-pattern because it produces invisible failures. Downstream agents and the user trust the completion claim, building on a potentially broken foundation. A premature completion in Phase 2 of autopilot can cascade through Phase 3 (QA) and Phase 4 (Validation), wasting the entire pipeline.
 
 **Detection Signals:**
+
 - Agent output ends with a claim like "The feature is implemented" without any command output
 - No build/test command appears in the agent's tool usage before the final message
 - The completion message uses future-tense or conditional language ("this should work")
 - No exit codes, test counts, or lint results appear in the response
 
 **Why It's Bad:**
+
 - Code may not compile, and the agent has no way to know without running the build
 - Tests may fail on edge cases the model did not consider
 - Functionality may not match the original requirements
@@ -65,6 +67,7 @@ The verification module defines seven standard checks: `build_success`, `test_pa
 Additionally, the Mandatory Architect Gate ensures that no task reaches final completion without a peer review from the architect agent running on Opus.
 
 **Enforcement:**
+
 - `src/features/verification/` -- Reusable verification module with `createProtocol()`, `runVerification()`, `validateChecklist()`
 - Agent prompts include the Iron Law verbatim in CLAUDE.md, architect.md, executor.md, ralph/SKILL.md
 - Mandatory Architect approval gate before final completion (spawned as a separate Task)
@@ -96,6 +99,7 @@ Feature is complete with verified evidence."
 **Severity:** Critical -- Speculation compounds. A speculated root cause leads to a speculated fix, which creates a new bug that requires further speculation. The system explicitly treats this as a trust violation: if an agent produces unfounded claims, the entire multi-agent workflow's output quality degrades.
 
 **Detection Signals:**
+
 - Agent recommends a fix without citing a specific `file:line` location
 - Analysis contains phrases like "probably," "likely," "I think," "it seems"
 - Agent did not use Read, Grep, or LSP tools before making claims about code behavior
@@ -103,6 +107,7 @@ Feature is complete with verified evidence."
 - Bug analysis jumps directly to solutions without showing the investigation path
 
 **Why It's Bad:**
+
 - Fixes address symptoms, not root causes, leaving the actual bug in place
 - Recommendations may not apply to the actual codebase (the model hallucinates API shapes)
 - Builds false confidence in incorrect analysis -- the user trusts the agent's authority
@@ -119,6 +124,7 @@ Three complementary enforcement strategies prevent speculation:
 3. **File:line citations**: The explore agent's output contract requires precise locations. From `agents/explore.md`: "Your response has FAILED if caller needs to ask 'but where exactly?'" All claims must reference specific file paths and line numbers.
 
 **Enforcement:**
+
 - Architect prompt: "Red Flags: Expressing confidence without citing file:line evidence"
 - Scientist prompt: "NO SPECULATION WITHOUT EVIDENCE" + inline marker format `[STAT:name]`
 - Explore prompt: failure condition if locations are imprecise
@@ -154,6 +160,7 @@ Fix: Add guard at auth.ts:46: `if (!req.user) return res.status(401).json({...})
 **Severity:** Critical -- Without containment, a single user request can spawn an exponentially growing tree of agents. Each agent costs tokens, and the results from deeply nested agents may never propagate back to the orchestrator. This is the multi-agent equivalent of a fork bomb.
 
 **Detection Signals:**
+
 - A worker agent's output contains `Task(subagent_type=...)` calls
 - Agent trace shows more than 2 levels of nesting
 - Token usage spikes unexpectedly on a simple task
@@ -161,6 +168,7 @@ Fix: Add guard at auth.ts:46: `if (!req.user) return res.status(401).json({...})
 - Worker agents produce orchestration-style output ("I'll delegate this to...") instead of direct work
 
 **Why It's Bad:**
+
 - Uncontrolled cost multiplication -- each layer multiplies token usage
 - Infinite recursion potential if no depth limit exists
 - No accountability -- work disappears into nested agents whose output is never collected
@@ -171,6 +179,7 @@ Fix: Add guard at auth.ts:46: `if (!req.user) return res.status(401).json({...})
 Two complementary mechanisms prevent recursive delegation:
 
 1. **Worker preamble** prepended to every spawned task (from `src/agents/preamble.ts`):
+
 ```
 CONTEXT: You are a WORKER agent, not an orchestrator.
 RULES:
@@ -183,13 +192,15 @@ TASK:
 ```
 
 2. **Tool blocking** via YAML frontmatter for agents that must never delegate:
+
 ```yaml
-disallowedTools: Task  # in executor frontmatter
+disallowedTools: Task # in executor frontmatter
 ```
 
 The preamble is the prompt-level enforcement. The `disallowedTools` is the infrastructure-level enforcement. Together they make recursive delegation both instructionally forbidden and physically impossible.
 
 **Enforcement:**
+
 - `src/agents/preamble.ts` -- Worker preamble function `wrapWithPreamble()`
 - Executor prompt: "BLOCKED ACTIONS: Task tool: BLOCKED (no delegation)"
 - Scientist prompt: "NEVER delegate to other agents"
@@ -225,12 +236,14 @@ Changes complete. Both files modified."
 **Severity:** High -- This is not Critical because the code change itself may be correct. The severity is High because it systematically degrades the system: it bypasses model routing (wasting Opus tokens on simple edits), skips the verification protocol, forgoes specialist prompt guidance, and undermines the delegation audit trail.
 
 **Detection Signals:**
+
 - The orchestrator uses Write or Edit tools on `.ts`, `.py`, `.go`, or other source files
 - No Task tool calls precede source file modifications
 - The delegation audit log at `.omc/logs/delegation-audit.jsonl` shows warnings
 - The `pre-tool-use` hook fires a delegation enforcement warning
 
 **Why It's Bad:**
+
 - Bypasses the model routing system: uses $15/MTok Opus for edits that Haiku ($0.25/MTok) could handle
 - Skips the verification protocol that executor agents are prompted to follow
 - No specialist prompt guidance (executor prompts include code quality rules, testing reminders)
@@ -245,6 +258,7 @@ Allowed paths (direct write OK): `~/.claude/**`, `.omc/**`, `.claude/**`, `CLAUD
 Warned paths (should delegate): `.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.go`, `.rs`, `.java`, `.c`, `.cpp`, `.h`, `.svelte`, `.vue`
 
 The delegation matrix explicitly maps every action to its delegatee:
+
 ```
 | Single-line code change | NEVER do directly | executor-low |
 | Multi-file changes      | NEVER do directly | executor / executor-high |
@@ -253,6 +267,7 @@ The delegation matrix explicitly maps every action to its delegatee:
 From CLAUDE.md: "RULE 3: NEVER do code changes directly -- delegate to executor"
 
 **Enforcement:**
+
 - `pre-tool-use` hook fires delegation enforcement warnings when the orchestrator writes source files
 - Soft enforcement via delegation audit log at `.omc/logs/delegation-audit.jsonl`
 - Prompt: "RULE 3: NEVER do code changes directly -- delegate to executor"
@@ -272,7 +287,7 @@ GOOD (orchestrator delegates):
 → Task(subagent_type="oh-my-claudecode:executor-low",
        model="haiku",
        prompt="Fix the typo in src/utils/format.ts:12.
-               Change 'formated' to 'formatted'.")
+               Change 'formatted' to 'formatted'.")
 ```
 
 ---
@@ -284,12 +299,14 @@ GOOD (orchestrator delegates):
 **Severity:** High -- Hedging language is the leading indicator of Premature Completion (anti-pattern #1). When an agent says "this should work," it is revealing that it has not run the code. The severity is High rather than Critical because hedging itself does not cause failures -- it signals that verification was skipped, and the skipped verification is what causes failures.
 
 **Detection Signals:**
+
 - Agent output contains "should," "probably," "seems to," "likely," "I believe," "I think"
 - Completion claims are phrased conditionally ("this should fix the issue")
 - No build/test output accompanies the hedged claim
 - Agent expresses satisfaction ("looks good") before running any verification command
 
 **Why It's Bad:**
+
 - Signals that the agent is operating on belief, not evidence
 - Creates a false impression of confidence that downstream consumers may not question
 - Downstream agents and the user may not notice the hedge buried in otherwise confident prose
@@ -301,6 +318,7 @@ The system teaches agents to treat their own hedging as a metacognitive diagnost
 
 ```markdown
 Red Flags (STOP and verify):
+
 - Using "should", "probably", "seems to"
 - Expressing satisfaction before running verification
 - Claiming completion without fresh test/build output
@@ -309,6 +327,7 @@ Red Flags (STOP and verify):
 This is a metacognitive prompt pattern: the model monitors its own language generation and uses certain tokens as triggers for behavioral redirection.
 
 **Enforcement:**
+
 - Present in architect.md, executor.md, CLAUDE.md -- three independent reinforcement points
 - The verification protocol requires actual command output, not verbal assurance
 - The Iron Law's step 4 ("ONLY THEN make the claim with evidence") makes hedging structurally unnecessary
@@ -341,6 +360,7 @@ Schema changes are backward-compatible (verified)."
 **Severity:** High -- The Mandatory Architect Gate is the system's last line of defense against premature completion. If the gate rubber-stamps, every upstream anti-pattern becomes undetectable. The severity is High because it silently disables quality assurance rather than causing direct failures.
 
 **Detection Signals:**
+
 - Reviewer output is shorter than 3 sentences
 - Review contains no specific file references or line numbers
 - Approval is given without mentioning any concerns, trade-offs, or risks
@@ -348,6 +368,7 @@ Schema changes are backward-compatible (verified)."
 - Verdict lacks the structured justification format (the critic requires structured OKAY/REJECT with reasoning)
 
 **Why It's Bad:**
+
 - The verification gate becomes a meaningless formality
 - Defects pass through to the user as "approved" work
 - Creates a false sense of quality assurance -- the user believes work was reviewed
@@ -367,11 +388,13 @@ rough drafts that require refinement. Plans from this author average
 This backstory achieves two goals: (1) it primes the model to expect imperfection, countering the LLM tendency toward agreeable output, and (2) it sets a concrete statistical anchor ("7 rejections") that calibrates strictness without being a rigid threshold.
 
 Additionally, the critic's verdict format requires structured justification:
+
 - OKAY must include what was verified and any remaining risks
 - REJECT must include specific feedback items that the planner must address
 - A bare "OKAY" with no justification is structurally invalid
 
 **Enforcement:**
+
 - `agents/critic.md` -- Calibrated strictness via backstory narrative
 - Ralplan skill: "CRITICAL: This phase MUST execute. The Critic is the gatekeeper."
 - Critic verdict format enforces structured justification, not just OKAY/REJECT
@@ -409,12 +432,14 @@ The plan requires these three items addressed before re-review."
 **Severity:** High -- Stale evidence creates a specific and insidious failure mode unique to LLM agents. Unlike human developers who re-run tests instinctively after changes, LLMs treat all in-context information as equally valid regardless of temporal ordering. A test that passed before a refactor is treated as proof the refactor works.
 
 **Detection Signals:**
+
 - Agent cites verification results without running a new command
 - Significant time gap between the last verification command and the completion claim
 - Multiple file edits occurred between the cited evidence and the current claim
 - Agent says "as we verified earlier" or "the tests passed previously"
 
 **Why It's Bad:**
+
 - Evidence from 10 minutes ago may be completely invalidated by subsequent edits
 - The agent cannot distinguish "this test passed before my changes" from "this test passes with my changes"
 - Creates false confidence that compounds: stale evidence supports premature completion
@@ -433,6 +458,7 @@ Evidence collected more than 5 minutes ago is rejected by the verification modul
 Agent prompts reinforce this with emphasis on the word "fresh": "FRESH verification evidence" appears in multiple agent files. The Iron Law's structure also implicitly prevents staleness: steps 1-3 (identify, run, read) must be performed immediately before step 4 (claim).
 
 **Enforcement:**
+
 - `src/features/verification/index.ts` -- Programmatic staleness detection with 5-minute window
 - Agent prompts emphasize "FRESH" verification evidence
 - The Iron Law's sequential structure (identify → run → read → claim) prevents interleaving old evidence
@@ -464,6 +490,7 @@ All evidence is fresh. Feature is complete."
 **Severity:** High -- Role drift undermines the specialist system that justifies the multi-agent architecture. If agents drift into each other's roles, the system degrades to a single-agent model running on the wrong model tier with the wrong prompt. The severity is High because the work produced may still be correct, but it bypasses the quality and cost controls that the role system provides.
 
 **Detection Signals:**
+
 - An architect agent uses Write or Edit tools (it should be read-only)
 - An explorer agent modifies files instead of reporting findings
 - A planner agent starts implementing steps instead of producing a plan
@@ -471,6 +498,7 @@ All evidence is fresh. Feature is complete."
 - Tool usage patterns do not match the agent's defined capability set
 
 **Why It's Bad:**
+
 - Bypasses the specialist system -- each role has prompt guidance tuned for its task
 - Uses the wrong model tier -- an architect running on Opus should not do Haiku-level edits
 - Produces lower quality results (the agent's prompt is not optimized for the drifted task)
@@ -481,17 +509,19 @@ All evidence is fresh. Feature is complete."
 Dual enforcement prevents role drift:
 
 1. **Tool restrictions** in YAML frontmatter physically block forbidden actions:
+
 ```yaml
 # agents/architect.md frontmatter
 disallowedTools: Write, Edit
 ```
 
 2. **Identity reinforcement** in prompts uses contrastive definitions stated 5+ times in different formulations:
+
 ```markdown
-| What You ARE          | What You ARE NOT   |
-|-----------------------|--------------------|
-| Strategic consultant  | Code writer        |
-| Requirements gatherer | Task executor      |
+| What You ARE          | What You ARE NOT |
+| --------------------- | ---------------- |
+| Strategic consultant  | Code writer      |
+| Requirements gatherer | Task executor    |
 ```
 
 The prompt also uses XML semantic containers like `<Role>`, `<Critical_Constraints>`, and `<Operational_Phases>` to reinforce role boundaries through document structure.
@@ -499,6 +529,7 @@ The prompt also uses XML semantic containers like `<Role>`, `<Critical_Constrain
 Neither enforcement alone is sufficient. Tool restrictions without prompt explanation leave the agent confused about why its actions fail. Prompt constraints without tool restrictions are unreliable -- models occasionally ignore instructions under pressure. Together they create reliable behavioral boundaries.
 
 **Enforcement:**
+
 - Tool blocking via `disallowedTools` in frontmatter makes drift physically impossible for restricted actions
 - Identity prompts stated 5+ times in different formulations (anti-drift redundancy)
 - Contrastive identity tables ("What You ARE / What You ARE NOT") clarify boundaries
@@ -540,6 +571,7 @@ Ensure the catch block preserves this behavior."
 **Severity:** Medium -- The severity is Medium rather than High because the loop is bounded by context window limits (the agent will eventually run out of tokens). However, before that limit, the agent wastes significant tokens on futile retries. The 3-failure circuit breaker elevates this from a systemic risk to a contained nuisance.
 
 **Detection Signals:**
+
 - Agent applies the same edit pattern more than twice
 - Error messages repeat across consecutive tool outputs
 - Agent's "fix" creates a new error that triggers another fix attempt
@@ -547,6 +579,7 @@ Ensure the catch block preserves this behavior."
 - Agent does not reference previous failed attempts when trying new approaches
 
 **Why It's Bad:**
+
 - Wastes tokens on identical failing approaches
 - May corrupt the codebase by layering bad fixes on top of each other
 - Delays resolution -- the time spent looping could have been spent escalating
@@ -568,6 +601,7 @@ After 3 consecutive failures on the same issue:
 This implements progressive escalation: self → specialist agent → Architect → user. The escalation path ensures that failures eventually reach an entity capable of resolving them, rather than looping at the wrong abstraction level.
 
 **Enforcement:**
+
 - `agents/architect.md` -- Circuit breaker instructions in the recovery protocol
 - `skills/orchestrate/SKILL.md` -- Escalation path definition
 - Ralph skill: iteration counter with max iterations prevents infinite loop at the workflow level
@@ -606,6 +640,7 @@ Escalating to Architect with context:
 **Severity:** Medium -- AI slop does not break functionality, which is why the severity is Medium. However, it degrades the user experience and signals that the system is not genuinely intelligent. For frontend work specifically, slop-quality design undermines user trust in the entire output.
 
 **Detection Signals:**
+
 - Every function has a JSDoc comment restating the function name ("Gets the user" for `getUser()`)
 - UI designs use the same color palette across all generated components
 - Communication starts with filler phrases before substantive content
@@ -613,6 +648,7 @@ Escalating to Architect with context:
 - Variable names are overly verbose (`userDataObjectInstance` instead of `user`)
 
 **Why It's Bad:**
+
 - Makes output look machine-generated, reducing user trust
 - Unnecessary comments add maintenance burden without information value
 - Generic designs fail to meet the specific aesthetic requirements of real projects
@@ -623,8 +659,10 @@ Escalating to Architect with context:
 The system combats AI slop through explicit anti-pattern lists in specialist prompts.
 
 Designer agents have aesthetic anti-patterns:
+
 ```markdown
 Anti-Patterns (NEVER):
+
 - Generic fonts (Inter, Roboto, Arial)
 - Purple gradients on white (AI slop)
 - Predictable layouts
@@ -632,6 +670,7 @@ Anti-Patterns (NEVER):
 ```
 
 Communication style rules in the orchestrate skill:
+
 ```markdown
 No Flattery: Never start with "Great question!"
 No Status Updates: Never start with "I'm on it..."
@@ -642,6 +681,7 @@ Start immediately. No acknowledgments.
 Code quality is enforced through the executor prompt's output format requirements, which demand dense, purposeful output rather than padded responses.
 
 **Enforcement:**
+
 - Designer agent prompts: explicit list of banned aesthetic choices
 - Orchestrate skill: communication anti-patterns in style rules
 - Executor prompt: "Dense > verbose" as a general output principle
@@ -679,6 +719,7 @@ Fix: add a null guard before the destructuring assignment."
 **Severity:** Medium -- Token waste does not affect correctness, which limits its severity. However, it directly impacts cost. The system reports ~47% cost reduction from proper tiered routing. Failing to route correctly eliminates this optimization entirely.
 
 **Detection Signals:**
+
 - Task delegation calls lack an explicit `model` parameter
 - Simple lookups ("What does this function return?") route to Opus
 - File read/grep operations use Sonnet or Opus agents
@@ -686,6 +727,7 @@ Fix: add a null guard before the destructuring assignment."
 - Cost per session is consistently higher than expected for the task complexity
 
 **Why It's Bad:**
+
 - Opus costs 60x more than Haiku ($15 vs $0.25 per million tokens)
 - Simple tasks do not benefit from Opus-level reasoning
 - Wasted budget reduces the number of total tasks the user can run
@@ -695,17 +737,18 @@ Fix: add a null guard before the destructuring assignment."
 **How to Avoid:**
 Always pass the `model` parameter explicitly when delegating. Use the complexity scoring system:
 
-| Task Complexity | Model | When to Use |
-|-----------------|-------|-------------|
-| Simple lookup | `haiku` | "What does this return?", "Find definition of X" |
-| Standard work | `sonnet` | "Add error handling", "Implement feature" |
-| Complex reasoning | `opus` | "Debug race condition", "Refactor architecture" |
+| Task Complexity   | Model    | When to Use                                      |
+| ----------------- | -------- | ------------------------------------------------ |
+| Simple lookup     | `haiku`  | "What does this return?", "Find definition of X" |
+| Standard work     | `sonnet` | "Add error handling", "Implement feature"        |
+| Complex reasoning | `opus`   | "Debug race condition", "Refactor architecture"  |
 
 The model routing pipeline (15+ signals, weighted scoring, priority-based rules) automates this when the orchestrator routes through it. But explicit model specification in delegation calls provides additional control.
 
 Ecomode (`/ecomode` or "eco" keyword) provides a token-conscious execution mode that defaults all delegations to the lowest viable tier.
 
 **Enforcement:**
+
 - CLAUDE.md: "ALWAYS pass `model` parameter explicitly when delegating!"
 - `src/features/model-routing/` -- Automated 4-stage routing pipeline
 - Agent agent selection guide in CLAUDE.md maps every task type to its optimal agent and model
@@ -736,12 +779,14 @@ Task(subagent_type="oh-my-claudecode:explore",
 **Severity:** Medium -- The severity is Medium because stale state typically causes a false resume attempt that fails quickly rather than corrupting data. However, it confuses users and wastes the first few turns of a new session on unnecessary recovery logic.
 
 **Detection Signals:**
+
 - `.omc/state/` directory contains state files for completed workflows
 - A new session begins with "Resuming previous ralph loop..." for a task that was finished
 - State files have `active: false` instead of being absent
 - Multiple state files exist for the same workflow type (e.g., two ralph-state.json variants)
 
 **Why It's Bad:**
+
 - Future sessions misinterpret completed workflows as in-progress
 - The `session-start` hook reads state files to restore modes -- stale files trigger false restores
 - Users see confusing "resuming..." messages for work that was already done
@@ -764,6 +809,7 @@ From `skills/ralph/SKILL.md`: "IMPORTANT: Delete state files on successful compl
 The `StateManager` in `src/features/state-manager/` provides standard paths and lifecycle methods. The `delete()` method should be called on completion, not `write({ active: false })`.
 
 **Enforcement:**
+
 - `skills/ralph/SKILL.md` -- Explicit instruction to delete, not flag
 - `src/features/state-manager/` -- Standard state lifecycle with `delete()` method
 - `session-end` hook includes cleanup logic for orphaned state files
@@ -797,6 +843,7 @@ StateManager.delete('.omc/state/ralph-state.json');
 **Severity:** High -- Vague delegation is the root cause of many downstream failures. An agent that receives "fix the auth bug" has no idea which auth bug, what file, what the expected behavior is, or what constraints apply. The severity is High because it wastes the entire delegation (agent tokens + orchestrator tokens for re-delegation) and can cascade if the vaguely-instructed agent produces subtly wrong output that passes review.
 
 **Detection Signals:**
+
 - Delegation prompts are fewer than 3 sentences
 - The prompt lacks file paths, function names, or specific locations
 - No expected outcome is stated ("fix it" without defining "fixed")
@@ -805,6 +852,7 @@ StateManager.delete('.omc/state/ralph-state.json');
 - The agent produces output that does not match what the orchestrator intended
 
 **Why It's Bad:**
+
 - Agents misunderstand requirements and produce wrong output
 - Wasted tokens on the failed delegation plus the re-delegation
 - Clarifying questions add latency (a full round-trip through the orchestrator)
@@ -827,6 +875,7 @@ The orchestrate skill defines a 7-section delegation format that ensures every a
 This structure eliminates ambiguity by forcing the orchestrator to think through each aspect of the delegation before sending it. The "MUST NOT DO" section is particularly important for preventing agents from taking destructive or wasteful approaches.
 
 **Enforcement:**
+
 - `skills/orchestrate/SKILL.md` -- Delegation format template
 - The structured agent communication pattern (Design Pattern #12) defines inter-agent protocols
 - Pipeline stages pass structured `pipeline_context` JSON between stages
@@ -869,6 +918,7 @@ CONTEXT: The bug was reported in issue #234. The crash occurs when
 **Severity:** High -- This anti-pattern degrades the user experience from "autonomous AI assistant" to "interactive questionnaire." The severity is High because it violates the core philosophy of zero-learning-curve and autonomous operation. Every question about the codebase signals a failure to use available tools.
 
 **Detection Signals:**
+
 - Planning interview asks "What framework/language are you using?"
 - Agent asks about file structure that could be discovered via `ls` or `find`
 - Questions about existing implementation that could be answered by reading code
@@ -876,6 +926,7 @@ CONTEXT: The bug was reported in issue #234. The crash occurs when
 - Multiple questions in sequence about facts that are all discoverable via exploration
 
 **Why It's Bad:**
+
 - Wastes user time answering questions the system can answer itself
 - Signals incompetence -- the user expected an autonomous system, not a survey
 - Delays task completion while waiting for user responses
@@ -899,6 +950,7 @@ The plan skill explicitly separates two categories of information:
    - Trade-off preferences (speed vs thoroughness?)
 
 The broad request detection system triggers exploration before planning:
+
 ```
 When BROAD REQUEST detected:
 1. Invoke `explore` agent to understand codebase
@@ -908,6 +960,7 @@ When BROAD REQUEST detected:
 ```
 
 **Enforcement:**
+
 - Plan skill instructions explicitly separate codebase facts from user preferences
 - Broad request detection triggers exploration before planning begins
 - The `AskUserQuestion` tool provides structured UI for preference questions only
@@ -949,6 +1002,7 @@ Now for your preferences:
 **Severity:** Medium -- Convergent design does not break functionality, which limits severity. However, it produces output that looks generic and unpolished. For users building real products, convergent design means their application looks identical to every other AI-generated UI. The severity is Medium because the designer agents include specific countermeasures.
 
 **Detection Signals:**
+
 - Multiple generated components share the same font, color scheme, and layout
 - The design defaults to light theme with purple accent color
 - Card-based layouts appear in every component regardless of content type
@@ -957,6 +1011,7 @@ Now for your preferences:
 - Generated dashboards all look interchangeable
 
 **Why It's Bad:**
+
 - Products look generic and indistinguishable from other AI output
 - Fails to match the specific aesthetic needs of the project
 - Creates a homogeneous portfolio if the user generates multiple components
@@ -972,8 +1027,10 @@ different fonts, different aesthetics.
 ```
 
 The explicit anti-pattern list bans the most common convergence targets:
+
 ```markdown
 Anti-Patterns (NEVER):
+
 - Generic fonts (Inter, Roboto, Arial)
 - Purple gradients on white (AI slop)
 - Predictable layouts
@@ -983,6 +1040,7 @@ Anti-Patterns (NEVER):
 Additionally, the designer-high (Opus tier) agent uses the `visual-engineering` delegation category, which sets temperature to 0.7 -- higher than the standard 0.3 -- to encourage creative variation.
 
 **Enforcement:**
+
 - Designer agent prompts: banned aesthetic choices and mandatory variation
 - `visual-engineering` delegation category: temperature 0.7 for creative tasks
 - Designer-high (Opus): full creative latitude with explicit diversity instructions
@@ -1016,6 +1074,7 @@ Component C: Space Grotesk, dark navy (#1a1a2e), glassmorphism cards,
 **Severity:** Medium -- Context bleed rarely causes catastrophic failures, which limits its severity. However, it produces subtle behavioral incorrectness: an agent applies the wrong rule at the wrong time, producing output that is slightly off. The severity is Medium because the XML semantic container system provides structural mitigation.
 
 **Detection Signals:**
+
 - Agent applies Phase 1 constraints during Phase 2 execution
 - Communication style rules appear in inter-agent technical messages
 - An agent's behavior does not match the phase it is currently in
@@ -1023,6 +1082,7 @@ Component C: Space Grotesk, dark navy (#1a1a2e), glassmorphism cards,
 - Role identity from one section contradicts role identity in another
 
 **Why It's Bad:**
+
 - The model applies wrong-phase instructions, producing subtly incorrect behavior
 - Constraints meant for one context leak into another, over-constraining the agent
 - Without clear boundaries, prompt authors cannot predict which instructions will interact
@@ -1062,6 +1122,7 @@ Each XML tag creates a semantic boundary that the model interprets as a context 
 This is more effective than markdown headers alone because XML tags are semantically typed (the tag name conveys the section's purpose), whereas markdown headers are visually typed (the `##` conveys hierarchy but not semantics).
 
 **Enforcement:**
+
 - Agent prompt templates use XML semantic containers (`<Role>`, `<Critical_Constraints>`, `<Operational_Phases>`, `<Output_Format>`, `<Quality_Standards>`)
 - The base agent template at `agents/templates/base-agent.md` defines the standard section structure
 - Mustache-style template rendering preserves XML structure during prompt assembly
@@ -1108,24 +1169,24 @@ Phases define workflow -- no bleed between sections]
 
 ## Enforcement Mechanisms Summary
 
-| # | Anti-Pattern | Mechanism | Type | Scope |
-|---|--------------|-----------|------|-------|
-| 1 | Premature Completion | Verification protocol + Iron Law + Architect gate | Runtime check + workflow gate | Per-completion |
-| 2 | Speculation Without Evidence | Statistical evidence gates + file:line citations | Prompt pattern + output format | Per-agent |
-| 3 | Recursive Delegation | Worker preamble + `disallowedTools: Task` | Prompt injection + infrastructure | Per-invocation |
-| 4 | Orchestrator Self-Implementation | Path-based write rules + pre-tool-use hook | Soft warning + delegation audit | Orchestrator |
-| 5 | Hedging Language | Red flag self-monitoring + verification protocol | Metacognitive prompt | Per-agent |
-| 6 | Rubber-Stamp Review | Calibration backstory + structured verdict format | Prompt narrative + output format | Critic agent |
-| 7 | Stale Evidence | 5-minute freshness window in verification module | Runtime check | Per-evidence |
-| 8 | Role Drift | Tool restrictions + contrastive identity tables | Infrastructure + prompt redundancy | Per-agent |
-| 9 | Infinite Retry Loop | 3-failure circuit breaker + escalation path | Prompt pattern + workflow | Per-task |
-| 10 | AI Slop Output | Banned aesthetic lists + communication style rules | Explicit anti-pattern list | Per-agent |
-| 11 | Token Waste | Model routing pipeline + explicit `model` parameter | Automated + manual routing | Per-delegation |
-| 12 | Stale State Persistence | Delete-on-complete + StateManager lifecycle | Convention + cleanup hooks | Per-mode |
-| 13 | Vague Delegation Prompts | 7-section delegation format + delegation categories | Prompt template + semantics | Per-delegation |
-| 14 | Ask-User-About-Codebase | Explore-first flow + fact/preference separation | Workflow design | Planning phase |
-| 15 | Convergent Design | Banned aesthetics + temperature 0.7 + diversity mandate | Prompt + model config | Designer agents |
-| 16 | Context Bleed Between Sections | XML semantic containers + typed section tags | Prompt structure | Per-agent prompt |
+| #   | Anti-Pattern                     | Mechanism                                               | Type                               | Scope            |
+| --- | -------------------------------- | ------------------------------------------------------- | ---------------------------------- | ---------------- |
+| 1   | Premature Completion             | Verification protocol + Iron Law + Architect gate       | Runtime check + workflow gate      | Per-completion   |
+| 2   | Speculation Without Evidence     | Statistical evidence gates + file:line citations        | Prompt pattern + output format     | Per-agent        |
+| 3   | Recursive Delegation             | Worker preamble + `disallowedTools: Task`               | Prompt injection + infrastructure  | Per-invocation   |
+| 4   | Orchestrator Self-Implementation | Path-based write rules + pre-tool-use hook              | Soft warning + delegation audit    | Orchestrator     |
+| 5   | Hedging Language                 | Red flag self-monitoring + verification protocol        | Metacognitive prompt               | Per-agent        |
+| 6   | Rubber-Stamp Review              | Calibration backstory + structured verdict format       | Prompt narrative + output format   | Critic agent     |
+| 7   | Stale Evidence                   | 5-minute freshness window in verification module        | Runtime check                      | Per-evidence     |
+| 8   | Role Drift                       | Tool restrictions + contrastive identity tables         | Infrastructure + prompt redundancy | Per-agent        |
+| 9   | Infinite Retry Loop              | 3-failure circuit breaker + escalation path             | Prompt pattern + workflow          | Per-task         |
+| 10  | AI Slop Output                   | Banned aesthetic lists + communication style rules      | Explicit anti-pattern list         | Per-agent        |
+| 11  | Token Waste                      | Model routing pipeline + explicit `model` parameter     | Automated + manual routing         | Per-delegation   |
+| 12  | Stale State Persistence          | Delete-on-complete + StateManager lifecycle             | Convention + cleanup hooks         | Per-mode         |
+| 13  | Vague Delegation Prompts         | 7-section delegation format + delegation categories     | Prompt template + semantics        | Per-delegation   |
+| 14  | Ask-User-About-Codebase          | Explore-first flow + fact/preference separation         | Workflow design                    | Planning phase   |
+| 15  | Convergent Design                | Banned aesthetics + temperature 0.7 + diversity mandate | Prompt + model config              | Designer agents  |
+| 16  | Context Bleed Between Sections   | XML semantic containers + typed section tags            | Prompt structure                   | Per-agent prompt |
 
 ---
 
