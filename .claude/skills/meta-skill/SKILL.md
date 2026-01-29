@@ -1,17 +1,31 @@
 ---
 name: meta-skill
 description: |
-  Guide for creating effective AI agent skills. Use when users want to create a new skill,
-  update an existing skill, or need guidance on skill architecture and best practices.
-  Triggers: "create a skill", "new skill", "make a skill", "skill template"
+  Guide for creating and validating AI agent skills. Use when users want to create a new skill,
+  update an existing skill, validate skills, or need guidance on skill architecture and best practices.
+  
+  USE WHEN:
+  - "create a skill", "new skill", "make a skill", "skill template"
+  - "validate skill", "check skill", "organize skill", "skill audit"
+  
+  DO NOT USE WHEN:
+  - Creating agents (use meta-agent)
+  - Creating commands (use meta-command)
 ---
 
 # Meta-Skill Creator
 
-A meta-skill that helps create new skills for AI agents. This skill provides structured workflows,
+A meta-skill that helps create and validate skills for AI agents. This skill provides structured workflows,
 automation scripts, and quality assurance mechanisms for skill development.
 
 > **Output Language**: All generated skill content (SKILL.md, comments, documentation) will be in **English**.
+
+## Workflow Routing
+
+| Intent | Workflow |
+|--------|----------|
+| Create a new skill (full process) | [Phase-by-phase below](#skill-creation-workflow-6-phases) |
+| Validate existing skill(s) | [workflows/validate-skill.md](workflows/validate-skill.md) |
 
 ## Quick Start
 

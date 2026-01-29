@@ -1,9 +1,16 @@
 ---
 name: meta-agent
 description: |
-  Guide for creating specialized AI agents (subagents). Use when users want to create
-  a new agent, define agent configurations, or need guidance on agent architecture.
-  Triggers: "create an agent", "new agent", "make a subagent", "agent template"
+  Guide for creating and validating specialized AI agents (subagents). Use when users want to create
+  a new agent, validate agents, define agent configurations, or need guidance on agent architecture.
+  
+  USE WHEN:
+  - "create an agent", "new agent", "make a subagent", "agent template"
+  - "validate agent", "check agent", "organize agent", "agent audit"
+  
+  DO NOT USE WHEN:
+  - Creating skills (use meta-skill)
+  - Creating commands (use meta-command)
 ---
 
 # Meta-Agent Creator
@@ -18,6 +25,7 @@ Supports Claude Code and OpenCode platforms.
 | Intent | Workflow |
 |--------|----------|
 | Create a new agent (full process) | [workflows/create-agent.md](workflows/create-agent.md) |
+| Validate existing agent(s) | [workflows/validate-agent.md](workflows/validate-agent.md) |
 
 ## Core Resources
 

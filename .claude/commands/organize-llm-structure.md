@@ -22,14 +22,14 @@ This command orchestrates the full structure creation pipeline:
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  Prerequisite: Feature Request                              │
-│  ⚡ /wrap-session (if extracting from session work)         │
+│  📚 meta-session-wrapper skill (if extracting from session) │
 │                                                             │
 │  Phase 1: DIAGNOSE                                          │
 │  📚 meta-structure-organizer skill                          │
 │  Input: Feature Request → Output: Type + Spec               │
 │                                                             │
 │  Phase 2: CREATE                                            │
-│  📚 meta-skill-creator OR meta-agent-creator skill          │
+│  📚 meta-skill OR meta-agent skill                          │
 │  Input: Spec → Output: Implementation                       │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
@@ -39,13 +39,9 @@ This command orchestrates the full structure creation pipeline:
 
 ### Prerequisite: Feature Request
 
-If you need to extract a pattern from completed session work first:
-
-```
-/wrap-session
-```
-
-This command handles session extraction and outputs a Feature Request.
+If you need to extract a pattern from completed session work first, use the
+meta-session-wrapper skill (@.claude/skills/meta-session-wrapper/SKILL.md).
+It handles session extraction and outputs a Feature Request.
 
 Skip if you already have a clear feature request.
 
@@ -62,18 +58,18 @@ Based on diagnosis result:
 | Diagnosis | Skill to Use | Output Location |
 |-----------|--------------|-----------------|
 | ⚡ **COMMAND** | N/A - implement from spec | `.claude/commands/{name}.md` |
-| 📚 **SKILL** | @.claude/skills/meta-skill-creator/SKILL.md | `.claude/skills/{name}/SKILL.md` |
-| 🤖 **AGENT** | @.claude/skills/meta-agent-creator/SKILL.md | `src/agents/{name}.ts` |
+| 📚 **SKILL** | @.claude/skills/meta-skill/SKILL.md | `.claude/skills/{name}/SKILL.md` |
+| 🤖 **AGENT** | @.claude/skills/meta-agent/SKILL.md | `src/agents/{name}.ts` |
 
 #### For COMMAND
 Implement directly from the generated spec template.
 
 #### For SKILL
-1. Read @.claude/skills/meta-skill-creator/SKILL.md
+1. Read @.claude/skills/meta-skill/SKILL.md
 2. Follow 6-phase workflow: UNDERSTAND → PLAN → INITIALIZE → IMPLEMENT → VALIDATE → PACKAGE
 
 #### For AGENT
-1. Read @.claude/skills/meta-agent-creator/SKILL.md
+1. Read @.claude/skills/meta-agent/SKILL.md
 2. Follow 5-phase workflow: DEFINE PURPOSE → CLASSIFY → DESIGN PROMPT → CONFIGURE → REGISTER & TEST
 
 ## Output Format

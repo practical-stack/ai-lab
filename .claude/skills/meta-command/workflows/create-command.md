@@ -276,11 +276,9 @@ ls .claude/commands/{name}.md
 Try to use a tool not in `allowed-tools`:
 - Should be blocked or warn
 
-### 5.4 Validate with /organize-command
+### 5.4 Validate Command
 
-```bash
-/organize-command .claude/commands/{name}.md
-```
+Follow the validation workflow: [validate-command.md](validate-command.md)
 
 Fix any reported issues.
 
@@ -305,7 +303,7 @@ Fix any reported issues.
 - [ ] Skills properly referenced
 - [ ] Tested with valid input
 - [ ] Tested with invalid input
-- [ ] Validated with /organize-command
+- [ ] Validated with validate-command workflow
 
 ---
 

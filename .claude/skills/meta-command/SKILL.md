@@ -7,7 +7,7 @@ description: |
   - "create a command", "new command", "make a command"
   - "command spec", "command format", "frontmatter"
   - "allowed-tools", "argument-hint"
-  - validating or organizing commands
+  - "validate command", "check command", "organize command", "command audit"
   
   DO NOT USE WHEN:
   - Creating skills or agents (use meta-skill, meta-agent)
@@ -26,6 +26,7 @@ Supports Claude Code and OpenCode platforms.
 | Intent | Reference |
 |--------|-----------|
 | Create a new command (full process) | [workflows/create-command.md](workflows/create-command.md) |
+| Validate existing command(s) | [workflows/validate-command.md](workflows/validate-command.md) |
 | Official field specification | [references/official-spec.md](references/official-spec.md) |
 | Best practices & patterns | [references/best-practices.md](references/best-practices.md) |
 | Real-world examples | [references/examples.md](references/examples.md) |
@@ -41,10 +42,7 @@ Supports Claude Code and OpenCode platforms.
 
 ### Validate Commands
 
-```bash
-/organize-command .claude/commands/my-command.md
-/organize-command --all
-```
+See [workflows/validate-command.md](workflows/validate-command.md) for the full validation workflow.
 
 ## Command Categories
 
