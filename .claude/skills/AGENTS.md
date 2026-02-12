@@ -34,9 +34,8 @@ skill-name/
 ```yaml
 ---
 name: skill-name          # kebab-case, matches directory
-description: |
-  USE WHEN: trigger keywords
-  DO NOT USE WHEN: exclusions
+description: Natural prose describing what it does. Use when [triggers woven
+  into sentences]. No structured labels like "USE WHEN:" — write 1-3 sentences.
 ---
 ```
 

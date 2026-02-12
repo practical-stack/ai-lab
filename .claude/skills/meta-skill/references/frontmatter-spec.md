@@ -23,29 +23,41 @@ name: claude-helper       # reserved prefix
 
 ### description (required)
 
-- **Structure**: `[What it does]` + `[When to use it]` + `[Key capabilities]`
+- **Format**: Natural prose, 1-3 sentences — NOT structured labels or bullet lists
+- **Structure**: `[What it does]` + `[When to use it]` woven into natural sentences
 - **Max length**: 1024 characters
-- **Must include**: Specific trigger phrases users would actually say
+- **Must include**: Specific trigger phrases users would actually say, embedded in prose
 - **No XML angle brackets** (`<` or `>`) — security restriction
+- **No structured labels**: Avoid `USE WHEN:`, `DO NOT USE WHEN:`, or bullet-list triggers
 
 ```yaml
-# Good - specific and actionable
-description: |
-  Analyzes Figma design files and generates developer handoff documentation.
-  Use when user uploads .fig files, asks for "design specs",
-  "component documentation", or "design-to-code handoff".
+# Good - natural prose with triggers woven in (Anthropic official style)
+description: Guide for creating effective skills. This skill should be used
+  when users want to create a new skill (or update an existing skill) that
+  extends Claude's capabilities with specialized knowledge, workflows, or
+  tool integrations.
 
-# Good - includes negative triggers
+# Good - natural prose with file types
+description: Toolkit for interacting with and testing local web applications
+  using Playwright. Supports verifying frontend functionality, debugging UI
+  behavior, capturing browser screenshots, and viewing browser logs.
+
+# Good - negative trigger when confusion is realistic
+description: "Use this skill whenever the user wants to create, read, edit,
+  or manipulate Word documents (.docx files). Do NOT use for PDFs,
+  spreadsheets, Google Docs, or general coding tasks."
+
+# Bad - structured labels instead of prose
 description: |
-  Advanced data analysis for CSV files. Use for statistical modeling,
-  regression, clustering. Do NOT use for simple data exploration
-  (use data-viz skill instead).
+  Creates skills for AI agents.
+  USE WHEN:
+  - "create a skill"
+  - "new skill"
+  DO NOT USE WHEN:
+  - Creating agents
 
 # Bad - too vague
 description: Helps with projects.
-
-# Bad - missing triggers
-description: Creates sophisticated multi-page documentation systems.
 
 # Bad - too technical, no user triggers
 description: Implements the Project entity model with hierarchical relationships.

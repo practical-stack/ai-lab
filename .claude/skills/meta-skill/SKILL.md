@@ -20,6 +20,14 @@ Create and validate skills for AI agents following Anthropic's official skill sp
 
 > **Output Language**: All generated skill content (SKILL.md, comments, documentation) in **English**.
 
+## Core Principle: Concise is Key
+
+The context window is a public good. Skills share it with system prompt, conversation history, other skills, and the user request.
+
+**Default assumption: Claude is already very smart.** Only add context Claude doesn't already have. For each piece of content, ask: *"Does Claude really need this? Does this paragraph justify its token cost?"*
+
+Prefer concise examples over verbose explanations. See [references/official-examples.md](references/official-examples.md) for how Anthropic's own skills demonstrate this — ranging from 33-line reference skills to 400-line generative skills, each sized appropriately for their domain.
+
 ## Workflow Routing
 
 | Intent | Workflow |
@@ -140,26 +148,23 @@ skill-name/
 ```yaml
 ---
 name: skill-name                    # Required: kebab-case, max 64 chars, match dir name
-description: |                      # Required: [What] + [When] + [Key capabilities]
-  [What it does]. Use when user asks to [specific phrases].
-  Do NOT use for [exclusion cases].
+description: [What it does] in natural prose. Use when [specific triggers/contexts].
+  Supports [key capabilities]. Include trigger phrases naturally in the sentence
+  flow — do NOT use structured labels like "USE WHEN:" or bullet lists.
 # --- Optional fields ---
 # license: MIT
 # compatibility: Requires Node.js 18+
 # allowed-tools: "Bash(python:*) WebFetch"   # Restrict tool access for security
-# metadata:
-#   author: Your Name
-#   version: 1.0.0
-#   mcp-server: server-name
 ---
 ```
 
 **Description field rules** (see [references/frontmatter-spec.md](references/frontmatter-spec.md)):
-- Structure: `[What it does]` + `[When to use it]` + `[Key capabilities]`
+- **Natural prose** — write 1-3 sentences, not structured labels or bullet lists
+- Weave trigger phrases into natural sentences (e.g., "Use when users want to..." not `USE WHEN:\n- "keyword"`)
 - Under 1024 characters
 - No XML angle brackets (`<` or `>`)
-- Include specific trigger phrases users would actually say
-- Mention relevant file types if applicable
+- Add "Do NOT use for..." only if realistic confusion exists with similar skills
+- See [references/official-examples.md](references/official-examples.md) for real Anthropic skill descriptions
 
 **Security considerations**:
 - No XML angle brackets in frontmatter (appears in system prompt — injection risk)
@@ -171,34 +176,31 @@ See [references/frontmatter-spec.md](references/frontmatter-spec.md) for complet
 
 #### 4.2 Write SKILL.md Body
 
-**Recommended structure** (see [references/writing-guide.md](references/writing-guide.md)):
+**Design the body structure around your skill's domain** — there is no one-size-fits-all template.
+Study [references/official-examples.md](references/official-examples.md) for how Anthropic's own skills structure their bodies.
 
-```markdown
-# Skill Name
+**Observed patterns from official skills**:
 
-## Instructions
-### Step 1: [First Major Step]
-Clear explanation. Include script calls if applicable.
-Expected output: [describe what success looks like]
+| Skill Domain | Body Structure |
+|-------------|----------------|
+| Creative (art, design) | Philosophy → Process → Technical Requirements → Resources |
+| Tool-based (testing, MCP) | Decision Tree → Examples → Best Practices |
+| Workflow (doc-coauthoring) | When to Offer → Stage 1 → Stage 2 → Stage 3 |
+| Simple reference (brand, theme) | Overview → Details → Usage Instructions |
+| Multi-step creation (skill-creator) | Core Principles → Anatomy → Step-by-step Process |
 
-## Examples
-### Example 1: [Common scenario]
-User says: "[trigger phrase]"
-Actions: 1. ... 2. ...
-Result: [outcome]
+**Key principle**: Let the domain dictate the structure. A 33-line reference skill and a 400-line generative art skill should look nothing alike.
 
-## Troubleshooting
-**Error:** [Common error message]
-**Cause:** [Why it happens]
-**Solution:** [How to fix]
-```
+**Optional elements** (include only when they add value):
+- **Workflow Routing table** — only if the skill has multiple distinct workflows (e.g., "create" vs "validate")
+- **Examples section** — helpful for user-facing skills with trigger phrases
+- **Troubleshooting section** — helpful for skills involving scripts or MCP integrations
+- **Reference Files section** — when bundled resources exist in references/, scripts/, or assets/
 
 **Writing best practices** (see [references/writing-guide.md](references/writing-guide.md)):
 - Be specific and actionable (not "validate the data" but `run scripts/validate.py --input {file}`)
 - Reference bundled resources clearly (`Before writing queries, consult references/api-patterns.md`)
-- Include error handling for each step
 - Put critical instructions at the top
-- Use `## Important` or `## Critical` headers for key points
 - Match Degrees of Freedom to task fragility (see writing-guide.md)
 
 **Output format guidance** (see [references/output-patterns.md](references/output-patterns.md)):
@@ -336,8 +338,9 @@ A skill should only contain files that directly support its functionality. Do NO
 
 | Anti-Pattern | Problem | Solution |
 |-------------|---------|----------|
-| Vague description | Skill won't trigger | Include specific trigger phrases |
-| Missing negative triggers | Overtriggering | Add "Do NOT use for..." |
+| Vague description | Skill won't trigger | Include specific trigger phrases in natural prose |
+| Structured labels in description | Doesn't match official style | Write natural sentences, not `USE WHEN:` bullet lists |
+| Unnecessary negative triggers | Clutter without value | Add "Do NOT use for..." only if realistic confusion with sibling skills |
 | XML brackets in frontmatter | Security violation | Use plain text only |
 | SKILL.md > 500 lines | Context bloat | Split to references/ |
 | Extraneous docs (README, CHANGELOG) | Clutter and confusion | Remove — see "What NOT to Include" above |
@@ -349,6 +352,7 @@ A skill should only contain files that directly support its functionality. Do NO
 
 ## References
 
+- **Official Examples**: [references/official-examples.md](references/official-examples.md) — real Anthropic skill frontmatter and body patterns
 - **Frontmatter Spec**: [references/frontmatter-spec.md](references/frontmatter-spec.md)
 - **Writing Guide**: [references/writing-guide.md](references/writing-guide.md) — description field, body structure, degrees of freedom
 - **Output Patterns**: [references/output-patterns.md](references/output-patterns.md) — template, examples, and validation patterns

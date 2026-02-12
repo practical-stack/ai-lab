@@ -25,45 +25,39 @@ Think of Claude as exploring a path: a **narrow bridge with cliffs** needs speci
 
 The description is the first level of progressive disclosure — it determines **when** Claude loads your skill.
 
-**Structure:** `[What it does]` + `[When to use it]` + `[Key capabilities]`
+**Write natural prose**, not structured labels. Weave trigger phrases into 1-3 sentences:
+- ✅ `"Guide for creating effective skills. Use when users want to create a new skill or update an existing skill."`
+- ❌ `"Creates skills.\nUSE WHEN:\n- 'create a skill'\nDO NOT USE WHEN:\n- Creating agents"`
 
-For good/bad description examples, see [frontmatter-spec.md](frontmatter-spec.md#description-required).
+For good/bad examples, see [frontmatter-spec.md](frontmatter-spec.md#description-required) and [official-examples.md](official-examples.md).
 
-## Recommended SKILL.md Body Structure
+## SKILL.md Body Structure
+
+**There is no universal template.** Design the body around your skill's domain. Anthropic's official skills each have unique structures tailored to their purpose.
+
+**Patterns observed from official skills:**
+
+- **Simple reference** (33-74 lines): overview → details → usage. E.g., `internal-comms`, `brand-guidelines`
+- **Tool-based** (~96 lines): decision tree → examples → best practices. E.g., `webapp-testing`
+- **Multi-step workflow** (~350 lines): stages with clear transitions. E.g., `doc-coauthoring`
+- **Creative/generative** (~400 lines): philosophy → process → technical requirements → resources. E.g., `algorithmic-art`
+- **Builder/creator** (~350 lines): core principles → anatomy → step-by-step. E.g., `skill-creator`
+
+**One possible structure** (not prescriptive — adapt to your domain):
 
 ```markdown
----
-name: your-skill
-description: [...]
----
+# Skill Name
 
-# Your Skill Name
+[Brief intro — what this skill does]
 
-## Instructions
+## [Domain-Appropriate Section 1]
+[Content]
 
-### Step 1: [First Major Step]
-Clear explanation of what happens.
+## [Domain-Appropriate Section 2]
+[Content]
 
-python scripts/fetch_data.py --project-id PROJECT_ID
-
-Expected output: [describe what success looks like]
-
-(Add more steps as needed)
-
-## Examples
-
-### Example 1: [common scenario]
-User says: "Set up a new marketing campaign"
-Actions:
-1. Fetch existing campaigns via MCP
-2. Create new campaign with provided parameters
-Result: Campaign created with confirmation link
-
-## Troubleshooting
-
-**Error:** [Common error message]
-**Cause:** [Why it happens]
-**Solution:** [How to fix]
+## Reference Files
+- [link to reference if applicable]
 ```
 
 ## Best Practices
