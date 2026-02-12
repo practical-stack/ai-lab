@@ -1,9 +1,9 @@
 ---
 name: meta-session-wrapper
-description: |
-  Extract reusable patterns from completed session work.
-  Triggers: "wrap this session", "extract workflow", "make this reusable",
-  "abstract this work", "create skill from session", "session to skill"
+description: Extract reusable patterns from completed session work. Use when
+  users want to wrap a session into a reusable component, extract workflows,
+  make completed work reusable, abstract session work into patterns, or create
+  a skill from session history.
 ---
 
 # Meta Session Wrapper
