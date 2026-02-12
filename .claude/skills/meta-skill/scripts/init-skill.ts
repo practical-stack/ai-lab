@@ -11,59 +11,56 @@ import { join, resolve } from "path";
 const SKILL_MD_TEMPLATE = `---
 name: {{SKILL_NAME}}
 description: |
-  [TODO: Clearly describe the skill's purpose and when to use it]
-  [TODO: Include trigger conditions - e.g., "use when...", "activates on..."]
-  Triggers: "keyword1", "keyword2", "keyword3"
+  [TODO: What it does in 1-2 sentences]. Use when user asks to [TODO: specific trigger phrases].
+  Do NOT use for [TODO: exclusion cases].
+
+  USE WHEN:
+  - [TODO: "trigger phrase 1", "trigger phrase 2"]
+
+  DO NOT USE WHEN:
+  - [TODO: exclusion 1]
 ---
 
 # {{SKILL_TITLE}}
 
-## Overview
+## Instructions
 
-[TODO: Describe what this skill does in 1-2 sentences]
+### Step 1: [TODO: First Major Step]
 
-## Quick Start
-
-[TODO: Provide immediately usable examples]
+[TODO: Clear explanation of what happens.]
 
 \`\`\`bash
-# Example command
-bun scripts/example.ts
+bun scripts/example.ts --input [INPUT]
 \`\`\`
 
-## Usage Guide
+Expected output: [TODO: describe what success looks like]
 
-### Basic Usage
+## Examples
 
-[TODO: Explain basic usage]
+### Example 1: [TODO: Common scenario]
 
-### Advanced Features
+**User says:** "[TODO: trigger phrase]"
 
-[TODO: Describe advanced features if needed]
+**Actions:**
+1. [TODO: First action]
+2. [TODO: Second action]
 
-## Resources
+**Result:** [TODO: Concrete outcome]
 
-### scripts/
+## Troubleshooting
 
-Contains executable scripts.
+**Error:** [TODO: Common error message]
+**Cause:** [TODO: Why it happens]
+**Solution:** [TODO: How to fix]
 
-- \`example.ts\` - Example script (modify or delete as needed)
+## References
 
-### references/
-
-Add detailed documentation here when needed.
-
-- \`guide.md\` - Detailed guide (modify or delete as needed)
-
-### assets/
-
-Contains files used for outputs.
-
-- Templates, images, config files, etc.
+- [references/guide.md](references/guide.md) - Detailed reference documentation
+- [scripts/example.ts](scripts/example.ts) - Example automation script
 
 ---
 
-**Delete unnecessary directories or files.** Not all skills need all three resource types.
+**Delete unnecessary directories or files.** Not all skills need scripts/, references/, and assets/.
 `;
 
 const EXAMPLE_SCRIPT_TEMPLATE = `#!/usr/bin/env node
@@ -124,8 +121,8 @@ function validateSkillName(name: string): { valid: boolean; error?: string } {
   if (!name) {
     return { valid: false, error: "Skill name is required" };
   }
-  if (name.length > 40) {
-    return { valid: false, error: "Skill name cannot exceed 40 characters" };
+  if (name.length > 64) {
+    return { valid: false, error: "Skill name cannot exceed 64 characters" };
   }
   if (!/^[a-z0-9-]+$/.test(name)) {
     return { valid: false, error: "Skill name must use only lowercase letters, numbers, and hyphens" };

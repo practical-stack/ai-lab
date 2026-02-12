@@ -1,34 +1,78 @@
 ---
 name: {{SKILL_NAME}}
 description: |
-  Describe the skill and when to use it.
-  Triggers: "keyword1", "keyword2", "keyword3"
+  [What it does in 1-2 sentences]. Use when user asks to [specific trigger phrases].
+  Do NOT use for [exclusion cases].
+
+  USE WHEN:
+  - "[trigger phrase 1]", "[trigger phrase 2]"
+
+  DO NOT USE WHEN:
+  - [Exclusion 1]
+# --- Optional fields ---
+# license: MIT
+# compatibility: [environment requirements]
+# allowed-tools: "Bash(python:*) WebFetch"
+# metadata:
+#   author: [Your Name]
+#   version: 1.0.0
 ---
 
 # {{SKILL_TITLE}}
 
-## Overview
+## Instructions
 
-This skill is used for [purpose].
+### Step 1: [First Major Step]
 
-## Quick Start
+[Clear explanation of what happens.]
 
 ```bash
-bun scripts/example.ts
+# Script call if applicable
+bun scripts/example.ts --input [INPUT]
 ```
 
-## Usage Guide
+Expected output: [describe what success looks like]
 
-### Basic Usage
+### Step 2: [Second Major Step]
 
-[Basic usage instructions]
+[Explanation and actions.]
 
-### Advanced Features
+## Examples
 
-[Advanced feature descriptions]
+### Example 1: [Common scenario]
 
-## Resources
+**User says:** "[trigger phrase]"
 
-- `scripts/` - Executable scripts
-- `references/` - Detailed documentation
-- `assets/` - Templates and assets
+**Actions:**
+1. [First action]
+2. [Second action]
+
+**Result:** [Concrete outcome]
+
+### Example 2: [Edge case or alternative scenario]
+
+**User says:** "[alternative trigger phrase]"
+
+**Actions:**
+1. [Action]
+
+**Result:** [Outcome]
+
+## Troubleshooting
+
+**Error:** [Common error message]
+**Cause:** [Why it happens]
+**Solution:** [How to fix]
+
+**Error:** [Another common error]
+**Cause:** [Why it happens]
+**Solution:** [How to fix]
+
+## References
+
+- [references/guide.md](references/guide.md) — Detailed reference documentation
+- [scripts/example.ts](scripts/example.ts) — Example automation script
+
+---
+
+**Delete unnecessary directories or files.** Not all skills need scripts/, references/, and assets/.

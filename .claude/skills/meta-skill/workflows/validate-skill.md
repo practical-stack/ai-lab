@@ -1,6 +1,6 @@
 # Validate Skill
 
-Validate skill files against the skill specification and best practices. Reports issues and optionally fixes them.
+Validate skill files against Anthropic's official skill specification and project best practices. Reports issues and optionally fixes them.
 
 ## Triggers
 
@@ -40,26 +40,33 @@ For each skill, check against these rules:
 
 | Check | Severity | Rule |
 |-------|----------|------|
-| `name` present | ERROR | Required, kebab-case, matches directory |
+| `name` present | ERROR | Required, kebab-case, max 64 chars, matches directory |
+| `name` not reserved | ERROR | Must not contain "claude" or "anthropic" |
 | `description` present | ERROR | Required, includes triggers |
-| Triggers in description | WARNING | USE WHEN / DO NOT USE WHEN pattern |
+| `description` length | WARNING | Under 1024 characters |
+| `description` no XML | ERROR | No angle brackets (`<` or `>`) |
+| Trigger phrases in desc | WARNING | Include what users would actually say |
+| Negative triggers | INFO | Recommended: "Do NOT use for..." |
 
 **Structure Checks:**
 
 | Check | Severity | Rule |
 |-------|----------|------|
-| SKILL.md exists | ERROR | Required |
+| SKILL.md exists | ERROR | Exact case: `SKILL.md` |
+| No README.md | ERROR | Must not exist in skill folder |
 | SKILL.md < 500 lines | WARNING | Split to references if exceeded |
 | Directory name matches `name` | ERROR | Must be identical |
 | References linked | WARNING | All refs mentioned in SKILL.md |
+| No deeply nested refs | WARNING | Keep references 1 level deep |
 
 **Content Checks:**
 
 | Check | Severity | Rule |
 |-------|----------|------|
 | No TODO placeholders | WARNING | All placeholders resolved |
-| Workflow routing table | INFO | Recommended for multi-workflow skills |
-| Quick reference section | INFO | Recommended |
+| Examples section | INFO | Recommended if skill has user-facing triggers |
+| Troubleshooting section | INFO | Recommended if skill involves MCP/scripts |
+| Workflow routing table | INFO | Project convention (not in Anthropic spec) — for multi-workflow skills |
 
 **Anti-Pattern Checks:**
 
@@ -68,7 +75,7 @@ For each skill, check against these rules:
 | Excessive orchestration (3+) | WARNING | 3+ unrelated skill invocations suggest Command/Agent |
 | Verbose description | WARNING | Be concise, focus on triggers |
 | Duplicated content | WARNING | Single source of truth |
-| Deeply nested refs | WARNING | Keep references 1 level deep |
+| Verbose instructions | WARNING | Claude may ignore overly verbose instructions |
 
 **Script Checks (if scripts/ exists):**
 
@@ -93,27 +100,21 @@ Generate report for each skill:
 
 | Check | Status | Details |
 |-------|--------|---------|
-| name | Pass | Matches directory |
-| description | Pass | Has USE WHEN triggers |
+| name | Pass | kebab-case, matches directory |
+| name not reserved | Pass | No reserved prefixes |
+| description | Pass | Has trigger phrases, under 1024 chars |
+| description no XML | Pass | No angle brackets |
+| SKILL.md exists | Pass | Exact case match |
+| No README.md | Pass | Not present |
 | SKILL.md size | Pass | 164 lines |
+| Examples section | Pass | 2 examples found |
 | References linked | Pass | 3 refs, all linked |
 | No excessive orchestration | Pass | Declarative only |
-| Quick reference | Pass | Present |
 
 **Summary:**
-- 6 Pass
+- 10 Pass
 - 0 Warnings
 - 0 Errors
-
-### Structure
-```
-meta-command/
-├── SKILL.md (164 lines)
-└── references/
-    ├── official-spec.md
-    ├── best-practices.md
-    └── examples.md
-```
 ```
 
 For `--all`, include an overall summary:
@@ -137,8 +138,10 @@ For each fixable issue:
 Common fixes:
 - Rename directory to match `name`
 - Add missing trigger keywords
+- Remove README.md from skill folder
 - Link unlinked references
-- Simplify excessive orchestration
+- Truncate description over 1024 chars
+- Remove XML brackets from frontmatter
 
 ## Safety
 
@@ -146,25 +149,31 @@ Common fixes:
 |--------|-------------|
 | Read skills | Always allowed |
 | Modify skills | Only with `--fix` + confirmation |
-| Delete | Never |
+| Delete | Never (except README.md removal with confirmation) |
 
 ## Validation Checklist Summary
 
 ### Frontmatter
 - [ ] `name`: kebab-case, max 64 chars, matches directory
-- [ ] `description`: includes triggers, purpose, when NOT to use
+- [ ] `name`: no "claude" or "anthropic" (reserved)
+- [ ] `description`: [What] + [When], under 1024 chars
+- [ ] `description`: no XML angle brackets
+- [ ] `description`: includes trigger phrases users would say
 
 ### Structure
-- [ ] SKILL.md exists and < 500 lines
-- [ ] References in `references/` directory
+- [ ] `SKILL.md` exists (exact case)
+- [ ] No `README.md` in skill folder
+- [ ] SKILL.md under 500 lines
+- [ ] References in `references/` directory (1 level deep)
 - [ ] All references linked from SKILL.md
 
 ### Content
 - [ ] No TODO placeholders
-- [ ] No excessive orchestration (3+ unrelated skill invocations)
-- [ ] Quick reference for key patterns
+- [ ] Examples section (recommended for user-facing skills)
+- [ ] Troubleshooting section (recommended for MCP/script skills)
+- [ ] No excessive orchestration (3+ unrelated invocations)
 
 ### Progressive Disclosure
-- [ ] Level 1 (~100 words): name + description
+- [ ] Level 1 (~100 words): name + description (frontmatter)
 - [ ] Level 2 (<5k words): SKILL.md body
 - [ ] Level 3: references/, scripts/, assets/

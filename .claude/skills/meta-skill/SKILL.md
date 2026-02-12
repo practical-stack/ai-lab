@@ -1,13 +1,14 @@
 ---
 name: meta-skill
 description: |
-  Guide for creating and validating AI agent skills. Use when users want to create a new skill,
-  update an existing skill, validate skills, or need guidance on skill architecture and best practices.
-  
+  Guide for creating and validating AI agent skills based on Anthropic's official skill specification.
+  Use when user asks to create a new skill, update an existing skill, validate skills,
+  or needs guidance on skill architecture and best practices.
+
   USE WHEN:
   - "create a skill", "new skill", "make a skill", "skill template"
   - "validate skill", "check skill", "organize skill", "skill audit"
-  
+
   DO NOT USE WHEN:
   - Creating agents (use meta-agent)
   - Creating commands (use meta-command)
@@ -15,16 +16,15 @@ description: |
 
 # Meta-Skill Creator
 
-A meta-skill that helps create and validate skills for AI agents. This skill provides structured workflows,
-automation scripts, and quality assurance mechanisms for skill development.
+Create and validate skills for AI agents following Anthropic's official skill specification.
 
-> **Output Language**: All generated skill content (SKILL.md, comments, documentation) will be in **English**.
+> **Output Language**: All generated skill content (SKILL.md, comments, documentation) in **English**.
 
 ## Workflow Routing
 
 | Intent | Workflow |
 |--------|----------|
-| Create a new skill (full process) | [Phase-by-phase below](#skill-creation-workflow-6-phases) |
+| Create a new skill (full process) | [Phase-by-phase below](#skill-creation-workflow-7-phases) |
 | Validate existing skill(s) | [workflows/validate-skill.md](workflows/validate-skill.md) |
 
 ## Quick Start
@@ -32,55 +32,58 @@ automation scripts, and quality assurance mechanisms for skill development.
 ### Create a New Skill
 
 ```bash
-# Initialize a new skill (using npx/bunx)
-npx ts-node scripts/init-skill.ts <skill-name> --path <output-directory>
-
-# Or with Bun
 bun scripts/init-skill.ts <skill-name> --path <output-directory>
-
-# Example
+# Example:
 bun scripts/init-skill.ts my-awesome-skill --path .claude/skills
 ```
 
 ### Validate and Package
 
 ```bash
-# Validate skill structure
 bun scripts/validate-skill.ts <skill-folder>
-
-# Package for distribution
 bun scripts/package-skill.ts <skill-folder> [output-dir]
 ```
 
-## Skill Creation Workflow (6 Phases)
+## Skill Creation Workflow (7 Phases)
 
-Follow these phases in order. Each phase has specific deliverables and validation criteria.
+Follow these phases in order. Each phase has specific deliverables and exit criteria.
 
 ### Phase 1: UNDERSTAND
 
-**Goal**: Gather concrete examples of how the skill will be used.
+**Goal**: Define concrete use cases and trigger conditions.
 
 **Questions to Ask**:
 1. "What specific scenarios trigger this skill?"
-2. "Can you provide 3-5 concrete usage examples?"
+2. "Can you provide 2-3 concrete use cases?" (with trigger, steps, result format)
 3. "What keywords should activate this skill?"
 4. "What inputs does it receive? What outputs does it produce?"
+5. "What tools are needed (built-in or MCP)?"
+
+**Use Case Format** (from Anthropic guide):
+```text
+Use Case: [Name]
+Trigger: User says "[phrase]" or "[phrase]"
+Steps:
+  1. [Step with tool/MCP call if applicable]
+  2. [Step]
+Result: [Concrete outcome]
+```
 
 **Deliverables**:
+- 2-3 concrete use cases in the format above
 - Trigger condition list
-- 3-5 usage scenarios with examples
 - Expected input/output format
 
-**Exit Criteria**: Clear understanding of skill purpose and usage patterns.
+**Exit Criteria**: Clear understanding of skill purpose, trigger conditions, and use cases.
 
 ### Phase 2: PLAN
 
-**Goal**: Identify reusable content and structure.
+**Goal**: Design structure and identify reusable content.
 
-**Analysis Checklist**:
+**Content Type Decision**:
 
 | Content Type | When to Include | Examples |
-|--------------|-----------------|----------|
+|-------------|-----------------|----------|
 | `scripts/` | Repetitive code, deterministic operations | File processing, API calls, automation |
 | `references/` | Detailed docs, schemas, lengthy guides | API docs, database schemas, workflow guides |
 | `assets/` | Output templates, images, fonts | HTML templates, config files, boilerplate |
@@ -93,78 +96,117 @@ Follow these phases in order. Each phase has specific deliverables and validatio
 | Medium | Preferred pattern exists | Pseudocode or parameterized scripts |
 | Low | Fragile operations, consistency critical | Specific scripts with minimal parameters |
 
+**Skill Pattern Selection** (choose one):
+
+| Pattern | Use When | Reference |
+|---------|----------|-----------|
+| Sequential Workflow | Multi-step processes in specific order | [references/skill-patterns.md](references/skill-patterns.md) |
+| Multi-MCP Coordination | Workflows spanning multiple services | [references/skill-patterns.md](references/skill-patterns.md) |
+| Iterative Refinement | Output quality improves with iteration | [references/skill-patterns.md](references/skill-patterns.md) |
+| Context-Aware Selection | Same outcome, different tools depending on context | [references/skill-patterns.md](references/skill-patterns.md) |
+| Domain-Specific Intelligence | Specialized knowledge beyond tool access | [references/skill-patterns.md](references/skill-patterns.md) |
+
 **Deliverables**:
 - Directory structure design
 - Progressive Disclosure strategy
-- Freedom level for each component
+- Selected skill pattern
 
 ### Phase 3: INITIALIZE
 
 **Goal**: Create skill directory and template files.
 
-**Action**: Run the initialization script:
-
 ```bash
 bun scripts/init-skill.ts <skill-name> --path <output-directory>
 ```
 
-The script creates:
+Creates:
 ```
 skill-name/
 ├── SKILL.md              # Template with placeholders
 ├── scripts/
-│   └── example.ts        # Example TypeScript script template
+│   └── example.ts
 ├── references/
-│   └── guide.md          # Example reference template
+│   └── guide.md
 └── assets/
-    └── .gitkeep          # Placeholder for assets
+    └── .gitkeep
 ```
 
-**Deliverables**: Initialized skill directory with all templates.
+**Post-init**: Delete unnecessary directories. Not all skills need all three resource types.
 
 ### Phase 4: IMPLEMENT
 
-**Goal**: Write skill content and implement resources.
-
-#### 4.1 Write SKILL.md Frontmatter
+#### 4.1 Write Frontmatter
 
 ```yaml
 ---
-name: skill-name           # Required: kebab-case, max 64 chars
-description: |             # Required: triggers + purpose
-  Describe the skill and when to use it.
-  Triggers: "keyword1", "keyword2", "keyword3"
+name: skill-name                    # Required: kebab-case, max 64 chars, match dir name
+description: |                      # Required: [What] + [When] + [Key capabilities]
+  [What it does]. Use when user asks to [specific phrases].
+  Do NOT use for [exclusion cases].
+# --- Optional fields ---
+# license: MIT
+# compatibility: Requires Node.js 18+
+# allowed-tools: "Bash(python:*) WebFetch"   # Restrict tool access for security
+# metadata:
+#   author: Your Name
+#   version: 1.0.0
+#   mcp-server: server-name
 ---
 ```
 
+**Description field rules** (see [references/frontmatter-spec.md](references/frontmatter-spec.md)):
+- Structure: `[What it does]` + `[When to use it]` + `[Key capabilities]`
+- Under 1024 characters
+- No XML angle brackets (`<` or `>`)
+- Include specific trigger phrases users would actually say
+- Mention relevant file types if applicable
+
+**Security considerations**:
+- No XML angle brackets in frontmatter (appears in system prompt — injection risk)
+- No "claude" or "anthropic" in skill name (reserved by Anthropic)
+- YAML uses safe parsing (no code execution)
+- Use `allowed-tools` to restrict tool access when the skill should only use specific tools
+
+See [references/frontmatter-spec.md](references/frontmatter-spec.md) for complete spec.
+
 #### 4.2 Write SKILL.md Body
 
-Structure options (choose based on skill type):
+**Recommended structure** (see [references/writing-guide.md](references/writing-guide.md)):
 
-| Pattern | Best For | Structure |
-|---------|----------|-----------|
-| Workflow-Based | Sequential processes | Decision Tree → Steps |
-| Task-Based | Tool collections | Quick Start → Task Categories |
-| Reference/Guidelines | Standards, specs | Overview → Guidelines → Specs |
-| Capabilities-Based | Integrated systems | Capabilities → Features |
+```markdown
+# Skill Name
+
+## Instructions
+### Step 1: [First Major Step]
+Clear explanation. Include script calls if applicable.
+Expected output: [describe what success looks like]
+
+## Examples
+### Example 1: [Common scenario]
+User says: "[trigger phrase]"
+Actions: 1. ... 2. ...
+Result: [outcome]
+
+## Troubleshooting
+**Error:** [Common error message]
+**Cause:** [Why it happens]
+**Solution:** [How to fix]
+```
+
+**Writing best practices** (see [references/writing-guide.md](references/writing-guide.md)):
+- Be specific and actionable (not "validate the data" but `run scripts/validate.py --input {file}`)
+- Reference bundled resources clearly (`Before writing queries, consult references/api-patterns.md`)
+- Include error handling for each step
+- Put critical instructions at the top
+- Use `## Important` or `## Critical` headers for key points
+- Match Degrees of Freedom to task fragility (see writing-guide.md)
+
+**Output format guidance** (see [references/output-patterns.md](references/output-patterns.md)):
+- **Strict template**: API contracts, data exports — use exact template with `ALWAYS` prefix
+- **Flexible template**: Analysis, docs — template with "adjust as needed"
+- **Examples pattern**: Style-sensitive output — provide 2-3 input/output pairs
 
 #### 4.3 Implement Scripts (TypeScript/JavaScript)
-
-```typescript
-#!/usr/bin/env node
-// scripts/my-script.ts
-
-import { readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
-
-async function main() {
-  const args = process.argv.slice(2);
-  // Implementation here
-  console.log('Script execution complete');
-}
-
-main().catch(console.error);
-```
 
 - Test ALL scripts by actually running them
 - Include helpful error messages
@@ -172,17 +214,18 @@ main().catch(console.error);
 
 #### 4.4 Write References
 
-- Keep SKILL.md under 500 lines
+- Keep SKILL.md under 500 lines (under 5,000 words)
 - Move detailed content to references/
 - Always link references from SKILL.md
 
-**Deliverables**: Complete skill implementation.
+#### 4.5 Critical Rules
+
+- **SKILL.md** must be exactly `SKILL.md` (case-sensitive)
+- **Folder naming**: kebab-case only (`my-skill` not `My_Skill`)
+- **No README.md** inside skill folder (documentation goes in SKILL.md or references/)
+- **No deeply nested references** — keep 1 level deep
 
 ### Phase 5: VALIDATE
-
-**Goal**: Ensure skill meets quality standards.
-
-**Run Validation**:
 
 ```bash
 bun scripts/validate-skill.ts <skill-folder>
@@ -192,21 +235,55 @@ bun scripts/validate-skill.ts <skill-folder>
 
 | Category | Check | Requirement |
 |----------|-------|-------------|
-| Frontmatter | `name` field | kebab-case, max 64 chars, matches directory name |
-| Frontmatter | `description` field | Includes triggers, purpose, when to use |
-| Structure | SKILL.md exists | Required |
-| Structure | Line count | < 500 lines (split to references if exceeded) |
+| Frontmatter | `name` field | kebab-case, max 64 chars, matches directory |
+| Frontmatter | `description` field | [What] + [When], under 1024 chars, no XML brackets |
+| Frontmatter | No reserved names | No "claude" or "anthropic" in name |
+| Structure | SKILL.md exists | Exact case: `SKILL.md` |
+| Structure | No README.md | Must not exist in skill folder |
+| Structure | Line count | Under 500 lines (split to references if exceeded) |
 | Content | No unresolved placeholders | All TODO markers resolved |
+| Content | Examples section | Recommended if skill has user-facing triggers |
+| Content | Error handling | Recommended if skill involves MCP/scripts |
 | Scripts | Execution test | All scripts run without errors |
-| References | Explicit links | All references linked from SKILL.md |
+| References | Explicit links | All refs linked from SKILL.md |
 
-**Exit Criteria**: All validation checks pass.
+See [workflows/validate-skill.md](workflows/validate-skill.md) for full validation workflow.
 
-### Phase 6: PACKAGE
+### Phase 6: TEST
 
-**Goal**: Create distributable .skill file.
+**Goal**: Verify skill triggers correctly and produces expected output.
 
-**Action**:
+**6.1 Triggering Tests**:
+```text
+Should trigger:
+- "[obvious trigger phrase 1]"
+- "[paraphrased request]"
+- "[alternative wording]"
+
+Should NOT trigger:
+- "[unrelated query 1]"
+- "[similar but out-of-scope query]"
+```
+
+**6.2 Functional Tests**:
+```text
+Test: [Scenario name]
+Given: [Input conditions]
+When: Skill executes workflow
+Then:
+  - [Expected outcome 1]
+  - [Expected outcome 2]
+  - No errors
+```
+
+**6.3 Performance Comparison** (optional — for distribution/sharing):
+- Compare same task WITH and WITHOUT skill
+- Measure: tool calls, total tokens, user corrections needed
+- Most useful when proving value to external users; skip for internal-only skills
+
+See [references/testing-guide.md](references/testing-guide.md) for iteration signals and complete testing methodology.
+
+### Phase 7: PACKAGE
 
 ```bash
 bun scripts/package-skill.ts <skill-folder> [output-dir]
@@ -215,76 +292,67 @@ bun scripts/package-skill.ts <skill-folder> [output-dir]
 **Output**: `<skill-name>.skill` file (ZIP format with .skill extension)
 
 **Post-Package**:
-1. Test the packaged skill
+1. Test the packaged skill in target environment
 2. Collect usage feedback
-3. Iterate based on real usage
+3. Iterate based on real usage (go back to Phase 6)
 
 ## Progressive Disclosure Patterns
 
-Keep context efficient by loading content progressively:
-
 | Level | When Loaded | Size Limit | Content |
 |-------|-------------|------------|---------|
-| 1 | Always | ~100 words | `name` + `description` |
+| 1 | Always | ~100 words | `name` + `description` (frontmatter) |
 | 2 | On trigger | <5k words | SKILL.md body |
 | 3 | On demand | Unlimited | scripts/, references/, assets/ |
 
 ### Pattern 1: High-level Guide with References
-
 ```markdown
 # Main Skill
-
 ## Quick Start
-[Essential instructions here]
-
+[Essential instructions]
 ## Advanced Features
-- **Feature A**: See [FEATURE_A.md](references/feature_a.md)
-- **Feature B**: See [FEATURE_B.md](references/feature_b.md)
+- **Feature A**: See [references/feature_a.md](references/feature_a.md)
 ```
 
-### Pattern 2: Domain-Specific Organization
-
-```
-skill/
-├── SKILL.md (overview + navigation)
-└── references/
-    ├── frontend.md    # Frontend-specific
-    ├── backend.md     # Backend-specific
-    └── deployment.md  # Deployment-specific
-```
-
-### Pattern 3: Conditional Details
-
+### Pattern 2: Conditional Details
 ```markdown
 ## Basic Usage
 [Simple instructions]
-
 ## Advanced (when needed)
-**For complex scenarios**: See [ADVANCED.md](references/advanced.md)
+**For complex scenarios**: See [references/advanced.md](references/advanced.md)
 ```
 
-## Anti-Patterns to Avoid
+## What NOT to Include
+
+A skill should only contain files that directly support its functionality. Do NOT create:
+
+- `README.md` — documentation goes in SKILL.md or references/
+- `INSTALLATION_GUIDE.md`, `QUICK_REFERENCE.md`, `CHANGELOG.md`
+- User-facing documentation, setup guides, or process notes
+- Any auxiliary context about the creation process itself
+
+**Rule**: If it's not needed by an AI agent to do the job, it doesn't belong in the skill.
+
+## Anti-Patterns
 
 | Anti-Pattern | Problem | Solution |
-|--------------|---------|----------|
-| Verbose descriptions | Wastes context tokens | Be concise, focus on triggers |
-| Missing triggers | Skill won't activate | Include explicit trigger phrases |
+|-------------|---------|----------|
+| Vague description | Skill won't trigger | Include specific trigger phrases |
+| Missing negative triggers | Overtriggering | Add "Do NOT use for..." |
+| XML brackets in frontmatter | Security violation | Use plain text only |
 | SKILL.md > 500 lines | Context bloat | Split to references/ |
-| Unnecessary files | Clutter and confusion | Only include essential files |
+| Extraneous docs (README, CHANGELOG) | Clutter and confusion | Remove — see "What NOT to Include" above |
 | Untested scripts | Runtime failures | Test all scripts before packaging |
 | Deeply nested refs | Hard to navigate | Keep references 1 level deep |
-| Duplicated content | Maintenance burden | Single source of truth |
-
-## Platform Compatibility
-
-This skill generates output compatible with:
-
-| Platform | Skill Location | Status |
-|----------|----------------|--------|
-| Claude Code | `.claude/skills/` | Full Support |
-| OpenCode | `.opencode/skills/` | Full Support |
+| Verbose instructions | Claude ignores them | Be concise, use bullet points |
+| Missing error handling | Users get stuck | Add Troubleshooting section |
+| No output examples | Inconsistent results | Add output-patterns (template or examples) |
 
 ## References
 
-- **Workflow Patterns**: See [references/workflows.md](references/workflows.md) for detailed workflow guidance
-- **Output Templates**: See [assets/templates/skill-template.md](assets/templates/skill-template.md) for skill template
+- **Frontmatter Spec**: [references/frontmatter-spec.md](references/frontmatter-spec.md)
+- **Writing Guide**: [references/writing-guide.md](references/writing-guide.md) — description field, body structure, degrees of freedom
+- **Output Patterns**: [references/output-patterns.md](references/output-patterns.md) — template, examples, and validation patterns
+- **Skill Patterns**: [references/skill-patterns.md](references/skill-patterns.md) — 5 architecture patterns
+- **Testing Guide**: [references/testing-guide.md](references/testing-guide.md)
+- **Workflow Patterns**: [references/workflows.md](references/workflows.md)
+- **Skill Template**: [assets/templates/skill-template.md](assets/templates/skill-template.md)

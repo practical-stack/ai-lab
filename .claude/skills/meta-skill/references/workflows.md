@@ -56,24 +56,6 @@ For workflows that may need multiple passes:
 Maximum iterations: 3 (notify user if exceeded)
 ```
 
-## Parallel Execution Patterns
-
-For independent tasks that can run simultaneously:
-
-```markdown
-## Parallel Execution
-
-The following tasks can run concurrently:
-
-| Task | Owner | Status |
-|------|-------|--------|
-| API docs analysis | librarian | background |
-| Codebase exploration | explore | background |
-| Similar implementation search | explore | background |
-
-Synthesize results after all tasks complete
-```
-
 ## Error Handling Patterns
 
 ```markdown
