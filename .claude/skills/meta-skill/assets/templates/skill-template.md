@@ -1,14 +1,8 @@
 ---
 name: {{SKILL_NAME}}
-description: |
-  [What it does in 1-2 sentences]. Use when user asks to [specific trigger phrases].
-  Do NOT use for [exclusion cases].
-
-  USE WHEN:
-  - "[trigger phrase 1]", "[trigger phrase 2]"
-
-  DO NOT USE WHEN:
-  - [Exclusion 1]
+description: [What it does in 1-2 sentences]. Use when users want to
+  [trigger phrases woven into natural prose]. Do NOT use for [exclusion cases
+  only if realistic confusion exists with similar skills].
 # --- Optional fields ---
 # license: MIT
 # compatibility: [environment requirements]

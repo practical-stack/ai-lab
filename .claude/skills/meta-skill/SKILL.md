@@ -1,17 +1,10 @@
 ---
 name: meta-skill
-description: |
-  Guide for creating and validating AI agent skills based on Anthropic's official skill specification.
-  Use when user asks to create a new skill, update an existing skill, validate skills,
-  or needs guidance on skill architecture and best practices.
-
-  USE WHEN:
-  - "create a skill", "new skill", "make a skill", "skill template"
-  - "validate skill", "check skill", "organize skill", "skill audit"
-
-  DO NOT USE WHEN:
-  - Creating agents (use meta-agent)
-  - Creating commands (use meta-command)
+description: Guide for creating and validating AI agent skills based on
+  Anthropic's official skill specification. Use when users want to create a new
+  skill, update an existing skill, validate skills, run a skill audit, or need
+  guidance on skill architecture and best practices. Do NOT use for creating
+  agents (use meta-agent) or commands (use meta-command).
 ---
 
 # Meta-Skill Creator
