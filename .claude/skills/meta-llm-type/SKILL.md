@@ -1,19 +1,10 @@
 ---
 name: meta-llm-type
-description: |
-  Diagnose features into the right LLM component type: Skill, Agent, or Command wrapper.
-  
-  USE WHEN: 
-  - "should this be a skill?"
-  - "command or agent?"
-  - "what type should this be"
-  - "skill vs command"
-  - "diagnose this feature"
-  - structure/architecture decisions for LLM components
-  
-  DO NOT USE WHEN:
-  - Actually implementing (use the generated spec instead)
-  - General coding tasks unrelated to structure design
+description: Diagnose features into the right LLM component type — Skill, Agent,
+  or Command wrapper. Use when users ask whether something should be a skill,
+  need to decide between command or agent, want to diagnose a feature's type,
+  or make structure and architecture decisions for LLM components.
+  Do NOT use for actual implementation or general coding tasks.
 ---
 
 # Structure Organizer
