@@ -1,9 +1,9 @@
 ---
 name: learning-content-creator
-description: |
-  Transform research materials into structured learning content with translations.
-  Triggers: "create learning content", "research to learning", "make learning path",
-  "translate learning content", "learning material"
+description: Transform research materials into structured learning content with
+  bilingual support. Use when users want to create learning content from research,
+  convert research to learning paths, make learning materials, or translate
+  learning content between languages.
 ---
 
 # Learning Content Creator
