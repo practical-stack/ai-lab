@@ -1,6 +1,6 @@
 # Skills Catalog
 
-**Generated:** 2026-01-25 | **Commit:** c740883
+**Generated:** 2026-02-12 | **Commit:** 4a2d0ba
 
 Extracted skills from ai-lab research. Each skill follows the standard structure.
 
