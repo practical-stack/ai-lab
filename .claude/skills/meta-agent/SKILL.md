@@ -1,16 +1,9 @@
 ---
 name: meta-agent
-description: |
-  Guide for creating and validating specialized AI agents (subagents). Use when users want to create
-  a new agent, validate agents, define agent configurations, or need guidance on agent architecture.
-  
-  USE WHEN:
-  - "create an agent", "new agent", "make a subagent", "agent template"
-  - "validate agent", "check agent", "organize agent", "agent audit"
-  
-  DO NOT USE WHEN:
-  - Creating skills (use meta-skill)
-  - Creating commands (use meta-command)
+description: Guide for creating and validating specialized AI agents (subagents).
+  Use when users want to create a new agent, make a subagent, define agent
+  configurations, validate agents, or need guidance on agent architecture.
+  Do NOT use for creating skills (use meta-skill) or commands (use meta-command).
 ---
 
 # Meta-Agent Creator
