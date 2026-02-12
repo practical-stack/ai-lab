@@ -1,19 +1,10 @@
 ---
 name: llm-repo-analysis
-description: |
-  Deep analysis of LLM agent/plugin repositories to extract architecture, patterns, and insights.
-  
-  USE WHEN:
-  - "analyze this LLM repo"
-  - "extract patterns from [repo]"
-  - "create documentation like oh-my-opencode-analysis"
-  - "repository deep dive"
-  - "understand this AI agent codebase"
-  
-  DO NOT USE WHEN:
-  - General code review (not LLM-specific)
-  - Simple file exploration
-  - Non-LLM repositories
+description: Deep analysis of LLM agent and plugin repositories to extract
+  architecture, patterns, and insights. Use when users want to analyze an LLM repo,
+  extract patterns from a repository, do a repository deep dive, or understand an
+  AI agent codebase. Do NOT use for general code review, simple file exploration,
+  or non-LLM repositories.
 ---
 
 # LLM Repository Analysis
