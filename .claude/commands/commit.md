@@ -22,13 +22,15 @@ Load the **git-master** skill and execute in COMMIT mode:
 1. **Context Gathering** (parallel):
    - `git status` - all changed files
    - `git diff --staged --stat` + `git diff --stat` - change overview
-   - `git log -30 --oneline` - commit style detection
    - `git branch --show-current` - branch context
 
-2. **Style Detection**:
-   - Analyze last 30 commits for language (Korean/English)
-   - Detect commit style (SEMANTIC/PLAIN/SHORT)
-   - Output detection result before proceeding
+2. **Commit Message Format**: `type(scope): description`
+   - `type`: feat, fix, refactor, docs, test, chore, style, perf, ci, build
+   - `scope`: module or area affected (e.g., auth, ui, config, skill)
+   - `description`: concise summary of the change
+   - Example: `feat(auth): add OAuth2 login`
+   - Example: `fix(ui): correct button alignment`
+   - Example: `docs(skill): update meta-skill reference`
 
 3. **Purpose-Based Grouping**:
    - Group by **logical purpose**, NOT by file count or directory
@@ -49,7 +51,7 @@ Load the **git-master** skill and execute in COMMIT mode:
 | Same purpose = same commit | Even if 10+ files across directories |
 | Different purposes = different commits | Even if in same directory |
 | Test + implementation = same commit | Always |
-| Match detected style | Never default to semantic |
+| Format: `type(scope): description` | Always use this format |
 
 ### Anti-Pattern: Over-Splitting
 
@@ -73,11 +75,11 @@ COMMIT SUMMARY
 ==============
 Created N commits:
 
-1. abc1234 feat: add OAuth2 login
+1. abc1234 feat(auth): add OAuth2 login
    - src/auth/oauth.ts
    - src/auth/oauth.test.ts
 
-2. def5678 fix: correct button alignment
+2. def5678 fix(ui): correct button alignment
    - src/components/Button.tsx
 ```
 
@@ -87,12 +89,12 @@ COMMIT PLAN (dry-run)
 =====================
 Would create N commits:
 
-COMMIT 1: feat: add OAuth2 login
+COMMIT 1: feat(auth): add OAuth2 login
   - src/auth/oauth.ts
   - src/auth/oauth.test.ts
   Justification: implementation + test
 
-COMMIT 2: fix: correct button alignment
+COMMIT 2: fix(ui): correct button alignment
   - src/components/Button.tsx
   Justification: independent UI fix
 ```
