@@ -1,17 +1,9 @@
 ---
 name: meta-command
-description: |
-  Guide for creating and validating Claude Code slash commands.
-  
-  USE WHEN:
-  - "create a command", "new command", "make a command"
-  - "command spec", "command format", "frontmatter"
-  - "allowed-tools", "argument-hint"
-  - "validate command", "check command", "organize command", "command audit"
-  
-  DO NOT USE WHEN:
-  - Creating skills or agents (use meta-skill, meta-agent)
-  - General markdown formatting
+description: Guide for creating and validating Claude Code slash commands.
+  Use when users want to create a command, define command specs, configure
+  allowed-tools or argument-hint fields, or validate and audit existing commands.
+  Do NOT use for creating skills or agents (use meta-skill, meta-agent).
 ---
 
 # Meta-Command
